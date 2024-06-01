@@ -16,7 +16,7 @@ database:
     user: "xiaoservice"
     pass: "xiaoservice"
     name: "xiaoservice"
-    type: "postgres"
+    type: "pgsql"
 redis:
   default:
     address: "localhost:6379"

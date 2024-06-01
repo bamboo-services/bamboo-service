@@ -12,6 +12,7 @@ package cmd
 
 import (
 	"XiaoService/internal/config/middleware"
+	"XiaoService/internal/config/startup"
 	"XiaoService/internal/controller/auth"
 	"XiaoService/internal/controller/sms"
 	"context"
@@ -26,8 +27,13 @@ var (
 	Main = gcmd.Command{
 		Name:  "main",
 		Usage: "main",
-		Brief: "start http server",
+		Brief: "XiaoService 服务端",
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
+			// 初始化配置
+			startup.InitialDatabaseStartup(ctx)
+			startup.InitialTableContentStartup(ctx)
+			startup.InitialFinialStartup(ctx)
+			// 服务器启动
 			s := g.Server()
 			s.Group("/", func(group *ghttp.RouterGroup) {
 				group.Middleware(bmiddle.BambooMiddleHandler)
