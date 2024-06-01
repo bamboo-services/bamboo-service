@@ -22,7 +22,7 @@ import "github.com/gogf/gf/v2/frame/g"
 //   - authorization_code		授权码，传入后若正确则通知任然有效(string?)
 type SmsMakeAuthorizationReq struct {
 	g.Meta            `path:"/api/v1/sms/authorization" method:"Get" summary:"生成短信验证码授权码" tags:"短信验证码控制器"`
-	AuthorizationCode string `json:"authorization_code" summary:"授权码"`
+	AuthorizationCode string `json:"authorization_code" v:"regex:^(|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$#授权码格式不正确" summary:"授权码"`
 }
 
 // SmsMakeAuthorizationRes

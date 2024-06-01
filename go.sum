@@ -53,6 +53,8 @@ github.com/go-logr/logr v1.4.2 h1:6pFjapn8bFcIbiKo3XT4j/BhANplGihG6tvd+8rYgrY=
 github.com/go-logr/logr v1.4.2/go.mod h1:9T104GzyrTigFIr8wt5mBrctHMim0Nb2HLGrmQ40KvY=
 github.com/go-logr/stdr v1.2.2 h1:hSWxHoqTgW2S2qGc0LTAI563KZ5YKYRhT3MFKZMbjag=
 github.com/go-logr/stdr v1.2.2/go.mod h1:mMo/vtBO5dYbehREoey6XUKy/eSumjCCveDpRre4VKE=
+github.com/gogf/gf/contrib/drivers/pgsql/v2 v2.7.1 h1:b7TyXW0MVKPV+J/Ir0njsPenp1Tvlyu9Mcf9G1xkiTc=
+github.com/gogf/gf/contrib/drivers/pgsql/v2 v2.7.1/go.mod h1:b18vfZ8U8JXHj49zP1pjV0ryzUBX05ebsoxBbJZ8KUQ=
 github.com/gogf/gf/contrib/nosql/redis/v2 v2.7.1 h1:AqwPDOuxidBX8gnGj65tp4Whh5/6GT1HyzlmbdXJH7Y=
 github.com/gogf/gf/contrib/nosql/redis/v2 v2.7.1/go.mod h1:+OrkFvkcxtfw8A1zMXOfZ4JLM7iKzpmUYChp6PNWPFY=
 github.com/gogf/gf/v2 v2.7.1 h1:Ukp7vzwh6VKnivEEx/xiMc61dL1HVZqCCHl//3GBRxc=
@@ -74,6 +76,8 @@ github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHm
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
+github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
+github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
 github.com/magiconair/properties v1.8.7 h1:IeQXZAiQcpL9mgcAe1Nu6cX9LLw6ExEHKjN0VQdvPDY=
 github.com/magiconair/properties v1.8.7/go.mod h1:Dhd985XPs7jluiymwWYZ0G4Z61jb3vdS329zhj2hYo0=
 github.com/mattn/go-colorable v0.1.13 h1:fFA4WZxdEF4tXPZVKMLwD8oUnCTTo08duU7wxecdEvA=

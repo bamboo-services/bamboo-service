@@ -22,4 +22,5 @@ bin
 /internal/dao/
 /internal/model/entity/
 /internal/model/do/
-/resource/sql/
+/resource/schema/
+aliyun.yaml
