@@ -55,6 +55,7 @@ func SystemStartUp(ctx context.Context) {
 	system.initialRoleStartup()
 	system.initialSuperAdminStartup()
 	system.getConstantStorage()
+	system.getAliyunAuthorizationKey()
 
 	/*
 	 * 系统准备完成

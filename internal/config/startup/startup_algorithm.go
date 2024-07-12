@@ -176,3 +176,24 @@ func createSuperAdmin(ctx context.Context) {
 	}
 	checkInfoTableValue(ctx, "system_admin", adminUUID.String())
 }
+
+// getInfoForDB
+//
+// # 获取数据库信息
+//
+// 获取数据库信息，用于获取数据库中的信息；用于获取数据库中的信息，存入常量中；
+//
+// # 请求
+//   - ctx			上下文(context.Context)
+//   - key			键(string)
+func getInfoForDB(ctx context.Context, key string) string {
+	var getInfo *entity.Info
+	err := dao.Info.Ctx(ctx).Where(do.Info{Key: key}).Scan(&getInfo)
+	if err != nil {
+		g.Log().Panicf(ctx, "[STAR] 数据库出现错误：%s", err.Error())
+	}
+	if getInfo == nil {
+		g.Log().Panicf(ctx, "[STAR] 数据 %s 不存在", key)
+	}
+	return getInfo.Value
+}

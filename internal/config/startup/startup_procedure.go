@@ -12,7 +12,9 @@ package startup
 
 import (
 	"bamboo-service/internal/constant"
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gfile"
 )
 
 // initialDatabaseStartup
@@ -46,6 +48,10 @@ func (s *systemStart) initialTableContentStartup() {
 	checkInfoTableValue(s.ctx, "system_version", "v1.0.0")
 	checkInfoTableValue(s.ctx, "system_author", "筱锋xiao_lfeng")
 	checkInfoTableValue(s.ctx, "has_initial_mode", "1")
+	// 插入 Aliyun 相关数据表
+	checkInfoTableValue(s.ctx, "aliyun_sms_sign_name", "锋楪")
+	checkInfoTableValue(s.ctx, "aliyun_sms_code_template", "SMS_299645708")
+	checkInfoTableValue(s.ctx, "aliyun_sms_endpoint", "dysmsapi.aliyuncs.com")
 }
 
 func (s *systemStart) initialRoleStartup() {
@@ -67,11 +73,31 @@ func (s *systemStart) initialSuperAdminStartup() {
 	if !hasSuperAdmin(s.ctx) {
 		// 创建超级管理员
 		createSuperAdmin(s.ctx)
+
 		g.Log().Noticef(s.ctx, "\t用户名：%s", "superAdmin")
 		g.Log().Noticef(s.ctx, "\t密码：%s", "admin")
 	}
 }
 
+// getConstantStorage
+//
+// # 获取常量存储
+//
+// 获取常量存储，用于获取常量存储；
 func (s *systemStart) getConstantStorage() {
+	constant.AliyunSmsSignName = getInfoForDB(s.ctx, "aliyun_sms_sign_name")
+	constant.AliyunSmsCodeTemplateCode = getInfoForDB(s.ctx, "aliyun_sms_code_template")
+	constant.AliyunSmsEndpoint = getInfoForDB(s.ctx, "aliyun_sms_endpoint")
+}
 
+// getAliyunAuthorizationKey
+//
+// # 获取阿里云授权密钥
+//
+// 获取阿里云授权密钥，用于获取阿里云授权密钥；
+func (s *systemStart) getAliyunAuthorizationKey() {
+	g.Log().Noticef(s.ctx, "[STAR] 获取阿里云授权密钥")
+	json := gjson.New(gfile.GetContents("aliyun.json"))
+	constant.AliyunAccessKey = json.Get("Key.AccessKeyID").String()
+	constant.AliyunSecretKey = json.Get("Key.AccessKeySecret").String()
 }

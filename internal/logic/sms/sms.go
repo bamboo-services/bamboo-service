@@ -8,23 +8,17 @@
  * ------------------------------------------------------------
  */
 
-package constant
+package sms
 
-// ------------------------------------------------------------
-// 阿里云授权信息
-// ------------------------------------------------------------
+import "bamboo-service/internal/service"
 
-var (
-	AliyunAccessKey string
-	AliyunSecretKey string
-)
+type sSms struct {
+}
 
-// ------------------------------------------------------------
-// 阿里云短信签名
-// ------------------------------------------------------------
+func init() {
+	service.RegisterSms(New())
+}
 
-var (
-	AliyunSmsSignName         string
-	AliyunSmsCodeTemplateCode string
-	AliyunSmsEndpoint         string
-)
+func New() *sSms {
+	return &sSms{}
+}

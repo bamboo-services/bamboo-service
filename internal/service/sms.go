@@ -15,8 +15,14 @@
 
 package service
 
+import (
+	"context"
+)
+
 type (
-	ISms interface{}
+	ISms interface {
+		AliyunSmsSend(ctx context.Context, to string, code string) (err error)
+	}
 )
 
 var (
