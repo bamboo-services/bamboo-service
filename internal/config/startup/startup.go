@@ -11,8 +11,8 @@
 package startup
 
 import (
+	"context"
 	"fmt"
-	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/glog"
 )
 
@@ -21,7 +21,15 @@ import (
 // # 系统启动
 //
 // 系统启动，用于系统启动时的初始化操作；
-type systemStart struct{}
+type systemStart struct {
+	ctx context.Context
+}
+
+func newSystem(ctx context.Context) *systemStart {
+	return &systemStart{
+		ctx: ctx,
+	}
+}
 
 // SystemStartUp
 //
@@ -31,19 +39,22 @@ type systemStart struct{}
 //
 // # 请求
 //   - ctx			上下文(context.Context)
-func SystemStartUp(ctx g.Ctx) {
+func SystemStartUp(ctx context.Context) {
 	glog.Noticef(ctx, "[STAR] 开始检查系统完整性...")
 
 	/*
 	 * 初始化
 	 */
 	// 初始化准备
-	var newSystem = new(systemStart)
+	var system = newSystem(ctx)
 
 	glog.Noticef(ctx, "==================================================")
 	// 系统初始化
-	newSystem.initialDatabaseStartup(ctx)
-	newSystem.initialTableContentStartup(ctx)
+	system.initialDatabaseStartup()
+	system.initialTableContentStartup()
+	system.initialRoleStartup()
+	system.initialSuperAdminStartup()
+	system.getConstantStorage()
 
 	/*
 	 * 系统准备完成
@@ -55,6 +66,6 @@ func SystemStartUp(ctx g.Ctx) {
 	  | |/_(_)__ ____  / __/__ _____  __(_)______ 
 	 _>  </ / _ ` + "`" + `/ _ \_\ \/ -_) __/ |/ / / __/ -_)
 	/_/|_/_/\_,_/\___/___/\__/_/  |___/_/\__/\__/ `)
-	fmt.Println("\033[32m	   ::: XiaoService :::\033[33m	   	v2.0.0")
+	fmt.Println("\033[32m	   ::: XiaoService :::\033[33m	   	v1.0.0")
 	fmt.Println("\033[0m")
 }

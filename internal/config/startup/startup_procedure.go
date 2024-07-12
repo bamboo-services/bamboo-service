@@ -11,7 +11,7 @@
 package startup
 
 import (
-	"context"
+	"bamboo-service/internal/constant"
 	"github.com/gogf/gf/v2/frame/g"
 )
 
@@ -20,18 +20,15 @@ import (
 // # 初始化数据库
 //
 // 初始化数据库，进行数据库的初始化操作；若检查数据库中没有数据则进行初始化操作；
-//
-// # 请求
-//   - ctx			上下文(context.Context)
-func (s *systemStart) initialDatabaseStartup(ctx context.Context) {
-	g.Log().Noticef(ctx, "[STAR] 初始化数据库...")
+func (s *systemStart) initialDatabaseStartup() {
+	g.Log().Noticef(s.ctx, "[STAR] 检查数据库")
 	// 检查数据库是否存在
-	createDatabase(ctx, "fy_info")
-	createDatabase(ctx, "fy_permission")
-	createDatabase(ctx, "fy_resource")
-	createDatabase(ctx, "fy_role")
-	createDatabase(ctx, "fy_vip")
-	createDatabase(ctx, "fy_user")
+	createDatabase(s.ctx, "fy_info")
+	createDatabase(s.ctx, "fy_permission")
+	createDatabase(s.ctx, "fy_resource")
+	createDatabase(s.ctx, "fy_role")
+	createDatabase(s.ctx, "fy_vip")
+	createDatabase(s.ctx, "fy_user")
 }
 
 // initialTableContentStartup
@@ -39,16 +36,42 @@ func (s *systemStart) initialDatabaseStartup(ctx context.Context) {
 // # 初始化数据表内容
 //
 // 初始化数据表内容，进行数据表内容的初始化操作；
-//
-// # 请求
-//   - ctx			上下文(context.Context)
-func (s *systemStart) initialTableContentStartup(ctx context.Context) {
-	g.Log().Noticef(ctx, "[STAR] 初始化数据表内容...")
+func (s *systemStart) initialTableContentStartup() {
+	g.Log().Noticef(s.ctx, "[STAR] 检查数据表内容...")
 
 	// Info 表
-	g.Log().Infof(ctx, "[STAR] 检查 fy_info 表数据...")
+	g.Log().Infof(s.ctx, "\t检查 fy_info 表数据...")
 	// 检查数据表
-	checkInfoTableValue(ctx, "system_name", "XiaoService")
-	checkInfoTableValue(ctx, "system_version", "v1.0.0")
-	checkInfoTableValue(ctx, "system_author", "筱锋xiao_lfeng")
+	checkInfoTableValue(s.ctx, "system_name", "竹业")
+	checkInfoTableValue(s.ctx, "system_version", "v1.0.0")
+	checkInfoTableValue(s.ctx, "system_author", "筱锋xiao_lfeng")
+	checkInfoTableValue(s.ctx, "has_initial_mode", "1")
+}
+
+func (s *systemStart) initialRoleStartup() {
+	g.Log().Noticef(s.ctx, "[STAR] 检查角色")
+
+	initializeRole(s.ctx, "admin", "管理员", constant.AdminRolePermission, "管理员角色，用于管理全系统级别权限管理等")
+	initializeRole(s.ctx, "user", "用户", constant.UserRolePermission, "用户角色，用于管理用户级别权限管理等")
+	initializeRole(s.ctx, "bad", "黑名单", constant.BadRolePermission, "黑名单角色，用于管理黑名单级别权限管理等")
+}
+
+// initialSuperAdminStartup
+//
+// # 初始化超级管理员
+//
+// 初始化超级管理员，进行超级管理员的初始化操作；
+func (s *systemStart) initialSuperAdminStartup() {
+	g.Log().Noticef(s.ctx, "[STAR] 检查超级管理员")
+	// 检查超级管理员是否存在
+	if !hasSuperAdmin(s.ctx) {
+		// 创建超级管理员
+		createSuperAdmin(s.ctx)
+		g.Log().Noticef(s.ctx, "\t用户名：%s", "superAdmin")
+		g.Log().Noticef(s.ctx, "\t密码：%s", "admin")
+	}
+}
+
+func (s *systemStart) getConstantStorage() {
+
 }
