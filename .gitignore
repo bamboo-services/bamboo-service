@@ -23,4 +23,5 @@ bin
 /internal/model/entity/
 /internal/model/do/
 /resource/schema/
+/internal/packed/schema_table.go
 aliyun.yaml
