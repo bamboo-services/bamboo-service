@@ -38,13 +38,24 @@ var (
 			s.SetDumpRouterMap(false)
 
 			// 路由组
-			s.Group("/", func(group *ghttp.RouterGroup) {
+			s.Group("/api", func(group *ghttp.RouterGroup) {
 				group.Middleware(bmiddle.BambooMiddleHandler)
-				group.Middleware(middleware.MiddleRequestHandler)
-				group.Bind(
-					auth.NewV2(),
-					sms.NewV2(),
-				)
+
+				// V1 版本路由
+				group.Group("/v1", func(group *ghttp.RouterGroup) {
+					group.Middleware(middleware.MiddleDefaultCors)
+
+				})
+
+				// V2 版本路由
+				group.Group("/v2", func(group *ghttp.RouterGroup) {
+					group.Middleware(middleware.MiddleDefaultCors)
+					group.Middleware(middleware.MiddleRequestHandler)
+					group.Bind(
+						auth.NewV2(),
+						sms.NewV2(),
+					)
+				})
 			})
 			s.Run()
 			return nil

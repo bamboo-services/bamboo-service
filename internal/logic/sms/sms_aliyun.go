@@ -21,12 +21,37 @@ import (
 	"github.com/gogf/gf/v2/container/gmap"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
+	"regexp"
 )
 
+// AliyunSmsSend
+//
+// # 阿里云短信发送
+//
+// 阿里云短信发送，用于发送短信验证码；该接口会对手机号进行正则表达式判断，判断是否是国内手机号；
+// 若为国内手机号则发送短信验证码，否则返回错误；
+// 当该手机号多次发送短信验证码时，对是否可重复发送判断由阿里云平台进行判断；
+// https://dysms.console.aliyun.com/msgsetting/frequency
+//
+// # 请求
+//   - ctx			上下文(context.Context)
+//   - to			接收者手机号(string)
+//   - code			验证码(string)
+//
+// # 响应
+//   - err			错误信息(error)
 func (s *sSms) AliyunSmsSend(ctx context.Context, to string, code string) (err error) {
 	g.Log().Notice(ctx, "[SERV] sms.AliyunSmsSend | 发送短信")
 
-	// TODO-[24071201] 对于发送者的 to 需要进行正则表达式判断，并且从缓存读取是否可以再次发送，需要整理 Json 发送短信
+	// 检查是否是国内的手机号
+	match, err := regexp.Match(`^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$`, []byte(to))
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err)
+	}
+	if !match {
+		return berror.NewError(bcode.OperationFailed, "手机号格式不正确")
+	}
+
 	// 创建客户端
 	smsParam := gmap.NewHashMap(true)
 	smsParam.Set("code", code)
@@ -34,7 +59,7 @@ func (s *sSms) AliyunSmsSend(ctx context.Context, to string, code string) (err e
 	if err != nil {
 		return err
 	} else {
-		if backCode != nil {
+		if *backCode != "OK" {
 			return berror.NewError(bcode.OperationFailed, "短信发送失败")
 		} else {
 			return nil
@@ -42,6 +67,21 @@ func (s *sSms) AliyunSmsSend(ctx context.Context, to string, code string) (err e
 	}
 }
 
+// smsSendCode
+//
+// # 发送短信
+//
+// 发送短信，用于发送短信验证码；该接口为内部接口，不对外开放；
+// 接口实现了通过阿里云的 SDK 发送短信验证码；
+//
+// # 请求
+//   - ctx			上下文(context.Context)
+//   - to			接收者手机号(string)
+//   - code			验证码(string)
+//
+// # 响应
+//   - backCode		返回码，短信发送状态(string)
+//   - err			错误信息(error)
 func smsSendCode(ctx context.Context, to, code string) (backCode *string, err error) {
 	g.Log().Debugf(ctx, "[SERV] Aliyun 发送短信")
 	config := &openapi.Config{

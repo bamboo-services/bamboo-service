@@ -8,17 +8,12 @@
  * ------------------------------------------------------------
  */
 
-package sms
+package rdo
 
-import (
-	"context"
+import "github.com/gogf/gf/v2/os/gtime"
 
-	"github.com/gogf/gf/v2/errors/gcode"
-	"github.com/gogf/gf/v2/errors/gerror"
-
-	"bamboo-service/api/sms/v2"
-)
-
-func (c *ControllerV2) SmsSendHasUser(ctx context.Context, req *v2.SmsSendHasUserReq) (res *v2.SmsSendHasUserRes, err error) {
-	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+type SmsPhoneCodeRDO struct {
+	Code      string      `json:"code" summary:"验证码"`
+	CreatedAt *gtime.Time `json:"created_at" summary:"创建时间"`
+	ExpiredAt *gtime.Time `json:"expired_at" summary:"过期时间"`
 }

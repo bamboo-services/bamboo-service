@@ -8,17 +8,11 @@
  * ------------------------------------------------------------
  */
 
-package sms
+package middleware
 
-import (
-	"context"
+import "github.com/gogf/gf/v2/net/ghttp"
 
-	"github.com/gogf/gf/v2/errors/gcode"
-	"github.com/gogf/gf/v2/errors/gerror"
-
-	"bamboo-service/api/sms/v2"
-)
-
-func (c *ControllerV2) SmsMakeAuthorization(ctx context.Context, req *v2.SmsMakeAuthorizationReq) (res *v2.SmsMakeAuthorizationRes, err error) {
-	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+func MiddleDefaultCors(r *ghttp.Request) {
+	r.Response.CORSDefault()
+	r.Middleware.Next()
 }

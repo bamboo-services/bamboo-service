@@ -1,11 +1,11 @@
 /*
- * ***********************************************************
+ * ------------------------------------------------------------
  * Copyright (c) 2016-NOW 锋楪技术 All Rights Reserved. 版权所有
  * 开源协议请遵循 MIT 开源协议，参考代码中的 LICENSE 部分
- * ***********************************************************
+ * ------------------------------------------------------------
  * 代码若需进行商用请务必联系我，同意后方可使用。在使用部分请注明出处
  * 作者：锋楪技术（筱锋xiao_lfeng）
- * ***********************************************************
+ * ------------------------------------------------------------
  */
 
 package middleware
@@ -27,9 +27,9 @@ import (
 //   - r		请求对象(*ghttp.Request)
 func MiddleRequestHandler(r *ghttp.Request) {
 	// 获取请求的参数
-	g.Log().Noticef(r.Context(), "[REQUEST] 请求信息：[%s] %s", r.Method, r.URL.Path)
+	g.Log().Noticef(r.Context(), "[REQU] 请求信息：[%s] %s", r.Method, r.URL.Path)
 	if len(r.GetBody()) > 0 {
-		g.Log().Infof(r.Context(), "\t[Body]请求体参数:")
+		g.Log().Infof(r.Context(), "\t[BODY]请求体参数:")
 		// 解析请求体参数
 		decode, _ := gjson.Decode(r.GetBody())
 		for key, value := range decode.(map[string]interface{}) {
@@ -37,13 +37,13 @@ func MiddleRequestHandler(r *ghttp.Request) {
 		}
 	}
 	if len(r.GetQueryMap()) > 0 {
-		g.Log().Infof(r.Context(), "\t[Query]请求参数:")
+		g.Log().Infof(r.Context(), "\t[PARA]请求参数:")
 		for key, value := range r.GetQueryMap() {
 			g.Log().Infof(r.Context(), "\t\t[%v] \t%v", key, value)
 		}
 	}
 	if r.Request.Header != nil {
-		g.Log().Debugf(r.Context(), "\t[Header]请求头部:")
+		g.Log().Debugf(r.Context(), "\t[HEAD]请求头部:")
 		for key, value := range r.Request.Header {
 			g.Log().Debugf(r.Context(), "\t\t[%v] \t%v", key, value)
 		}

@@ -12,24 +12,24 @@ package v2
 
 import "github.com/gogf/gf/v2/frame/g"
 
-// SmsSendHasUserReq
+// SmsSendReq
 //
-// # 向已注册用户发送短信验证码
+// # 发送短信
 //
-// 向已注册用户发送短信验证码，用于用户登录等需要进行用户信息验证的操作；
+// 发送短信，用于发送短信验证码，用户注册等操作；
 //
 // # 参数
 //   - Phone		手机号(string)
-type SmsSendHasUserReq struct {
-	g.Meta `path:"/api/v2/sms/send/user" method:"Post" summary:"向已注册用户发送短信验证码" tags:"短信验证码控制器"`
-	Phone  string `json:"phone" v:"required|length:11,11#请输入手机号|手机号长度为11位"`
+type SmsSendReq struct {
+	g.Meta `path:"/sms" method:"Post" tags:"短信控制器" summary:"发送短信" dc:"发送短信，用于发送短信验证码，用户注册等操作"`
+	Phone  string `json:"phone" v:"required|length:11,11#请输入手机号|手机号长度为11位" summary:"手机号"`
 }
 
-// SmsSendHasUserRes
+// SmsSendRes
 //
-// # 向已注册用户发送短信验证码
+// # 发送短信
 //
-// 返回相应的数据
-type SmsSendHasUserRes struct {
+// 返回相应的数据；
+type SmsSendRes struct {
 	g.Meta `mime:"application/json"`
 }

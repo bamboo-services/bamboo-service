@@ -1,10 +1,9 @@
 server:
   address: ":7777"
   openapiPath: "/api.json"
-  logger:
-    path: ".logs"
-    level: "all"
-    stdout: true
+  logStdout: true
+  errorStack: true
+  errorLogEnabled: true
 logger:
   path: ".logs"
   level: "all"

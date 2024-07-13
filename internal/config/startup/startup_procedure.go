@@ -39,10 +39,10 @@ func (s *systemStart) initialDatabaseStartup() {
 //
 // 初始化数据表内容，进行数据表内容的初始化操作；
 func (s *systemStart) initialTableContentStartup() {
-	g.Log().Noticef(s.ctx, "[STAR] 检查数据表内容...")
+	g.Log().Noticef(s.ctx, "[STAR] 检查数据表内容")
 
 	// Info 表
-	g.Log().Infof(s.ctx, "\t检查 fy_info 表数据...")
+	g.Log().Infof(s.ctx, "\t检查 fy_info 表数据")
 	// 检查数据表
 	checkInfoTableValue(s.ctx, "system_name", "竹业")
 	checkInfoTableValue(s.ctx, "system_version", "v1.0.0")
@@ -50,7 +50,7 @@ func (s *systemStart) initialTableContentStartup() {
 	checkInfoTableValue(s.ctx, "has_initial_mode", "1")
 	// 插入 Aliyun 相关数据表
 	checkInfoTableValue(s.ctx, "aliyun_sms_sign_name", "锋楪")
-	checkInfoTableValue(s.ctx, "aliyun_sms_code_template", "SMS_299645708")
+	checkInfoTableValue(s.ctx, "aliyun_sms_code_template", "SMS_468930484")
 	checkInfoTableValue(s.ctx, "aliyun_sms_endpoint", "dysmsapi.aliyuncs.com")
 }
 
@@ -85,6 +85,8 @@ func (s *systemStart) initialSuperAdminStartup() {
 //
 // 获取常量存储，用于获取常量存储；
 func (s *systemStart) getConstantStorage() {
+	g.Log().Noticef(s.ctx, "[STAR] 检查常量存储")
+
 	constant.AliyunSmsSignName = getInfoForDB(s.ctx, "aliyun_sms_sign_name")
 	constant.AliyunSmsCodeTemplateCode = getInfoForDB(s.ctx, "aliyun_sms_code_template")
 	constant.AliyunSmsEndpoint = getInfoForDB(s.ctx, "aliyun_sms_endpoint")
