@@ -32,6 +32,8 @@ type InfoWebEditReq struct {
 	WebDesc string `json:"web_desc" v:"required|length:6,100#请输入网站描述|网站描述长度为 6-100 位"`
 	WebKey  string `json:"web_key" v:"required|length:6,100#请输入网站关键字|网站关键字长度为 6-100 位"`
 	WebCopy string `json:"web_copy" v:"required|length:6,100#请输入网站版权|网站版权长度为 6-100 位"`
+	WebLogo string `json:"web_logo" v:"required|url#请输入网站Logo|网站Logo格式不正确"`
+	WebFav  string `json:"web_fav" v:"required|url#请输入网站Favicon|网站Favicon格式不正确"`
 }
 
 // InfoWebEditRes

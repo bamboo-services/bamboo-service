@@ -8,10 +8,17 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package info
 
-import (
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/sms"
-)
+import "bamboo-service/internal/service"
+
+type sInfo struct {
+}
+
+func init() {
+	service.RegisterInfo(New())
+}
+
+func New() *sInfo {
+	return &sInfo{}
+}
