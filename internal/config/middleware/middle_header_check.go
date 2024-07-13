@@ -15,28 +15,29 @@ import (
 	"github.com/bamboo-services/bamboo-utils/bcode"
 	"github.com/bamboo-services/bamboo-utils/berror"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"strings"
 )
 
-// MiddleSystemHasInitialized
+// MiddleHeaderCheck
 //
-// # 系统初始化
+// # 中间件-请求头检查
 //
-// 用于检查系统是否进行初始化；
-// 若没有进行初始化则将系统进行拦截，只放行初始化接口；
+// 用于检查请求头中的 Referer 信息是否合法；
 //
 // # 参数
-//   - r		*ghttp.Request		请求对象
-func MiddleSystemHasInitialized(r *ghttp.Request) {
-	// 检查是否已初始化
-	if constant.InitializeMode {
-		// 检查访问接口是否是初始化接口
-		if r.Request.URL.Path == "/api/v1/auth/init" {
-			r.Middleware.Next()
-		} else {
-			r.SetError(berror.NewError(bcode.Unauthorized, "系统未初始化，不允许访问其他接口"))
-			r.Response.Status = 401
-		}
-	} else {
-		r.Middleware.Next()
+//   - r		请求(*ghttp.Request)
+func MiddleHeaderCheck(r *ghttp.Request) {
+	// 获取请求头信息
+	referer := r.Header.Get("Referer")
+	if referer == "" {
+		r.SetError(berror.NewError(bcode.Unauthorized, "请求头中缺少 Referer 信息"))
+		r.Response.Status = 401
+		return
 	}
+	if !strings.Contains(constant.SystemReferer, referer) {
+		r.SetError(berror.NewError(bcode.Forbidden, "Referer 信息不合法"))
+		r.Response.Status = 403
+		return
+	}
+	r.Middleware.Next()
 }

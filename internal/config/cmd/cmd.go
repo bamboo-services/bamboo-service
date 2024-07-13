@@ -14,6 +14,7 @@ import (
 	"bamboo-service/internal/config/middleware"
 	"bamboo-service/internal/config/startup"
 	"bamboo-service/internal/controller/auth"
+	"bamboo-service/internal/controller/info"
 	"bamboo-service/internal/controller/sms"
 	"context"
 	"github.com/bamboo-services/bamboo-utils/bmiddle"
@@ -45,8 +46,10 @@ var (
 				// V1 版本路由
 				group.Group("/v1", func(group *ghttp.RouterGroup) {
 					group.Middleware(bmiddle.BambooMiddleDefaultCors)
+					group.Middleware(middleware.MiddleHeaderCheck)
 					group.Bind(
 						auth.NewV1(),
+						info.NewV1(),
 					)
 				})
 

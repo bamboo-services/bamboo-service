@@ -15,8 +15,8 @@ package constant
 // ------------------------------------------------------------
 
 var (
-	AliyunAccessKey string
-	AliyunSecretKey string
+	AliyunAccessKey string // 阿里云AccessKey
+	AliyunSecretKey string // 阿里云SecretKey
 )
 
 // ------------------------------------------------------------
@@ -24,7 +24,7 @@ var (
 // ------------------------------------------------------------
 
 var (
-	AliyunSmsSignName         string
-	AliyunSmsCodeTemplateCode string
-	AliyunSmsEndpoint         string
+	AliyunSmsSignName         string // 阿里云短信签名
+	AliyunSmsCodeTemplateCode string // 阿里云短信验证码模板
+	AliyunSmsEndpoint         string // 阿里云短信服务端点
 )

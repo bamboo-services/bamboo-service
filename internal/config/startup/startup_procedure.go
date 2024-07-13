@@ -50,6 +50,15 @@ func (s *systemStart) initialTableContentStartup() {
 	checkInfoTableValue(s.ctx, "system_author", "筱锋xiao_lfeng")
 	checkInfoTableValue(s.ctx, "system_referer", "")
 	checkInfoTableValue(s.ctx, "has_initial_mode", "1")
+	checkInfoTableValue(s.ctx, "web_name", "竹业")
+	checkInfoTableValue(s.ctx, "web_description", "竹业，一个基于 Golang 开发的后端服务")
+	checkInfoTableValue(s.ctx, "web_keywords", "竹业, Golang, 后端服务")
+	checkInfoTableValue(s.ctx, "web_logo", "https://cdn.fengyuecloud.com/2021/09/20210909100000.png")
+	checkInfoTableValue(s.ctx, "web_favicon", "https://cdn.fengyuecloud.com/2021/09/20210909100000.png")
+	checkInfoTableValue(s.ctx, "web_icp", "粤ICP备2023097009号-2")
+	checkInfoTableValue(s.ctx, "web_record", "粤公网安备 44030502003107号")
+	checkInfoTableValue(s.ctx, "web_copy", "© 2022-2024 竹业")
+
 	// 插入 Aliyun 相关数据表
 	checkInfoTableValue(s.ctx, "aliyun_sms_sign_name", "锋楪")
 	checkInfoTableValue(s.ctx, "aliyun_sms_code_template", "SMS_468930484")
@@ -97,6 +106,14 @@ func (s *systemStart) getConstantStorage() {
 	// 获取系统信息
 	constant.InitializeMode = gconv.Bool(getInfoForDB(s.ctx, "has_initial_mode"))
 	constant.SystemReferer = getInfoForDB(s.ctx, "system_referer")
+	constant.WebFavicon = getInfoForDB(s.ctx, "web_favicon")
+	constant.WebLogo = getInfoForDB(s.ctx, "web_logo")
+	constant.WebName = getInfoForDB(s.ctx, "web_name")
+	constant.WebDescription = getInfoForDB(s.ctx, "web_description")
+	constant.WebKeywords = getInfoForDB(s.ctx, "web_keywords")
+	constant.WebICP = getInfoForDB(s.ctx, "web_icp")
+	constant.WebRecord = getInfoForDB(s.ctx, "web_record")
+	constant.WebCopy = getInfoForDB(s.ctx, "web_copy")
 }
 
 // getAliyunAuthorizationKey

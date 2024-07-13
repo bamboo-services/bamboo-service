@@ -11,6 +11,12 @@
 package constant
 
 var (
-	InitializeMode bool   // 初始化模式
-	SystemReferer  string // 系统来源
+	WebName        string // 网站名称
+	WebDescription string // 网站描述
+	WebKeywords    string // 网站关键字
+	WebLogo        string // 网站Logo
+	WebFavicon     string // 网站Favicon
+	WebICP         string // 网站备案号
+	WebRecord      string // 网站备案地址
+	WebCopy        string // 网站版权
 )
