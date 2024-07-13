@@ -11,8 +11,9 @@
 package main
 
 import (
-	"bamboo-service/internal/config/cmd"
 	_ "bamboo-service/internal/logic"
+
+	"bamboo-service/internal/config/cmd"
 	_ "bamboo-service/internal/packed"
 
 	_ "github.com/gogf/gf/contrib/drivers/pgsql/v2"

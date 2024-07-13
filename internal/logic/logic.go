@@ -11,5 +11,6 @@
 package logic
 
 import (
+	_ "bamboo-service/internal/logic/init"
 	_ "bamboo-service/internal/logic/sms"
 )

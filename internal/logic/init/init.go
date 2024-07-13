@@ -8,11 +8,17 @@
  * ------------------------------------------------------------
  */
 
-package middleware
+package init
 
-import "github.com/gogf/gf/v2/net/ghttp"
+import "bamboo-service/internal/service"
 
-func MiddleDefaultCors(r *ghttp.Request) {
-	r.Response.CORSDefault()
-	r.Middleware.Next()
+type sInit struct {
+}
+
+func init() {
+	service.RegisterInit(New())
+}
+
+func New() *sInit {
+	return &sInit{}
 }

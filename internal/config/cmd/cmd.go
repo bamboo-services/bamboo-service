@@ -40,17 +40,21 @@ var (
 			// 路由组
 			s.Group("/api", func(group *ghttp.RouterGroup) {
 				group.Middleware(bmiddle.BambooMiddleHandler)
+				group.Middleware(middleware.MiddleSystemHasInitialized)
 
 				// V1 版本路由
 				group.Group("/v1", func(group *ghttp.RouterGroup) {
-					group.Middleware(middleware.MiddleDefaultCors)
-
+					group.Middleware(bmiddle.BambooMiddleDefaultCors)
+					group.Bind(
+						auth.NewV1(),
+					)
 				})
 
 				// V2 版本路由
 				group.Group("/v2", func(group *ghttp.RouterGroup) {
-					group.Middleware(middleware.MiddleDefaultCors)
-					group.Middleware(middleware.MiddleRequestHandler)
+					group.Middleware(bmiddle.BambooMiddleDefaultCors)
+					group.Middleware(bmiddle.BambooMiddleRequestCheck)
+
 					group.Bind(
 						auth.NewV2(),
 						sms.NewV2(),

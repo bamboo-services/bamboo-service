@@ -15,6 +15,7 @@ import (
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gfile"
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 // initialDatabaseStartup
@@ -47,6 +48,7 @@ func (s *systemStart) initialTableContentStartup() {
 	checkInfoTableValue(s.ctx, "system_name", "竹业")
 	checkInfoTableValue(s.ctx, "system_version", "v1.0.0")
 	checkInfoTableValue(s.ctx, "system_author", "筱锋xiao_lfeng")
+	checkInfoTableValue(s.ctx, "system_referer", "")
 	checkInfoTableValue(s.ctx, "has_initial_mode", "1")
 	// 插入 Aliyun 相关数据表
 	checkInfoTableValue(s.ctx, "aliyun_sms_sign_name", "锋楪")
@@ -87,9 +89,14 @@ func (s *systemStart) initialSuperAdminStartup() {
 func (s *systemStart) getConstantStorage() {
 	g.Log().Noticef(s.ctx, "[STAR] 检查常量存储")
 
+	// 获取阿里云授权密钥
 	constant.AliyunSmsSignName = getInfoForDB(s.ctx, "aliyun_sms_sign_name")
 	constant.AliyunSmsCodeTemplateCode = getInfoForDB(s.ctx, "aliyun_sms_code_template")
 	constant.AliyunSmsEndpoint = getInfoForDB(s.ctx, "aliyun_sms_endpoint")
+
+	// 获取系统信息
+	constant.InitializeMode = gconv.Bool(getInfoForDB(s.ctx, "has_initial_mode"))
+	constant.SystemReferer = getInfoForDB(s.ctx, "system_referer")
 }
 
 // getAliyunAuthorizationKey
