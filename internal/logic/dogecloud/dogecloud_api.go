@@ -14,11 +14,17 @@ import (
 	"bamboo-service/internal/constant"
 	"bamboo-service/internal/model/rdo"
 	"bamboo-service/internal/service"
+	"bytes"
 	"context"
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/bamboo-services/bamboo-utils/bcode"
 	"github.com/bamboo-services/bamboo-utils/berror"
 	"github.com/gogf/gf/v2/encoding/gjson"
@@ -159,4 +165,46 @@ func (s *sDogeCloud) GetToken(ctx context.Context) (bucket *rdo.DogeCloudBucketR
 		return nil, berror.NewErrorHasError(bcode.ServerInternalError, err, "获取 Token 失败")
 	}
 	return bucket, nil
+}
+
+// UploadData
+//
+// # 上传数据
+//
+// 该接口用于上传数据到多吉云存储；
+//
+// # 参数
+//   - ctx			上下文(context.Context)
+//   - path			路径(string)
+//   - fileName		文件名(string)
+//   - body			数据(*io.Reader)
+//
+// # 返回
+//   - err			错误信息(error)
+func (s *sDogeCloud) UploadData(ctx context.Context, path, fileName string, body []byte) (err error) {
+	g.Log().Notice(ctx, "[SERV] doge-cloud.UploadData | 上传数据")
+	bucket, err := s.GetToken(ctx)
+	if err != nil {
+		return err
+	}
+	// 上传数据
+	s3Config := &aws.Config{
+		Credentials: credentials.NewStaticCredentials(bucket.AccessKeyID, bucket.SecretAccessKey, bucket.SessionToken),
+		Region:      aws.String("automatic"),
+		Endpoint:    aws.String(bucket.Endpoint),
+	}
+	newSession, err := session.NewSession(s3Config)
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "创建 Session 失败")
+	}
+	client := s3manager.NewUploaderWithClient(s3.New(newSession))
+	_, err = client.Upload(&s3manager.UploadInput{
+		Bucket: aws.String(bucket.Bucket),
+		Key:    aws.String(path + fileName),
+		Body:   bytes.NewReader(body),
+	})
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "上传失败")
+	}
+	return nil
 }

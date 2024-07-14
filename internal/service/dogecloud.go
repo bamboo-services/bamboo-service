@@ -69,6 +69,21 @@ type (
 		//   - bucket		多吉云存储 Token 信息(*rdo.DogeCloudBucketRDO)
 		//   - err			错误信息(error)
 		GetToken(ctx context.Context) (bucket *rdo.DogeCloudBucketRDO, err error)
+		// UploadData
+		//
+		// # 上传数据
+		//
+		// 该接口用于上传数据到多吉云存储；
+		//
+		// # 参数
+		//   - ctx			上下文(context.Context)
+		//   - path			路径(string)
+		//   - fileName		文件名(string)
+		//   - body			数据(*io.Reader)
+		//
+		// # 返回
+		//   - err			错误信息(error)
+		UploadData(ctx context.Context, path, fileName string, body []byte) (err error)
 	}
 )
 
