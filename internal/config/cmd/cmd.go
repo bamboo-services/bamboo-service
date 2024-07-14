@@ -14,6 +14,7 @@ import (
 	"bamboo-service/internal/config/middleware"
 	"bamboo-service/internal/config/startup"
 	"bamboo-service/internal/controller/auth"
+	"bamboo-service/internal/controller/avatar"
 	"bamboo-service/internal/controller/info"
 	"bamboo-service/internal/controller/sms"
 	"context"
@@ -61,9 +62,19 @@ var (
 					group.Bind(
 						auth.NewV2(),
 						sms.NewV2(),
+						avatar.NewV2(),
 					)
 				})
 			})
+
+			// 特殊路由表
+			s.Group("/", func(group *ghttp.RouterGroup) {
+				group.Bind(
+					// 获取头像
+					avatar.NewV3(),
+				)
+			})
+
 			s.Run()
 			return nil
 		},
