@@ -35,7 +35,7 @@ import (
 	"net/url"
 )
 
-// Api
+// API
 //
 // # 多吉云 API 请求
 //
@@ -53,13 +53,13 @@ import (
 // # 返回
 //   - ret			返回数据(map[string]interface{})
 //   - err			错误信息(error)
-func (s *sDogeCloud) Api(
+func (s *sDogeCloud) API(
 	ctx context.Context,
 	apiPath string,
 	data map[string]interface{},
 	jsonMode bool,
 ) (ref map[string]interface{}, err error) {
-	g.Log().Notice(ctx, "[SERV] doge-cloud.Api | 多吉云 API 请求")
+	g.Log().Notice(ctx, "[SERV] doge-cloud.API | 多吉云 API 请求")
 	var body, mime string
 	if jsonMode {
 		_body, err := json.Marshal(data)
@@ -102,7 +102,7 @@ func (s *sDogeCloud) Api(
 	return ref, nil
 }
 
-// GetAccessTokenApi
+// GetAccessTokenAPI
 //
 // # 获取多吉云存储 Token 权限
 //
@@ -115,27 +115,27 @@ func (s *sDogeCloud) Api(
 // # 返回
 //   - bucket		多吉云存储 Token 信息(*rdo.DogeCloudBucketRDO)
 //   - err			错误信息(error)
-func (s *sDogeCloud) GetAccessTokenApi(ctx context.Context) (bucket *rdo.DogeCloudBucketRDO, err error) {
-	g.Log().Notice(ctx, "[SERV] doge-cloud.GetAccessTokenApi | 获取多吉云存储 Token 权限")
+func (s *sDogeCloud) GetAccessTokenAPI(ctx context.Context) (bucket *rdo.DogeCloudBucketRDO, err error) {
+	g.Log().Notice(ctx, "[SERV] doge-cloud.GetAccessTokenAPI | 获取多吉云存储 Token 权限")
 	data := gconv.Map(g.Map{
 		"channel": "OSS_FULL",
 		"scopes":  "bamboo-service",
 	})
-	ref, err := service.DogeCloud().Api(ctx, "/auth/tmp_token.json", data, true)
+	ref, err := service.DogeCloud().API(ctx, "/auth/tmp_token.json", data, true)
 	if err != nil {
 		return nil, berror.NewErrorHasError(bcode.ServerInternalError, err, "获取 Token 失败")
 	}
-	getJson := gjson.New(ref)
+	getJSON := gjson.New(ref)
 	// 数据处理
 	bucketRDO := new(rdo.DogeCloudBucketRDO)
-	bucketRDO.Name = getJson.Get("data.Buckets.0.name").String()
-	bucketRDO.Bucket = getJson.Get("data.Buckets.0.s3Bucket").String()
-	bucketRDO.Endpoint = getJson.Get("data.Buckets.0.s3Endpoint").String()
-	bucketRDO.EndpointHost = getJson.Get("data.Buckets.0.s3EndpointHost").String()
-	bucketRDO.AccessKeyID = getJson.Get("data.Credentials.accessKeyId").String()
-	bucketRDO.SecretAccessKey = getJson.Get("data.Credentials.secretAccessKey").String()
-	bucketRDO.SessionToken = getJson.Get("data.Credentials.sessionToken").String()
-	bucketRDO.ExpiredAt = gtime.NewFromTime(getJson.Get("data.ExpiredAt").Time())
+	bucketRDO.Name = getJSON.Get("data.Buckets.0.name").String()
+	bucketRDO.Bucket = getJSON.Get("data.Buckets.0.s3Bucket").String()
+	bucketRDO.Endpoint = getJSON.Get("data.Buckets.0.s3Endpoint").String()
+	bucketRDO.EndpointHost = getJSON.Get("data.Buckets.0.s3EndpointHost").String()
+	bucketRDO.AccessKeyID = getJSON.Get("data.Credentials.accessKeyId").String()
+	bucketRDO.SecretAccessKey = getJSON.Get("data.Credentials.secretAccessKey").String()
+	bucketRDO.SessionToken = getJSON.Get("data.Credentials.sessionToken").String()
+	bucketRDO.ExpiredAt = gtime.NewFromTime(getJSON.Get("data.ExpiredAt").Time())
 	// 数据返回
 	return bucketRDO, nil
 }

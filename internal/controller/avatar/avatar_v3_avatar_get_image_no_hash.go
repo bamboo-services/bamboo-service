@@ -11,14 +11,34 @@
 package avatar
 
 import (
+	"bamboo-service/internal/service"
+	"bamboo-service/utility"
 	"context"
-
-	"github.com/gogf/gf/v2/errors/gcode"
-	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/frame/g"
 
 	"bamboo-service/api/avatar/v3"
 )
 
-func (c *ControllerV3) AvatarGetImageNoHash(ctx context.Context, req *v3.AvatarGetImageNoHashReq) (res *v3.AvatarGetImageNoHashRes, err error) {
-	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+// AvatarGetImageNoHash
+//
+// # 获取头像
+//
+// 获取头像，获取用户头像；
+//
+// # 参数
+//   - ctx		上下文(context.Context)
+//   - req		请求参数(*v3.AvatarGetImageNoHashReq)
+//
+// # 返回
+//   - res		返回结果(*v3.AvatarGetImageNoHashRes)
+//   - err		错误信息(error)
+func (c *ControllerV3) AvatarGetImageNoHash(
+	ctx context.Context,
+	req *v3.AvatarGetImageNoHashReq,
+) (res *v3.AvatarGetImageNoHashRes, err error) {
+	g.Log().Notice(ctx, "[CONT] 获取头像")
+	getRequest := g.RequestFromCtx(ctx)
+	avatar := service.Avatar().AvatarGet(ctx, utility.StringToMD5(req.Email))
+	getRequest.Response.Write(avatar)
+	return nil, nil
 }

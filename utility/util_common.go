@@ -8,12 +8,24 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package utility
 
 import (
-	_ "bamboo-service/internal/logic/avatar"
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/sms"
+	"github.com/gogf/gf/v2/crypto/gmd5"
 )
+
+// StringToMD5
+//
+// # 字符串转 MD5
+//
+// 字符串转 MD5，将字符串转换为 MD5 加密后的字符串；
+//
+// # 参数
+//   - str		字符串(string)
+//
+// # 返回
+//   - string	MD5 加密后的字符串(string)
+func StringToMD5(str string) string {
+	encrypt, _ := gmd5.EncryptString(str)
+	return encrypt
+}

@@ -12,8 +12,10 @@ package test
 
 import (
 	"bamboo-service/internal/constant"
+	"bamboo-service/internal/logic/avatar"
 	"bamboo-service/internal/logic/dogecloud"
 	"bamboo-service/internal/service"
+	"bamboo-service/utility"
 	_ "github.com/gogf/gf/contrib/drivers/pgsql/v2"
 	_ "github.com/gogf/gf/contrib/nosql/redis/v2"
 	"github.com/gogf/gf/v2/encoding/gjson"
@@ -41,9 +43,9 @@ func TestDogeCloudApi(t *testing.T) {
 		//	"channel": "OSS_FULL",
 		//	"scopes":  "bamboo-service",
 		//})
-		//ref, err := service.DogeCloud().Api(ctx, "/auth/tmp_token.json", data, true)
+		//ref, err := service.DogeCloud().API(ctx, "/auth/tmp_token.json", data, true)
 		// 处理
-		rdo, err := service.DogeCloud().GetAccessTokenApi(ctx)
+		rdo, err := service.DogeCloud().GetAccessTokenAPI(ctx)
 		if err != nil {
 			t.Error(err)
 		}
@@ -77,5 +79,26 @@ func TestDogeCloudUploadData(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+	}
+}
+
+// TestDogeCloudGetAvatar
+//
+// # 测试多吉云获取头像
+//
+// 测试多吉云获取头像接口；
+func TestDogeCloudGetAvatar(t *testing.T) {
+	if true {
+		service.RegisterDogeCloud(dogecloud.New())
+		service.RegisterAvatar(avatar.New())
+		getJSON := gjson.New(gfile.GetContents("../access.json"))
+		constant.DogeCloudAccessKey = getJSON.Get("DogeCloudKey.AccessKey").String()
+		constant.DogeCloudSecretKey = getJSON.Get("DogeCloudKey.SecretKey").String()
+		// 获取 Cravatar
+		getAvatar, err := service.Avatar().AvatarGetAPI(ctx, utility.StringToMD5("aka@bep.ink"))
+		if err != nil {
+			t.Error(err)
+		}
+		t.Log(gjson.New(getAvatar).MustToJsonString())
 	}
 }

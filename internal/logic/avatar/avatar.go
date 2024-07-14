@@ -8,12 +8,17 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package avatar
 
-import (
-	_ "bamboo-service/internal/logic/avatar"
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/sms"
-)
+import "bamboo-service/internal/service"
+
+type sAvatar struct {
+}
+
+func init() {
+	service.RegisterAvatar(New())
+}
+
+func New() *sAvatar {
+	return &sAvatar{}
+}

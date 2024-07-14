@@ -22,7 +22,7 @@ import (
 
 type (
 	IDogeCloud interface {
-		// Api
+		// API
 		//
 		// # 多吉云 API 请求
 		//
@@ -40,8 +40,8 @@ type (
 		// # 返回
 		//   - ret			返回数据(map[string]interface{})
 		//   - err			错误信息(error)
-		Api(ctx context.Context, apiPath string, data map[string]interface{}, jsonMode bool) (ref map[string]interface{}, err error)
-		// GetAccessTokenApi
+		API(ctx context.Context, apiPath string, data map[string]interface{}, jsonMode bool) (ref map[string]interface{}, err error)
+		// GetAccessTokenAPI
 		//
 		// # 获取多吉云存储 Token 权限
 		//
@@ -54,7 +54,7 @@ type (
 		// # 返回
 		//   - bucket		多吉云存储 Token 信息(*rdo.DogeCloudBucketRDO)
 		//   - err			错误信息(error)
-		GetAccessTokenApi(ctx context.Context) (bucket *rdo.DogeCloudBucketRDO, err error)
+		GetAccessTokenAPI(ctx context.Context) (bucket *rdo.DogeCloudBucketRDO, err error)
 		// GetToken
 		//
 		// # 获取多吉云存储 Token 权限

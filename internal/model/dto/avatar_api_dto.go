@@ -8,12 +8,16 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package dto
 
-import (
-	_ "bamboo-service/internal/logic/avatar"
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/sms"
-)
+// AvatarApiDTO
+//
+// # 头像 DTO
+//
+// 头像 DTO，用于头像的数据传输对象；
+//
+// # 参数
+//   - Avatar		头像(string)
+type AvatarApiDTO struct {
+	Avatar string `json:"avatar" summary:"头像"`
+}

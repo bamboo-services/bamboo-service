@@ -138,7 +138,7 @@ func (s *systemStart) getAliyunAuthorizationKey() {
 // 获取多吉云授权密钥，用于获取多吉云授权密钥；
 func (s *systemStart) dogeCloudKey() {
 	g.Log().Noticef(s.ctx, "[STAR] 获取多吉云授权密钥")
-	bucket, err := service.DogeCloud().GetAccessTokenApi(s.ctx)
+	bucket, err := service.DogeCloud().GetAccessTokenAPI(s.ctx)
 	if err != nil {
 		g.Log().Panic(s.ctx, err.Error())
 	}
