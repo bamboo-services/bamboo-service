@@ -66,6 +66,11 @@ func (s *systemStart) initialTableContentStartup() {
 	checkInfoTableValue(s.ctx, "aliyun_sms_endpoint", "dysmsapi.aliyuncs.com")
 }
 
+// initialRoleStartup
+//
+// # 初始化角色
+//
+// 初始化角色，进行角色的初始化操作；
 func (s *systemStart) initialRoleStartup() {
 	g.Log().Noticef(s.ctx, "[STAR] 检查角色")
 

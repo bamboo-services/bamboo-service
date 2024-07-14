@@ -11,14 +11,23 @@
 package avatar
 
 import (
+	"bamboo-service/internal/service"
 	"context"
-
-	"github.com/gogf/gf/v2/errors/gcode"
-	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/frame/g"
 
 	"bamboo-service/api/avatar/v2"
 )
 
-func (c *ControllerV2) AvatarGet(ctx context.Context, req *v2.AvatarGetReq) (res *v2.AvatarGetRes, err error) {
-	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+func (c *ControllerV2) AvatarGet(
+	ctx context.Context,
+	req *v2.AvatarGetReq,
+) (res *v2.AvatarGetRes, err error) {
+	g.Log().Notice(ctx, "[CONT] 获取头像接口")
+	avatar, err := service.Avatar().AvatarGetAPI(ctx, req.Hash)
+	if err != nil {
+		return nil, err
+	}
+	return &v2.AvatarGetRes{
+		AvatarApiDTO: *avatar,
+	}, nil
 }

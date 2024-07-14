@@ -10,7 +10,10 @@
 
 package v2
 
-import "github.com/gogf/gf/v2/frame/g"
+import (
+	"bamboo-service/internal/model/dto"
+	"github.com/gogf/gf/v2/frame/g"
+)
 
 // AvatarGetReq
 //
@@ -35,4 +38,5 @@ type AvatarGetReq struct {
 // 返回相应的数据
 type AvatarGetRes struct {
 	g.Meta `mime:"application/json"`
+	dto.AvatarApiDTO
 }
