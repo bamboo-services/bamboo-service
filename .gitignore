@@ -24,4 +24,4 @@ bin
 /internal/model/do/
 /resource/schema/
 /internal/packed/schema_table.go
-aliyun.json
+access.json

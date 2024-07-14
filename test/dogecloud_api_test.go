@@ -12,31 +12,32 @@ package test
 
 import (
 	"bamboo-service/internal/constant"
-	"bamboo-service/internal/logic/sms"
+	"bamboo-service/internal/logic/dogecloud"
 	"bamboo-service/internal/service"
-	"github.com/bamboo-services/bamboo-utils/butil"
 	"github.com/gogf/gf/v2/encoding/gjson"
-	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gctx"
 	"github.com/gogf/gf/v2/os/gfile"
 	"testing"
 )
 
-func TestSmsSend(t *testing.T) {
+var ctx = gctx.GetInitCtx()
+
+func TestDogeCloudApi(t *testing.T) {
 	if false {
-		service.RegisterSms(sms.New())
-		// 读取文件
+		service.RegisterDogeCloud(dogecloud.New())
 		getJson := gjson.New(gfile.GetContents("../access.json"))
-		constant.AliyunSmsSignName = "锋楪"
-		constant.AliyunSmsCodeTemplateCode = "SMS_468930484"
-		constant.AliyunAccessKey = getJson.Get("AliyunKey.AccessKeyID").String()
-		constant.AliyunSecretKey = getJson.Get("AliyunKey.AccessKeySecret").String()
-		constant.AliyunSmsEndpoint = "dysmsapi.aliyuncs.com"
-		g.Log().Debugf(ctx, "[TEST] %s", gjson.New(constant.AliyunAccessKey).MustToJsonString())
-		err := service.Sms().AliyunSmsSend(ctx, "13316569390", butil.RandomString(6))
+		constant.DogeCloudAccessKey = getJson.Get("DogeCloudKey.AccessKey").String()
+		constant.DogeCloudSecretKey = getJson.Get("DogeCloudKey.SecretKey").String()
+		//data := gconv.Map(g.Map{
+		//	"channel": "OSS_FULL",
+		//	"scopes":  "bamboo-service",
+		//})
+		//ref, err := service.DogeCloud().Api(ctx, "/auth/tmp_token.json", data, true)
+		// 处理
+		rdo, err := service.DogeCloud().GetAccessTokenApi(ctx)
 		if err != nil {
 			t.Error(err)
-		} else {
-			t.Log("短信发送成功")
 		}
+		t.Log(gjson.New(rdo).MustToJsonString())
 	}
 }

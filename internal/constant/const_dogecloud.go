@@ -8,11 +8,13 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package constant
 
-import (
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/sms"
+// ------------------------------------------------------------
+// 多吉云授权信息
+// ------------------------------------------------------------
+
+var (
+	DogeCloudAccessKey string // 多吉云AccessKey
+	DogeCloudSecretKey string // 多吉云SecretKey
 )

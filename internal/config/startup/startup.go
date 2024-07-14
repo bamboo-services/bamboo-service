@@ -56,6 +56,7 @@ func SystemStartUp(ctx context.Context) {
 	system.initialSuperAdminStartup()
 	system.getConstantStorage()
 	system.getAliyunAuthorizationKey()
+	system.dogeCloudKey()
 
 	/*
 	 * 系统准备完成

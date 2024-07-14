@@ -12,6 +12,7 @@ package startup
 
 import (
 	"bamboo-service/internal/constant"
+	"bamboo-service/internal/service"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gfile"
@@ -123,7 +124,32 @@ func (s *systemStart) getConstantStorage() {
 // 获取阿里云授权密钥，用于获取阿里云授权密钥；
 func (s *systemStart) getAliyunAuthorizationKey() {
 	g.Log().Noticef(s.ctx, "[STAR] 获取阿里云授权密钥")
-	json := gjson.New(gfile.GetContents("aliyun.json"))
-	constant.AliyunAccessKey = json.Get("Key.AccessKeyID").String()
-	constant.AliyunSecretKey = json.Get("Key.AccessKeySecret").String()
+	json := gjson.New(gfile.GetContents("access.json"))
+	constant.AliyunAccessKey = json.Get("AliyunKey.AccessKeyID").String()
+	constant.AliyunSecretKey = json.Get("AliyunKeyKey.AccessKeySecret").String()
+	constant.DogeCloudAccessKey = json.Get("DogeCloudKey.AccessKey").String()
+	constant.DogeCloudSecretKey = json.Get("DogeCloudKey.SecretKey").String()
+}
+
+// dogeCloudKey
+//
+// # 获取多吉云授权密钥
+//
+// 获取多吉云授权密钥，用于获取多吉云授权密钥；
+func (s *systemStart) dogeCloudKey() {
+	g.Log().Noticef(s.ctx, "[STAR] 获取多吉云授权密钥")
+	bucket, err := service.DogeCloud().GetAccessTokenApi(s.ctx)
+	if err != nil {
+		g.Log().Panic(s.ctx, err.Error())
+	}
+	// 缓存数据重写
+	err = g.Redis().HMSet(s.ctx, "global:dc:bucket", gconv.Map(bucket))
+	if err != nil {
+		g.Log().Panic(s.ctx, err.Error())
+	}
+	// 设置过期时间
+	_, err = g.Redis().ExpireAt(s.ctx, "global:dc:bucket", bucket.ExpiredAt.Time)
+	if err != nil {
+		g.Log().Panic(s.ctx, err.Error())
+	}
 }

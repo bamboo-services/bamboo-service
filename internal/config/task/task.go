@@ -8,11 +8,31 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package task
 
-import (
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/sms"
-)
+import "context"
+
+type task struct {
+	ctx context.Context
+}
+
+func taskNew(ctx context.Context) *task {
+	return &task{
+		ctx: ctx,
+	}
+}
+
+// SystemTask
+//
+// # 系统任务
+//
+// 系统任务列表，用于系统定时任务的处理操作
+//
+// # 参数
+//   - ctx:		上下文(context.Context)
+func SystemTask(ctx context.Context) {
+	getTask := taskNew(ctx)
+
+	// 任务列表
+	getTask.dogeCloudTask()
+}

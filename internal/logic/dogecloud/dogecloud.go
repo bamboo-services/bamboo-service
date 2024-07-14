@@ -8,11 +8,17 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package dogecloud
 
-import (
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/sms"
-)
+import "bamboo-service/internal/service"
+
+type sDogeCloud struct {
+}
+
+func init() {
+	service.RegisterDogeCloud(New())
+}
+
+func New() *sDogeCloud {
+	return &sDogeCloud{}
+}
