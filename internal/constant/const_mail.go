@@ -8,13 +8,16 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package constant
 
-import (
-	_ "bamboo-service/internal/logic/avatar"
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/mail"
-	_ "bamboo-service/internal/logic/sms"
+// ------------------------------------------------------------
+// 邮件常量
+// ------------------------------------------------------------
+
+var (
+	MailSMTPHost string // 邮件 SMTP 主机
+	MailSMTPPort string // 邮件 SMTP 端口
+	MailUser     string // 邮件用户
+	MailPassword string // 邮件密码
+	MailNickname string // 邮件昵称
 )

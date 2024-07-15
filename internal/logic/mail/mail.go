@@ -8,13 +8,17 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package mail
 
-import (
-	_ "bamboo-service/internal/logic/avatar"
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/mail"
-	_ "bamboo-service/internal/logic/sms"
-)
+import "bamboo-service/internal/service"
+
+type sMail struct {
+}
+
+func init() {
+	service.RegisterMail(New())
+}
+
+func New() *sMail {
+	return &sMail{}
+}

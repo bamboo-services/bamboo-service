@@ -60,6 +60,13 @@ func (s *systemStart) initialTableContentStartup() {
 	checkInfoTableValue(s.ctx, "web_record", "粤公网安备 44030502003107号")
 	checkInfoTableValue(s.ctx, "web_copy", "© 2022-2024 竹业")
 
+	// 邮件内容
+	checkInfoTableValue(s.ctx, "mail_host", "smtp.qiye.aliyun.com")
+	checkInfoTableValue(s.ctx, "mail_port", "465")
+	checkInfoTableValue(s.ctx, "mail_user", "noreplay@x-lf.cn")
+	checkInfoTableValue(s.ctx, "mail_password", "password")
+	checkInfoTableValue(s.ctx, "mail_name", "锋楪服务")
+
 	// 插入 Aliyun 相关数据表
 	checkInfoTableValue(s.ctx, "aliyun_sms_sign_name", "锋楪")
 	checkInfoTableValue(s.ctx, "aliyun_sms_code_template", "SMS_468930484")
@@ -120,6 +127,13 @@ func (s *systemStart) getConstantStorage() {
 	constant.WebICP = getInfoForDB(s.ctx, "web_icp")
 	constant.WebRecord = getInfoForDB(s.ctx, "web_record")
 	constant.WebCopy = getInfoForDB(s.ctx, "web_copy")
+
+	// 获取邮件信息
+	constant.MailSMTPHost = getInfoForDB(s.ctx, "mail_host")
+	constant.MailSMTPPort = getInfoForDB(s.ctx, "mail_port")
+	constant.MailUser = getInfoForDB(s.ctx, "mail_user")
+	constant.MailPassword = getInfoForDB(s.ctx, "mail_password")
+	constant.MailNickname = getInfoForDB(s.ctx, "mail_name")
 }
 
 // getAliyunAuthorizationKey

@@ -8,13 +8,18 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package dto
 
-import (
-	_ "bamboo-service/internal/logic/avatar"
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/mail"
-	_ "bamboo-service/internal/logic/sms"
-)
+// MailVariableDTO
+//
+// # 邮件变量 DTO
+//
+// 邮件变量 DTO，用于邮件变量的数据传输对象；
+//
+// # 参数
+//   - Key		变量名(string)
+//   - Value	变量值(string)
+type MailVariableDTO struct {
+	Key   string `json:"value_name" summary:"变量名"`
+	Value string `json:"value" summary:"变量值"`
+}

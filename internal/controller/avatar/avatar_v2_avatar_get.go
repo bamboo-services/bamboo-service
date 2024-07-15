@@ -18,6 +18,19 @@ import (
 	"bamboo-service/api/avatar/v2"
 )
 
+// AvatarGet
+//
+// # 获取头像
+//
+// 获取头像，获取用户头像；
+//
+// # 参数
+//   - ctx		上下文(context.Context)
+//   - req		请求参数(*v2.AvatarGetNoHashReq)
+//
+// # 返回
+//   - res		返回结果(*v2.AvatarGetNoHashRes)
+//   - err		错误信息(error)
 func (c *ControllerV2) AvatarGet(
 	ctx context.Context,
 	req *v2.AvatarGetReq,

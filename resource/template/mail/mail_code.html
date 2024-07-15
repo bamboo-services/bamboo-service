@@ -1,0 +1,99 @@
+<!--
+  ~ ------------------------------------------------------------
+  ~ Copyright (c) 2016-NOW 锋楪技术 All Rights Reserved. 版权所有
+  ~ 开源协议请遵循 MIT 开源协议，参考代码中的 LICENSE 部分
+  ~ ------------------------------------------------------------
+  ~ 代码若需进行商用请务必联系我，同意后方可使用。在使用部分请注明出处
+  ~ 作者：锋楪技术（筱锋xiao_lfeng）
+  ~ ------------------------------------------------------------
+  -->
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>%title%</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #77BFA3;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .content {
+            padding: 20px;
+            text-align: left;
+        }
+
+        .content p {
+            font-size: 16px;
+            color: #333333;
+            margin: 0 0 20px;
+        }
+
+        .code-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .code {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #A3D8F4;
+            color: #ffffff;
+            font-size: 24px;
+            border-radius: 5px;
+            letter-spacing: 2px;
+        }
+
+        .footer {
+            background-color: #77BFA3;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .footer p {
+            font-size: 12px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>%title%</h1>
+    </div>
+    <div class="content">
+        <p>您好 %email% ，</p>
+        <p>以下为您的动态验证码，有效期为 <b>5</b> 分钟：</p>
+        <div class="code-container">
+            <p class="code">%value%</p>
+        </div>
+        <p>请勿将验证码透露给他人，以免造成不必要的损失。若您未进行任何操作，请忽略此邮件。</p>
+    </div>
+    <div class="footer">
+        <p>%footer_message%</p>
+    </div>
+</div>
+</body>
+</html>
