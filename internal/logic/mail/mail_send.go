@@ -13,6 +13,7 @@ package mail
 import (
 	"bamboo-service/internal/constant"
 	"bamboo-service/internal/model/dto"
+	"bamboo-service/utility"
 	"context"
 	"fmt"
 	"github.com/bamboo-services/bamboo-utils/bcode"
@@ -22,8 +23,62 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 	"net/smtp"
 	"regexp"
+	"strconv"
 	"strings"
 )
+
+// SendCodeMail
+//
+// # 发送验证码邮件
+//
+// 发送验证码邮件，发送验证码邮件到指定邮箱；
+// 验证码将发送到指定 mail 邮箱中，验证码为 code；
+// 验证码的有效期为 5 分钟；该接口将会为输入的 code 进行存入缓存中，用于后续的验证；
+//
+// # 参数
+//   - ctx		上下文(context.Context)
+//   - mail		邮箱(string)
+//   - code		验证码(string)
+//
+// # 返回
+//   - error	错误信息(error)
+func (s *sMail) SendCodeMail(ctx context.Context, mail, code string) (err error) {
+	g.Log().Notice(ctx, "[SERV] mail.SendCodeMail | 发送验证码邮件接口")
+	// 检查是否可以再次发送验证码
+	getExpireTime, err := g.Redis().ExpireTime(ctx, "mail:code:"+utility.StringToMD5(mail))
+	g.Log().Debug(ctx, getExpireTime)
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "获取验证码缓存失败")
+	}
+	// 检查是否小于 4 分钟
+	if getExpireTime.GTime().Timestamp()-gtime.Now().Timestamp() > 240 {
+		second := getExpireTime.GTime().Timestamp() - gtime.Now().Timestamp() - 240
+		return berror.NewError(
+			bcode.OperationNotAllow,
+			"验证码发送时间过短，剩余 "+strconv.FormatInt(second, 10)+" 秒",
+		)
+	}
+	// 发送验证码
+	_, err = g.Redis().Set(ctx, "mail:code:"+utility.StringToMD5(mail), code)
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "验证码缓存设置失败")
+	}
+	_, err = g.Redis().Expire(ctx, "mail:code:"+utility.StringToMD5(mail), 300)
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "验证码缓存时间设置失败")
+	}
+	// 设置变量
+	value := make([]dto.MailVariableDTO, 0)
+	value = append(value, dto.MailVariableDTO{
+		Key:   "code",
+		Value: code,
+	})
+	err = s.SendMail(ctx, mail, constant.WebName+"-验证码", "mail_code", value)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 // SendMail
 //
@@ -45,6 +100,9 @@ func (s *sMail) SendMail(ctx context.Context, mail, title, tpl string, value []d
 	// 发送邮件
 	plainAuth := smtp.PlainAuth("", constant.MailUser, constant.MailPassword, constant.MailSMTPHost)
 	// 获取发送邮件内容
+	if !gres.Contains("resource/template/mail/" + tpl + ".html") {
+		return berror.NewError(bcode.NotExist, "不存在 "+tpl+" 模板")
+	}
 	getContent := gres.GetContent("resource/template/mail/" + tpl + ".html")
 	// 对模板进行参数替换
 	getReplace := strings.ReplaceAll(string(getContent), "%title%", title)

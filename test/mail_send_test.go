@@ -34,12 +34,12 @@ func TestMailSend(t *testing.T) {
 		constant.MailUser = "noreplay@x-lf.cn"
 		constant.MailPassword = "password"
 		constant.MailNickname = "锋楪技术机器人"
-		constant.WebCopy = "&copy️; 2021 锋楪技术"
+		constant.WebCopy = "&copy️ 2023-2024 锋楪技术"
 		// 发送邮件
 		// 添加变量
 		value := make([]dto.MailVariableDTO, 0)
 		value = append(value, dto.MailVariableDTO{
-			Key:   "value",
+			Key:   "code",
 			Value: butil.RandomString(6),
 		})
 		err := service.Mail().SendMail(ctx, "gm@x-lf.cn", "测试邮件", "mail_code", value)

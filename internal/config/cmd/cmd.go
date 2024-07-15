@@ -16,6 +16,7 @@ import (
 	"bamboo-service/internal/controller/auth"
 	"bamboo-service/internal/controller/avatar"
 	"bamboo-service/internal/controller/info"
+	"bamboo-service/internal/controller/mail"
 	"bamboo-service/internal/controller/sms"
 	"context"
 	"github.com/bamboo-services/bamboo-utils/bmiddle"
@@ -29,7 +30,7 @@ var (
 	Main = gcmd.Command{
 		Name:  "main",
 		Usage: "main",
-		Brief: "XiaoService 服务端",
+		Brief: "bamboo-service 服务端",
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			// 初始化配置
 			startup.SystemStartUp(ctx)
@@ -51,17 +52,18 @@ var (
 					group.Bind(
 						auth.NewV1(),
 						info.NewV1(),
+						sms.NewV1(),
+						mail.NewV1(),
 					)
 				})
 
 				// V2 版本路由
-				group.Group("/v2", func(group *ghttp.RouterGroup) {
+				group.Group("/v1", func(group *ghttp.RouterGroup) {
 					group.Middleware(bmiddle.BambooMiddleDefaultCors)
 					group.Middleware(bmiddle.BambooMiddleRequestCheck)
 
 					group.Bind(
 						auth.NewV2(),
-						sms.NewV2(),
 						avatar.NewV2(),
 					)
 				})

@@ -8,28 +8,16 @@
  * ------------------------------------------------------------
  */
 
-package v2
+package v1
 
 import "github.com/gogf/gf/v2/frame/g"
 
-// SmsSendReq
-//
-// # 发送短信
-//
-// 发送短信，用于发送短信验证码，用户注册等操作；
-//
-// # 参数
-//   - Phone		手机号(string)
-type SmsSendReq struct {
-	g.Meta `path:"/sms" method:"Post" tags:"短信控制器" summary:"发送短信" dc:"发送短信，用于发送短信验证码，用户注册等操作"`
-	Phone  string `json:"phone" v:"required|length:11,11#请输入手机号|手机号长度为11位" summary:"手机号"`
+type MailSendReq struct {
+	g.Meta  `path:"/mail/send" method:"Post" tags:"邮件控制器" summary:"发送邮件" dc:"发送邮件，用于发送邮件验证码，用户注册等操作"`
+	Referer string `json:"Referer" v:"required|url#请输入来源地址|来源地址格式不正确" in:"header"`
+	Mail    string `json:"mail" v:"required|email#请输入邮箱|邮箱格式不正确" summary:"邮箱"`
 }
 
-// SmsSendRes
-//
-// # 发送短信
-//
-// 返回相应的数据；
-type SmsSendRes struct {
+type MailSendRes struct {
 	g.Meta `mime:"application/json"`
 }

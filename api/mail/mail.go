@@ -2,14 +2,14 @@
 // Code generated and maintained by GoFrame CLI tool. DO NOT EDIT.
 // =================================================================================
 
-package sms
+package mail
 
 import (
 	"context"
 
-	"bamboo-service/api/sms/v1"
+	"bamboo-service/api/mail/v1"
 )
 
-type ISmsV1 interface {
-	SmsSend(ctx context.Context, req *v1.SmsSendReq) (res *v1.SmsSendRes, err error)
+type IMailV1 interface {
+	MailSend(ctx context.Context, req *v1.MailSendReq) (res *v1.MailSendRes, err error)
 }

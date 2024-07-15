@@ -16,7 +16,7 @@ import (
 	"github.com/bamboo-services/bamboo-utils/butil"
 	"github.com/gogf/gf/v2/frame/g"
 
-	"bamboo-service/api/sms/v2"
+	"bamboo-service/api/sms/v1"
 )
 
 // SmsSend
@@ -27,15 +27,15 @@ import (
 //
 // # 参数
 //   - ctx			上下文(context.Context)
-//   - req			请求(*v2.SmsSendReq)
+//   - req			请求(*v1.SmsSendReq)
 //
 // # 返回
-//   - res			响应(*v2.SmsSendRes)
+//   - res			响应(*v1.SmsSendRes)
 //   - err			错误信息(error)
-func (c *ControllerV2) SmsSend(
+func (c *ControllerV1) SmsSend(
 	ctx context.Context,
-	req *v2.SmsSendReq,
-) (res *v2.SmsSendRes, err error) {
+	req *v1.SmsSendReq,
+) (res *v1.SmsSendRes, err error) {
 	g.Log().Notice(ctx, "[CONT] 发送短信")
 	// 检查手机号是否可重发
 	err = service.Sms().PhoneCodeAbleResend(ctx, req.Phone)

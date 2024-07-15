@@ -22,6 +22,22 @@ import (
 
 type (
 	IMail interface {
+		// SendCodeMail
+		//
+		// # 发送验证码邮件
+		//
+		// 发送验证码邮件，发送验证码邮件到指定邮箱；
+		// 验证码将发送到指定 mail 邮箱中，验证码为 code；
+		// 验证码的有效期为 5 分钟；该接口将会为输入的 code 进行存入缓存中，用于后续的验证；
+		//
+		// # 参数
+		//   - ctx		上下文(context.Context)
+		//   - mail		邮箱(string)
+		//   - code		验证码(string)
+		//
+		// # 返回
+		//   - error	错误信息(error)
+		SendCodeMail(ctx context.Context, mail, code string) (err error)
 		// SendMail
 		//
 		// # 发送邮件
@@ -33,6 +49,7 @@ type (
 		//   - mail		邮箱(string)
 		//   - title	标题(string)
 		//   - tpl		模板(string)
+		//   - value	自定义参数([]dto.MailVariableDTO)
 		//
 		// # 返回
 		//   - error	错误信息(error)
