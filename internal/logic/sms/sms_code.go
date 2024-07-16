@@ -139,3 +139,35 @@ func (s *sSms) PhoneCodeAbleResend(ctx context.Context, phone string) (err error
 	}
 	return nil
 }
+
+// PhoneCodeVerify
+//
+// # 手机验证码验证
+//
+// 手机验证码验证，用于验证手机验证码；
+// 该验证码会在 5 分钟后自动失效，失效后无法获取数据；
+// 验证成功后将会返回 nil 信息；
+//
+// # 参数
+//   - ctx			上下文(context.Context)
+//   - phone		手机号(string)
+//   - code			验证码(string)
+//
+// # 返回
+//   - err			错误信息(error)
+func (s *sSms) PhoneCodeVerify(ctx context.Context, phone, code string) (err error) {
+	g.Log().Notice(ctx, "[SERV] sms.PhoneCodeVerify | 手机验证码验证")
+	getCode, err := s.GetPhoneCode(ctx, phone)
+	if err != nil {
+		return err
+	}
+	if getCode.Code != code {
+		return berror.NewError(bcode.VerifyFailed, "验证码错误")
+	}
+	// 验证成功删除验证码
+	err = s.DelPhoneCode(ctx, phone)
+	if err != nil {
+		return err
+	}
+	return nil
+}

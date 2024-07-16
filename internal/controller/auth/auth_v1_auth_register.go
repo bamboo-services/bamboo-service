@@ -11,8 +11,10 @@
 package auth
 
 import (
+	"bamboo-service/internal/service"
 	"context"
 	"github.com/gogf/gf/v2/frame/g"
+	"sync"
 
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -38,6 +40,34 @@ func (c *ControllerV1) AuthRegister(
 	req *v1.AuthRegisterReq,
 ) (res *v1.AuthRegisterRes, err error) {
 	g.Log().Notice(ctx, "[CONT] 用户注册")
-
+	// 多线程检查数据是否有效
+	wg := new(sync.WaitGroup)
+	wg.Add(3)
+	go func(username string) {
+		defer wg.Done()
+		_, err = service.User().UserExistByUsername(ctx, username)
+	}(req.Username)
+	go func(mail string) {
+		defer wg.Done()
+		_, err = service.User().UserExistByEmail(ctx, mail)
+	}(req.Email)
+	go func(phone string) {
+		defer wg.Done()
+		_, err = service.User().UserExistByPhone(ctx, phone)
+	}(req.Phone)
+	wg.Wait()
+	if err != nil {
+		return nil, err
+	}
+	// 对验证码进行验证
+	err = service.Sms().PhoneCodeVerify(ctx, req.Phone, req.SmsCode)
+	if err != nil {
+		return nil, err
+	}
+	// 对用户进行注册
+	err = service.User().UserRegister(ctx, req.Username, req.Email, req.Phone, req.Password)
+	if err != nil {
+		return nil, err
+	}
 	return nil, gerror.NewCode(gcode.CodeNotImplemented)
 }

@@ -29,6 +29,7 @@ type AuthRegisterReq struct {
 	Referer  string `json:"Referer" v:"required|url#请输入来源地址|来源地址格式不正确" in:"header"`
 	Username string `json:"username" v:"required|length:6,30#请输入用户名|用户名长度为 6-30 位"`
 	Phone    string `json:"phone" v:"required|regex:^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$#请输入手机号|手机号格式不正确"`
+	Email    string `json:"email" v:"required|email#请输入邮箱|邮箱格式不正确"`
 	Password string `json:"password" v:"required|length:6,30#请输入密码|密码长度为 6-30 位"`
 	SmsCode  string `json:"sms_code" v:"required|regex:^[0-9]{6,10}#请输入短信验证码|短信验证码为 6-10 位"`
 }
