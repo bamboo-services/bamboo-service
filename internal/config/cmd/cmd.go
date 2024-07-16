@@ -63,7 +63,6 @@ var (
 					group.Middleware(bmiddle.BambooMiddleRequestCheck)
 
 					group.Bind(
-						auth.NewV2(),
 						avatar.NewV2(),
 					)
 				})

@@ -8,17 +8,17 @@
  * ------------------------------------------------------------
  */
 
-package auth
+package user
 
-import (
-	"context"
+import "bamboo-service/internal/service"
 
-	"github.com/gogf/gf/v2/errors/gcode"
-	"github.com/gogf/gf/v2/errors/gerror"
+type sUser struct {
+}
 
-	"bamboo-service/api/auth/v2"
-)
+func init() {
+	service.RegisterUser(New())
+}
 
-func (c *ControllerV2) AuthRegister(ctx context.Context, req *v2.AuthRegisterReq) (res *v2.AuthRegisterRes, err error) {
-	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+func New() *sUser {
+	return &sUser{}
 }

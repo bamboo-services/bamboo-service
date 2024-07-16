@@ -17,4 +17,5 @@ import (
 	_ "bamboo-service/internal/logic/init"
 	_ "bamboo-service/internal/logic/mail"
 	_ "bamboo-service/internal/logic/sms"
+	_ "bamboo-service/internal/logic/user"
 )

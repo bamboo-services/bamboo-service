@@ -18,12 +18,6 @@ import (
 	"bamboo-service/api/auth"
 )
 
-type ControllerV2 struct{}
-
-func NewV2() auth.IAuthV2 {
-	return &ControllerV2{}
-}
-
 type ControllerV1 struct{}
 
 func NewV1() auth.IAuthV1 {
