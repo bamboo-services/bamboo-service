@@ -34,9 +34,9 @@ type (
 		//   - hash		头像的 hash 值(string)
 		//
 		// # 返回
-		//   - avatar	头像内容(dto.AvatarApiDTO)
+		//   - avatar	头像内容(dto.AvatarAPIDTO)
 		//   - err		错误信息(error)
-		AvatarGetAPI(ctx context.Context, hash string) (avatar *dto.AvatarApiDTO, err error)
+		AvatarGetAPI(ctx context.Context, hash string) (avatar *dto.AvatarAPIDTO, err error)
 		// AvatarGet
 		//
 		// # 获取头像

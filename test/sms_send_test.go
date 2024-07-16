@@ -25,11 +25,11 @@ func TestSmsSend(t *testing.T) {
 	if false {
 		service.RegisterSms(sms.New())
 		// 读取文件
-		getJson := gjson.New(gfile.GetContents("../access.json"))
+		getJSON := gjson.New(gfile.GetContents("../access.json"))
 		constant.AliyunSmsSignName = "锋楪"
 		constant.AliyunSmsCodeTemplateCode = "SMS_468930484"
-		constant.AliyunAccessKey = getJson.Get("AliyunKey.AccessKeyID").String()
-		constant.AliyunSecretKey = getJson.Get("AliyunKey.AccessKeySecret").String()
+		constant.AliyunAccessKey = getJSON.Get("AliyunKey.AccessKeyID").String()
+		constant.AliyunSecretKey = getJSON.Get("AliyunKey.AccessKeySecret").String()
 		constant.AliyunSmsEndpoint = "dysmsapi.aliyuncs.com"
 		g.Log().Debugf(ctx, "[TEST] %s", gjson.New(constant.AliyunAccessKey).MustToJsonString())
 		err := service.Sms().AliyunSmsSend(ctx, "13316569390", butil.RandomString(6))

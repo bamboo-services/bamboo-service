@@ -39,11 +39,6 @@ func TestDogeCloudApi(t *testing.T) {
 		getJSON := gjson.New(gfile.GetContents("../access.json"))
 		constant.DogeCloudAccessKey = getJSON.Get("DogeCloudKey.AccessKey").String()
 		constant.DogeCloudSecretKey = getJSON.Get("DogeCloudKey.SecretKey").String()
-		//data := gconv.Map(g.Map{
-		//	"channel": "OSS_FULL",
-		//	"scopes":  "bamboo-service",
-		//})
-		//ref, err := service.DogeCloud().API(ctx, "/auth/tmp_token.json", data, true)
 		// 处理
 		rdo, err := service.DogeCloud().GetAccessTokenAPI(ctx)
 		if err != nil {

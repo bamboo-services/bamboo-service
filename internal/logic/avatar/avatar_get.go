@@ -31,9 +31,9 @@ import (
 //   - hash		头像的 hash 值(string)
 //
 // # 返回
-//   - avatar	头像内容(dto.AvatarApiDTO)
+//   - avatar	头像内容(dto.AvatarAPIDTO)
 //   - err		错误信息(error)
-func (s *sAvatar) AvatarGetAPI(ctx context.Context, hash string) (avatar *dto.AvatarApiDTO, err error) {
+func (s *sAvatar) AvatarGetAPI(ctx context.Context, hash string) (avatar *dto.AvatarAPIDTO, err error) {
 	g.Log().Notice(ctx, "[SERV] avatar.AvatarGetAPI | 获取头像接口")
 	// 从 CDN 获取头像检查是否存在
 	client := g.Client()
@@ -42,7 +42,7 @@ func (s *sAvatar) AvatarGetAPI(ctx context.Context, hash string) (avatar *dto.Av
 		return nil, berror.NewErrorHasError(bcode.ServerInternalError, err, "获取头像失败")
 	}
 	if getCDNResponse.StatusCode == 200 {
-		return &dto.AvatarApiDTO{
+		return &dto.AvatarAPIDTO{
 			Avatar: "http://b-cdn.api-fy.cn/avatar/" + hash + ".png",
 		}, nil
 	}
@@ -59,7 +59,7 @@ func (s *sAvatar) AvatarGetAPI(ctx context.Context, hash string) (avatar *dto.Av
 			return nil, err
 		}
 		// 数据返回
-		return &dto.AvatarApiDTO{
+		return &dto.AvatarAPIDTO{
 			Avatar: "https://cravatar.cn/avatar/" + hash,
 		}, nil
 	}

@@ -25,11 +25,11 @@ import (
 // 若都不存在则返回默认头像；
 //
 // # 参数
-//   - UserId		用户ID(int64)
+//   - UserID		用户ID(int64)
 //   - Email		邮箱地址(string)
 type AvatarGetNoHashReq struct {
 	g.Meta `path:"/avatar" method:"Get" summary:"获取用户头像(非Hash)" tags:"头像控制器"`
-	UserId int64  `json:"user_id" v:"regex:^[0-9]+$#请输入用户ID|用户ID格式不正确"`
+	UserID int64  `json:"user_id" v:"regex:^[0-9]+$#请输入用户ID|用户ID格式不正确"`
 	Email  string `json:"email" v:"email#邮箱地址格式不正确"`
 }
 
@@ -40,5 +40,5 @@ type AvatarGetNoHashReq struct {
 // 返回相应的数据
 type AvatarGetNoHashRes struct {
 	g.Meta `mime:"application/json"`
-	dto.AvatarApiDTO
+	dto.AvatarAPIDTO
 }

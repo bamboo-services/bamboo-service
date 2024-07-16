@@ -38,5 +38,5 @@ type AvatarGetReq struct {
 // 返回相应的数据
 type AvatarGetRes struct {
 	g.Meta `mime:"application/json"`
-	dto.AvatarApiDTO
+	dto.AvatarAPIDTO
 }

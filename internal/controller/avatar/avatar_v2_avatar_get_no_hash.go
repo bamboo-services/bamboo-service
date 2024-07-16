@@ -42,6 +42,6 @@ func (c *ControllerV2) AvatarGetNoHash(
 		return nil, err
 	}
 	return &v2.AvatarGetNoHashRes{
-		AvatarApiDTO: *avatar,
+		AvatarAPIDTO: *avatar,
 	}, nil
 }

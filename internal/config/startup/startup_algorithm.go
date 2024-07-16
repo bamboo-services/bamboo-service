@@ -109,7 +109,7 @@ func initializeRole(
 		return
 	}
 	// 权限由数组转为 Json
-	permissionJson, err := gjson.Encode(permissions)
+	permissionJSON, err := gjson.Encode(permissions)
 	if err != nil {
 		g.Log().Panicf(ctx, "[STAR] 权限转换失败：%s", err.Error())
 	}
@@ -118,7 +118,7 @@ func initializeRole(
 		Name:        roleName,
 		DisplayName: roleDisplay,
 		Description: description,
-		Permission:  gjson.New(permissionJson),
+		Permission:  gjson.New(permissionJSON),
 	}).Insert()
 	if err != nil {
 		g.Log().Panicf(ctx, "[STAR] 角色创建失败：%s", err.Error())

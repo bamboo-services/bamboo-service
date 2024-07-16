@@ -10,7 +10,7 @@
 
 package dto
 
-// AvatarApiDTO
+// AvatarAPIDTO
 //
 // # 头像 DTO
 //
@@ -18,6 +18,6 @@ package dto
 //
 // # 参数
 //   - Avatar		头像(string)
-type AvatarApiDTO struct {
+type AvatarAPIDTO struct {
 	Avatar string `json:"avatar" summary:"头像"`
 }

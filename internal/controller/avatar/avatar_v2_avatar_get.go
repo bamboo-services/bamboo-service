@@ -41,6 +41,6 @@ func (c *ControllerV2) AvatarGet(
 		return nil, err
 	}
 	return &v2.AvatarGetRes{
-		AvatarApiDTO: *avatar,
+		AvatarAPIDTO: *avatar,
 	}, nil
 }

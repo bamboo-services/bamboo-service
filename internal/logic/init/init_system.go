@@ -92,5 +92,8 @@ func (s *sInit) SetSystemAdmin(ctx context.Context, username, phone, email, pass
 	constant.InitializeMode = false
 	// 将配置信息更新到数据库
 	_, err = dao.Info.Ctx(ctx).Where(do.Info{Key: "has_initial_mode"}).Update(do.Info{Value: "0"})
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "关闭初始化模式失败")
+	}
 	return nil
 }

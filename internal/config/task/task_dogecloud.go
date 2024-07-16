@@ -28,7 +28,7 @@ import (
 // 缓存数据有效期为该令牌的有效期时限
 func (t *task) dogeCloudTask() {
 	gtimer.AddTimes(t.ctx, time.Hour, 1, func(_ context.Context) {
-		bucket, err := service.DogeCloud().GetAccessTokenApi(t.ctx)
+		bucket, err := service.DogeCloud().GetAccessTokenAPI(t.ctx)
 		if err != nil {
 			g.Log().Error(t.ctx, err.Error())
 		}
