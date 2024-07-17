@@ -18,6 +18,7 @@ import (
 	"github.com/bamboo-services/bamboo-utils/butil"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gfile"
 	"github.com/gogf/gf/v2/os/gres"
 )
 
@@ -195,4 +196,22 @@ func getInfoForDB(ctx context.Context, key string) string {
 		g.Log().Panicf(ctx, "[STAR] 数据 %s 不存在", key)
 	}
 	return getInfo.Value
+}
+
+// checkAndCreateFolder
+//
+// # 检查并创建文件夹
+//
+// 检查并创建文件夹，用于检查文件夹是否存在，若不存在则创建；
+// 创建文件夹失败将会 panic；
+// 文件夹权限默认为 0755；
+func checkAndCreateFolder(ctx context.Context, folder string) {
+	if !gfile.Exists(folder) {
+		err := gfile.Mkdir(folder)
+		if err != nil {
+			g.Log().Panic(ctx, err.Error())
+		}
+		// 设置文件夹权限
+		err = gfile.Chmod(folder, 0755)
+	}
 }

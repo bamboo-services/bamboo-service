@@ -32,22 +32,23 @@ import (
 // # 返回
 //   - *dto.UserCurrentDTO	用户当前数据传输对象(*dto.UserCurrentDTO)
 func (s *sUser) UserEntityToUserCurrent(ctx context.Context, user *entity.User) (userCurrent *dto.UserCurrentDTO) {
+	g.Log().Notice(ctx, "[SERV] user.UserEntityToUserCurrent | 用户实体转用户当前")
 	recordRole, err := dao.Role.Ctx(ctx).Where(do.Role{Ruuid: user.Ruuid}).One()
 	if err != nil {
-		g.Log().Warningf(ctx, "查询用户角色失败：%s", err.Error())
+		g.Log().Warningf(ctx, "[SERV] 查询用户角色失败：%s", err.Error())
 	}
 	recordVip, err := dao.Vip.Ctx(ctx).Where(do.Vip{Vuuid: user.Vuuid}).One()
 	if err != nil {
-		g.Log().Warningf(ctx, "查询用户VIP失败：%s", err.Error())
+		g.Log().Warningf(ctx, "[SERV] 查询用户VIP失败：%s", err.Error())
 	}
 	var ruuidString, vuuidString string
 	if recordRole != nil {
-		ruuidString = recordRole.GMap().Get("name").(string) //nolint:errcheck
+		ruuidString = recordRole.GMap().Get("name").(string)
 	} else {
 		ruuidString = ""
 	}
 	if recordVip != nil {
-		vuuidString = recordVip.GMap().Get("name").(string) //nolint:errcheck
+		vuuidString = recordVip.GMap().Get("name").(string)
 	} else {
 		vuuidString = ""
 	}

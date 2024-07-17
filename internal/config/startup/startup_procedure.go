@@ -174,3 +174,15 @@ func (s *systemStart) dogeCloudKey() {
 		g.Log().Panic(s.ctx, err.Error())
 	}
 }
+
+// checkFolder
+//
+// # 检查文件夹
+//
+// 检查文件夹，用于检查文件夹是否存在；
+func (s *systemStart) checkFolder() {
+	g.Log().Noticef(s.ctx, "[STAR] 检查文件夹")
+
+	checkAndCreateFolder(s.ctx, "upload")
+	checkAndCreateFolder(s.ctx, "upload/ip_location")
+}

@@ -70,7 +70,7 @@ func (c *ControllerV1) AuthLogin(
 	// 密码验证
 	if butil.PasswordVerify(req.Pass, user.Password) {
 		// 生成授权请求
-		getToken, err := service.Token().MakeToken(ctx, butil.MakeUUIDByString(req.User), nil)
+		getToken, err := service.Token().MakeToken(ctx, butil.StringToUUID(user.Uuid), nil)
 		if err != nil {
 			return nil, err
 		}

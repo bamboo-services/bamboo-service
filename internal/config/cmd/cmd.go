@@ -16,6 +16,7 @@ import (
 	"bamboo-service/internal/controller/auth"
 	"bamboo-service/internal/controller/avatar"
 	"bamboo-service/internal/controller/info"
+	"bamboo-service/internal/controller/ip"
 	"bamboo-service/internal/controller/mail"
 	"bamboo-service/internal/controller/sms"
 	"context"
@@ -54,6 +55,7 @@ var (
 						info.NewV1(),
 						sms.NewV1(),
 						mail.NewV1(),
+						ip.NewV1(),
 					)
 				})
 

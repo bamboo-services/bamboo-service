@@ -8,17 +8,17 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package ip
 
-import (
-	_ "bamboo-service/internal/logic/auth"
-	_ "bamboo-service/internal/logic/avatar"
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/ip"
-	_ "bamboo-service/internal/logic/mail"
-	_ "bamboo-service/internal/logic/sms"
-	_ "bamboo-service/internal/logic/token"
-	_ "bamboo-service/internal/logic/user"
-)
+import "bamboo-service/internal/service"
+
+type sIP struct {
+}
+
+func init() {
+	service.RegisterIP(New())
+}
+
+func New() *sIP {
+	return &sIP{}
+}

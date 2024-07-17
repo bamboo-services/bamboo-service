@@ -57,6 +57,7 @@ func SystemStartUp(ctx context.Context) {
 	system.getConstantStorage()
 	system.getAliyunAuthorizationKey()
 	system.dogeCloudKey()
+	system.checkFolder()
 
 	/*
 	 * 系统准备完成

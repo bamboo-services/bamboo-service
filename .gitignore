@@ -25,3 +25,4 @@ bin
 /resource/schema/
 /internal/packed/schema_table.go
 access.json
+upload/
