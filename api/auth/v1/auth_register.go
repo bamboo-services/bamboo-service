@@ -25,7 +25,7 @@ import "github.com/gogf/gf/v2/frame/g"
 //   - Password		密码(string)
 //   - SmsCode		短信验证码(string)
 type AuthRegisterReq struct {
-	g.Meta   `path:"/auth/login" method:"Post" tags:"认证控制器" summary:"用户注册" dc:"用户注册，用于用户注册操作"`
+	g.Meta   `path:"/auth/register" method:"Post" tags:"认证控制器" summary:"用户注册" dc:"用户注册，用于用户注册操作"`
 	Referer  string `json:"Referer" v:"required|url#请输入来源地址|来源地址格式不正确" in:"header"`
 	Username string `json:"username" v:"required|length:6,30#请输入用户名|用户名长度为 6-30 位"`
 	Phone    string `json:"phone" v:"required|regex:^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$#请输入手机号|手机号格式不正确"` //nolint:lll

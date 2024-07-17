@@ -73,14 +73,14 @@ func (s *sMail) SendCodeMail(ctx context.Context, mail, code string) (err error)
 		Key:   "code",
 		Value: code,
 	})
-	err = s.SendMail(ctx, mail, constant.WebName+"-验证码", "mail_code", value)
+	err = s.sendMail(ctx, mail, constant.WebName+"-验证码", "mail_code", value)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-// SendMail
+// sendMail
 //
 // # 发送邮件
 //
@@ -95,8 +95,8 @@ func (s *sMail) SendCodeMail(ctx context.Context, mail, code string) (err error)
 //
 // # 返回
 //   - error	错误信息(error)
-func (s *sMail) SendMail(ctx context.Context, mail, title, tpl string, value []dto.MailVariableDTO) (err error) {
-	g.Log().Notice(ctx, "[SERV] mail.SendMail | 发送邮件接口")
+func (s *sMail) sendMail(ctx context.Context, mail, title, tpl string, value []dto.MailVariableDTO) (err error) {
+	g.Log().Notice(ctx, "[SERV] mail.sendMail | 发送邮件接口")
 	// 发送邮件
 	plainAuth := smtp.PlainAuth("", constant.MailUser, constant.MailPassword, constant.MailSMTPHost)
 	// 获取发送邮件内容

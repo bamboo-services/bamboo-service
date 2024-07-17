@@ -40,7 +40,6 @@ func createDatabase(ctx context.Context, schema string) {
 	if record.IsEmpty() {
 		g.Log().Debugf(ctx, "[STAR] 数据表不存在，创建 %s 数据表", schema)
 		// 读取 packed 文件并且根据分号拆分
-		gres.Dump()
 		getContent := gres.GetContent("resource/schema/" + schema + ".sql")
 		if len(getContent) == 0 {
 			g.Log().Panicf(ctx, "[STAR] 数据表创建失败：%s 文件不存在", schema)

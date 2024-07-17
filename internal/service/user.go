@@ -16,6 +16,7 @@
 package service
 
 import (
+	"bamboo-service/internal/model/dto"
 	"bamboo-service/internal/model/entity"
 	"context"
 
@@ -41,6 +42,19 @@ type (
 		// # 返回
 		//   - err			错误信息(error)
 		UserChangePassword(ctx context.Context, getUUID uuid.UUID, newPassword string) (err error)
+		// UserEntityToUserCurrent
+		//
+		// # 用户实体转用户当前
+		//
+		// 用户实体转用户当前，将用户实体转换为用户当前数据传输对象；
+		//
+		// # 参数
+		//   - ctx		上下文(context.Context)
+		//   - user		用户实体(*entity.User)
+		//
+		// # 返回
+		//   - *dto.UserCurrentDTO	用户当前数据传输对象(*dto.UserCurrentDTO)
+		UserEntityToUserCurrent(ctx context.Context, user *entity.User) (userCurrent *dto.UserCurrentDTO)
 		// UserExistByUsername
 		//
 		// # 用户是否存在
@@ -190,6 +204,22 @@ type (
 		// # 返回
 		//   - err			错误信息(error)
 		GetUserIntoRedis(ctx context.Context, getUUID *uuid.UUID, user *entity.User) (err error)
+		// UserRegister
+		//
+		// # 用户注册
+		//
+		// 用户注册，用于用户注册，需要传递用户名、邮箱、手机号、密码；
+		// 该接口将会对用户的数据进行注册，注册成功后将会返回 nil 信息；
+		//
+		// # 参数
+		//   - ctx			上下文(context.Context)
+		//   - username		用户名(string)
+		//   - email		邮箱(string)
+		//   - phone		手机号(string)
+		//   - password		密码(string)
+		//
+		// # 返回
+		//   - err			错误信息(error)
 		UserRegister(ctx context.Context, username, email, phone, password string) (err error)
 	}
 )

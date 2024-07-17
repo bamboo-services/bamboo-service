@@ -12,6 +12,8 @@ package utility
 
 import (
 	"github.com/gogf/gf/v2/crypto/gmd5"
+	"github.com/google/uuid"
+	"strings"
 )
 
 // StringToMD5
@@ -28,4 +30,19 @@ import (
 func StringToMD5(str string) string {
 	encrypt, _ := gmd5.EncryptString(str)
 	return encrypt
+}
+
+// UUIDReplaceDash
+//
+// # UUID 替换
+//
+// UUID 替换，将 UUID 中的 - 替换为空；
+//
+// # 参数
+//   - uuid		UUID(uuid.UUID)
+//
+// # 返回
+//   - string	替换后的 UUID(string)
+func UUIDReplaceDash(uuid uuid.UUID) string {
+	return strings.ReplaceAll(uuid.String(), "-", "")
 }

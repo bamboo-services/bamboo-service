@@ -94,7 +94,7 @@ func (s *sUser) GetUserByEmail(ctx context.Context, email string) (user *entity.
 	if user == nil {
 		return nil, berror.NewError(bcode.NotExist, "用户不存在")
 	}
-	return nil, nil
+	return user, nil
 }
 
 // GetUserByPhone
@@ -123,7 +123,7 @@ func (s *sUser) GetUserByPhone(ctx context.Context, phone string) (user *entity.
 	if user == nil {
 		return nil, berror.NewError(bcode.NotExist, "用户不存在")
 	}
-	return nil, nil
+	return user, nil
 }
 
 // GetUserByUsername
@@ -152,7 +152,7 @@ func (s *sUser) GetUserByUsername(ctx context.Context, username string) (user *e
 	if user == nil {
 		return nil, berror.NewError(bcode.NotExist, "用户不存在")
 	}
-	return nil, nil
+	return user, nil
 }
 
 // GetUserIntoRedis

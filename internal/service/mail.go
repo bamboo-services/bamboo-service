@@ -16,7 +16,6 @@
 package service
 
 import (
-	"bamboo-service/internal/model/dto"
 	"context"
 )
 
@@ -38,22 +37,6 @@ type (
 		// # 返回
 		//   - error	错误信息(error)
 		SendCodeMail(ctx context.Context, mail, code string) (err error)
-		// SendMail
-		//
-		// # 发送邮件
-		//
-		// 发送邮件，发送邮件到指定邮箱；
-		//
-		// # 参数
-		//   - ctx		上下文(context.Context)
-		//   - mail		邮箱(string)
-		//   - title	标题(string)
-		//   - tpl		模板(string)
-		//   - value	自定义参数([]dto.MailVariableDTO)
-		//
-		// # 返回
-		//   - error	错误信息(error)
-		SendMail(ctx context.Context, mail, title, tpl string, value []dto.MailVariableDTO) (err error)
 	}
 )
 

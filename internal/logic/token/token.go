@@ -8,15 +8,17 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package token
 
-import (
-	_ "bamboo-service/internal/logic/avatar"
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/mail"
-	_ "bamboo-service/internal/logic/sms"
-	_ "bamboo-service/internal/logic/token"
-	_ "bamboo-service/internal/logic/user"
-)
+import "bamboo-service/internal/service"
+
+type sToken struct {
+}
+
+func init() {
+	service.RegisterToken(New())
+}
+
+func New() *sToken {
+	return &sToken{}
+}

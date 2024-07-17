@@ -13,7 +13,6 @@ package test
 import (
 	"bamboo-service/internal/constant"
 	"bamboo-service/internal/logic/mail"
-	"bamboo-service/internal/model/dto"
 	_ "bamboo-service/internal/packed"
 	"bamboo-service/internal/service"
 	"github.com/bamboo-services/bamboo-utils/butil"
@@ -36,13 +35,7 @@ func TestMailSend(t *testing.T) {
 		constant.MailNickname = "锋楪技术机器人"
 		constant.WebCopy = "&copy️ 2023-2024 锋楪技术"
 		// 发送邮件
-		// 添加变量
-		value := make([]dto.MailVariableDTO, 0)
-		value = append(value, dto.MailVariableDTO{
-			Key:   "code",
-			Value: butil.RandomString(6),
-		})
-		err := service.Mail().SendMail(ctx, "gm@x-lf.cn", "测试邮件", "mail_code", value)
+		err := service.Mail().SendCodeMail(ctx, "gm@x-lf.cn", butil.RandomString(6))
 		if err != nil {
 			t.Error(err)
 		}

@@ -17,7 +17,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/hmac"
-	"crypto/sha1"
+	"crypto/sha1" //nolint:gosec
 	"encoding/hex"
 	"encoding/json"
 	"github.com/aws/aws-sdk-go/aws"
