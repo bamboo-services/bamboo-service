@@ -19,6 +19,7 @@ import "github.com/gogf/gf/v2/frame/g"
 // 导入IPv6数据库，用于导入IPv6数据库操作；
 type IPImportIpv6Req struct {
 	g.Meta        `path:"/ip/import/ipv6" method:"Get" summary:"导入IPv6数据库" tags:"地址控制器"`
+	Referer       string `json:"Referer" v:"required|url#请输入来源地址|来源地址格式不正确" in:"header"`
 	Authorization string `json:"Authorization" v:"required#请输入授权码" in:"header"`
 }
 

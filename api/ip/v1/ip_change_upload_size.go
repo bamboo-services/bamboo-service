@@ -10,32 +10,30 @@
 
 package v1
 
-import (
-	"github.com/gogf/gf/v2/frame/g"
-)
+import "github.com/gogf/gf/v2/frame/g"
 
-// IPUploadIPv6Req
+// IPChangeUploadFileSizeReq
 //
-// # 上传IPv6数据库
+// # 修改上传文件大小
 //
-// 上传IPv6数据库，用于上传IPv6数据库操作；
+// 修改上传文件大小，用于修改上传文件大小操作；
 //
 // # 参数
 //   - Referer			来源地址(string)
 //   - Authorization	授权码(string)
-//   - File				文件(string)
-type IPUploadIPv6Req struct {
-	g.Meta        `path:"/ip/upload/ipv6" method:"Post" summary:"上传IPv6数据库" tags:"地址控制器" mime:"multipart/form-data"`
+//   - Length			文件大小(int64)
+type IPChangeUploadFileSizeReq struct {
+	g.Meta        `path:"/ip/upload/size" method:"Put" summary:"修改上传文件大小" tags:"地址控制器"`
 	Referer       string `json:"Referer" v:"required|url#请输入来源地址|来源地址格式不正确" in:"header"`
 	Authorization string `json:"Authorization" v:"required#请输入授权码" in:"header"`
-	File          []byte `json:"file" v:"required#请输入文件" dc:"文件"`
+	Length        int64  `json:"Length" v:"required#请输入文件大小" default:"8388608"`
 }
 
-// IPUploadIPv6Res
+// IPChangeUploadFileSizeRes
 //
-// # 上传IPv6数据库
+// # 修改上传文件大小
 //
 // 返回相应的数据
-type IPUploadIPv6Res struct {
+type IPChangeUploadFileSizeRes struct {
 	g.Meta `mime:"application/json"`
 }

@@ -14,6 +14,7 @@ import (
 	"bamboo-service/internal/dao"
 	"bamboo-service/internal/model/do"
 	"context"
+	"encoding/csv"
 	"github.com/bamboo-services/bamboo-utils/bcode"
 	"github.com/bamboo-services/bamboo-utils/berror"
 	"github.com/gogf/gf/v2/database/gdb"
@@ -21,6 +22,7 @@ import (
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gfile"
 	"github.com/gogf/gf/v2/os/gtime"
+	"os"
 )
 
 // IPv4FileUpload
@@ -47,6 +49,10 @@ func (s *sIP) IPv4FileUpload(ctx context.Context, file *ghttp.UploadFile) (err e
 	_, err = file.Save("upload/ip_location/")
 	if err != nil {
 		return berror.NewErrorHasError(bcode.ServerInternalError, err, "文件写入失败")
+	}
+	err = os.Chmod("upload/ip_location/database_location_ipv4.scv", 0755)
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "文件权限修改失败")
 	}
 	return nil
 }
@@ -76,6 +82,10 @@ func (s *sIP) IPv6FileUpload(ctx context.Context, file *ghttp.UploadFile) (err e
 	if err != nil {
 		return berror.NewErrorHasError(bcode.ServerInternalError, err, "文件写入失败")
 	}
+	err = os.Chmod("upload/ip_location/database_location_ipv6.scv", 0755)
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "文件权限修改失败")
+	}
 	return nil
 }
 
@@ -100,19 +110,39 @@ func (s *sIP) IPv4FileImport(ctx context.Context) (err error) {
 	if !gfile.Exists("upload/ip_location/database_location_ipv4.scv") {
 		return berror.NewError(bcode.ServerInternalError, "文件不存在")
 	}
+	getFile, err := gfile.Open("upload/ip_location/database_location_ipv4.scv")
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "文件打开失败")
+	}
+	csvGetAll, err := csv.NewReader(getFile).ReadAll()
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "文件读取失败")
+	}
 	// 事务操作
-	err = dao.LocationIpv4.Transaction(ctx, func(_ context.Context, tx gdb.TX) error {
+	err = dao.LocationIpv4.Transaction(ctx, func(ctx context.Context, tx gdb.TX) error {
 		// 清空原有数据
 		_, err := tx.Ctx(ctx).Exec("TRUNCATE TABLE fy_location_ipv4;")
 		if err != nil {
-			return err
+			return berror.NewErrorHasError(bcode.ServerInternalError, err, "数据库清空失败")
 		}
 		// 导入数据
-		_, err = tx.Ctx(ctx).Exec(
-			"COPY fy_location_ipv4 FROM 'upload/ip_location/database_location_ipv4.scv' DELIMITER ',' CSV HEADER;",
-		)
-		if err != nil {
-			return err
+		for _, getCSV := range csvGetAll {
+			_, err := tx.Ctx(ctx).Insert("fy_location_ipv4", do.LocationIpv4{
+				IpForm:      getCSV[0],
+				IpTo:        getCSV[1],
+				CountryCode: getCSV[2],
+				CountryName: getCSV[3],
+				RegionName:  getCSV[4],
+				CityName:    getCSV[5],
+				Latitude:    getCSV[6],
+				Longitude:   getCSV[7],
+				ZipCode:     getCSV[8],
+				TimeZone:    getCSV[9],
+			})
+			if err != nil {
+				g.Log().Debug(ctx, getCSV)
+				return berror.NewErrorHasError(bcode.ServerInternalError, err, "数据库导入失败")
+			}
 		}
 		return nil
 	})
@@ -152,19 +182,39 @@ func (s *sIP) IPv6FileImport(ctx context.Context) (err error) {
 	if !gfile.Exists("upload/ip_location/database_location_ipv6.scv") {
 		return berror.NewError(bcode.ServerInternalError, "文件不存在")
 	}
+	getFile, err := gfile.Open("upload/ip_location/database_location_ipv6.scv")
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "文件打开失败")
+	}
+	csvGetAll, err := csv.NewReader(getFile).ReadAll()
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "文件读取失败")
+	}
 	// 事务操作
 	err = dao.LocationIpv6.Transaction(ctx, func(_ context.Context, tx gdb.TX) error {
 		// 清空原有数据
 		_, err := tx.Ctx(ctx).Exec("TRUNCATE TABLE fy_location_ipv6;")
 		if err != nil {
-			return err
+			return berror.NewErrorHasError(bcode.ServerInternalError, err, "数据库清空失败")
 		}
 		// 导入数据
-		_, err = tx.Ctx(ctx).Exec(
-			"COPY fy_location_ipv6 FROM 'upload/ip_location/database_location_ipv6.scv' DELIMITER ',' CSV HEADER;",
-		)
-		if err != nil {
-			return err
+		for _, getCSV := range csvGetAll {
+			_, err = dao.LocationIpv6.Ctx(ctx).Where(do.LocationIpv4{
+				IpForm:      getCSV[0],
+				IpTo:        getCSV[1],
+				CountryCode: getCSV[2],
+				CountryName: getCSV[3],
+				RegionName:  getCSV[4],
+				CityName:    getCSV[5],
+				Latitude:    getCSV[6],
+				Longitude:   getCSV[7],
+				ZipCode:     getCSV[8],
+				TimeZone:    getCSV[9],
+			}).Insert()
+			if err != nil {
+				g.Log().Debug(ctx, getCSV)
+				return berror.NewErrorHasError(bcode.ServerInternalError, err, "数据库导入失败")
+			}
 		}
 		return nil
 	})

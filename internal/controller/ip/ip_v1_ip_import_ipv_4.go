@@ -11,12 +11,12 @@
 package ip
 
 import (
+	"bamboo-service/api/ip/v1"
 	"bamboo-service/internal/service"
 	"context"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gctx"
 	"sync"
-
-	"bamboo-service/api/ip/v1"
 )
 
 // IPImportIpv4
@@ -46,9 +46,10 @@ func (c *ControllerV1) IPImportIpv4(
 	wg := new(sync.WaitGroup)
 	wg.Add(1)
 	go func() {
-		err = service.IP().IPv4FileImport(ctx)
+		newCTX := gctx.New()
+		err = service.IP().IPv4FileImport(newCTX)
 		if err != nil {
-			return
+			g.Log().Warningf(newCTX, "[CONT] 导入IPv4数据库失败：%s", err.Error())
 		}
 	}()
 	return nil, nil

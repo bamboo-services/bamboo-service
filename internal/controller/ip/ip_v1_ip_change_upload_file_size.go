@@ -14,44 +14,34 @@ import (
 	"bamboo-service/internal/service"
 	"context"
 	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gctx"
-	"sync"
 
 	"bamboo-service/api/ip/v1"
 )
 
-// IPImportIpv6
+// IPChangeUploadFileSize
 //
-// # 导入IPv6数据库
+// # 修改上传文件大小
 //
-// 导入IPv6数据库，用于导入IPv6数据库操作；
+// 修改上传文件大小，用于修改上传文件大小操作；
 //
 // # 参数
-//   - ctx		上下文(context.Context)
-//   - req		请求(*v1.IPImportIpv6Req)
+//   - ctx			上下文(context.Context)
+//   - req			请求(*v1.IPChangeUploadFileSizeReq)
 //
 // # 返回
-//   - res		响应(*v1.IPImportIpv6Res)
-//   - err		错误信息(error)
-func (c *ControllerV1) IPImportIpv6(
+//   - res			响应(*v1.IPChangeUploadFileSizeRes)
+//   - err			错误信息(error)
+func (c *ControllerV1) IPChangeUploadFileSize(
 	ctx context.Context,
-	req *v1.IPImportIpv6Req,
-) (res *v1.IPImportIpv6Res, err error) {
-	g.Log().Notice(ctx, "[CONT] 导入IPv6数据库")
-	// 授权检查
+	req *v1.IPChangeUploadFileSizeReq,
+) (res *v1.IPChangeUploadFileSizeRes, err error) {
+	g.Log().Notice(ctx, "[CONT] 修改上传文件大小")
+	// 管理员授权认证
 	err = service.Auth().CheckUserHasSuperAdmin(ctx, req.Authorization)
 	if err != nil {
 		return nil, err
 	}
-	// 多线程导入IPv6数据库
-	wg := new(sync.WaitGroup)
-	wg.Add(1)
-	go func() {
-		newCTX := gctx.New()
-		err = service.IP().IPv6FileImport(newCTX)
-		if err != nil {
-			g.Log().Warningf(newCTX, "[CONT] 导入IPv6数据库失败：%s", err.Error())
-		}
-	}()
+	// 修改上传文件大小
+	g.Server().SetClientMaxBodySize(req.Length)
 	return nil, nil
 }
