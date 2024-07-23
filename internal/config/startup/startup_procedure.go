@@ -77,8 +77,14 @@ func (s *systemStart) initialTableContentStartup() {
 	// 全局配置变量存储
 	checkInfoTableValue(s.ctx, "ip_4_import_time", "")
 	checkInfoTableValue(s.ctx, "ip_4_import_spending", "")
+	checkInfoTableValue(s.ctx, "ip_4_ctx", "")
+	checkInfoTableValue(s.ctx, "ip_4_period_time", "")
+	checkInfoTableValue(s.ctx, "ip_4_upload_total", "")
 	checkInfoTableValue(s.ctx, "ip_6_import_time", "")
 	checkInfoTableValue(s.ctx, "ip_6_import_spending", "")
+	checkInfoTableValue(s.ctx, "ip_6_ctx", "")
+	checkInfoTableValue(s.ctx, "ip_6_period_time", "")
+	checkInfoTableValue(s.ctx, "ip_6_upload_total", "")
 }
 
 // initialRoleStartup
