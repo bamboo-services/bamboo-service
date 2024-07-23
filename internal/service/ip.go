@@ -51,6 +51,22 @@ type (
 		// # 返回
 		//   - err			错误信息(error)
 		IPv6FileUpload(ctx context.Context, file *ghttp.UploadFile) (err error)
+		// IPv4FileImport
+		//
+		// # 导入IPv4数据库
+		//
+		// 导入IPv4数据库，用于导入IPv4数据库操作；
+		// 该接口将会从 upload/ip_location/database_location_ipv4.scv 文件中导入数据到数据库中；
+		// 该接口将会清空原有的数据；
+		IPv4FileImport(ctx context.Context) (err error)
+		// IPv6FileImport
+		//
+		// # 导入IPv6数据库
+		//
+		// 导入IPv6数据库，用于导入IPv6数据库操作；
+		// 该接口将会从 upload/ip_location/database_location_ipv6.scv 文件中导入数据到数据库中；
+		// 该接口将会清空原有的数据；
+		IPv6FileImport(ctx context.Context) (err error)
 	}
 )
 

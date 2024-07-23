@@ -73,6 +73,12 @@ func (s *systemStart) initialTableContentStartup() {
 	checkInfoTableValue(s.ctx, "aliyun_sms_sign_name", "锋楪")
 	checkInfoTableValue(s.ctx, "aliyun_sms_code_template", "SMS_468930484")
 	checkInfoTableValue(s.ctx, "aliyun_sms_endpoint", "dysmsapi.aliyuncs.com")
+
+	// 全局配置变量存储
+	checkInfoTableValue(s.ctx, "ip_4_import_time", "")
+	checkInfoTableValue(s.ctx, "ip_4_import_spending", "")
+	checkInfoTableValue(s.ctx, "ip_6_import_time", "")
+	checkInfoTableValue(s.ctx, "ip_6_import_spending", "")
 }
 
 // initialRoleStartup

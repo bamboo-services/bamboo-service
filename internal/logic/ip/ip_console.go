@@ -11,12 +11,16 @@
 package ip
 
 import (
+	"bamboo-service/internal/dao"
+	"bamboo-service/internal/model/do"
 	"context"
 	"github.com/bamboo-services/bamboo-utils/bcode"
 	"github.com/bamboo-services/bamboo-utils/berror"
+	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gfile"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 // IPv4FileUpload
@@ -71,6 +75,110 @@ func (s *sIP) IPv6FileUpload(ctx context.Context, file *ghttp.UploadFile) (err e
 	_, err = file.Save("upload/ip_location/")
 	if err != nil {
 		return berror.NewErrorHasError(bcode.ServerInternalError, err, "文件写入失败")
+	}
+	return nil
+}
+
+// IPv4FileImport
+//
+// # 导入IPv4数据库
+//
+// 导入IPv4数据库，用于导入IPv4数据库操作；
+// 该接口将会从 upload/ip_location/database_location_ipv4.scv 文件中导入数据到数据库中；
+// 该接口将会清空原有的数据；
+//
+// # 参数
+//   - ctx			上下文(context.Context)
+//
+// # 返回
+//   - err			错误信息(error)
+func (s *sIP) IPv4FileImport(ctx context.Context) (err error) {
+	g.Log().Notice(ctx, "[SERV] ip.IPv4FileImport | 导入IPv4数据库接口")
+	// 事务时间统计
+	startTime := gtime.Now().TimestampMilli()
+	// 检查文件是否存在
+	if !gfile.Exists("upload/ip_location/database_location_ipv4.scv") {
+		return berror.NewError(bcode.ServerInternalError, "文件不存在")
+	}
+	// 事务操作
+	err = dao.LocationIpv4.Transaction(ctx, func(_ context.Context, tx gdb.TX) error {
+		// 清空原有数据
+		_, err := tx.Ctx(ctx).Exec("TRUNCATE TABLE fy_location_ipv4;")
+		if err != nil {
+			return err
+		}
+		// 导入数据
+		_, err = tx.Ctx(ctx).Exec(
+			"COPY fy_location_ipv4 FROM 'upload/ip_location/database_location_ipv4.scv' DELIMITER ',' CSV HEADER;",
+		)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "数据库导入失败")
+	}
+	_, err = dao.Info.Ctx(ctx).Where(do.Info{Key: "ip_4_import_time"}).Update(do.Info{Value: gtime.Now()})
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "数据库导入时间更新失败")
+	}
+	_, err = dao.Info.Ctx(ctx).Where(do.Info{Key: "ip_4_import_spending"}).
+		Update(do.Info{Value: gtime.Now().TimestampMilli() - startTime})
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "数据库导入时间更新失败")
+	}
+	return nil
+}
+
+// IPv6FileImport
+//
+// # 导入IPv6数据库
+//
+// 导入IPv6数据库，用于导入IPv6数据库操作；
+// 该接口将会从 upload/ip_location/database_location_ipv6.scv 文件中导入数据到数据库中；
+// 该接口将会清空原有的数据；
+//
+// # 参数
+//   - ctx			上下文(context.Context)
+//
+// # 返回
+//   - err			错误信息(error)
+func (s *sIP) IPv6FileImport(ctx context.Context) (err error) {
+	g.Log().Notice(ctx, "[SERV] ip.IPv6FileImport | 导入IPv6数据库接口")
+	// 事务时间统计
+	startTime := gtime.Now().TimestampMilli()
+	// 检查文件是否存在
+	if !gfile.Exists("upload/ip_location/database_location_ipv6.scv") {
+		return berror.NewError(bcode.ServerInternalError, "文件不存在")
+	}
+	// 事务操作
+	err = dao.LocationIpv6.Transaction(ctx, func(_ context.Context, tx gdb.TX) error {
+		// 清空原有数据
+		_, err := tx.Ctx(ctx).Exec("TRUNCATE TABLE fy_location_ipv6;")
+		if err != nil {
+			return err
+		}
+		// 导入数据
+		_, err = tx.Ctx(ctx).Exec(
+			"COPY fy_location_ipv6 FROM 'upload/ip_location/database_location_ipv6.scv' DELIMITER ',' CSV HEADER;",
+		)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "数据库导入失败")
+	}
+	_, err = dao.Info.Ctx(ctx).Where(do.Info{Key: "ip_6_import_time"}).Update(do.Info{Value: gtime.Now()})
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "数据库导入时间更新失败")
+	}
+	_, err = dao.Info.Ctx(ctx).Where(do.Info{Key: "ip_6_import_spending"}).
+		Update(do.Info{Value: gtime.Now().TimestampMilli() - startTime})
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "数据库导入时间更新失败")
 	}
 	return nil
 }
