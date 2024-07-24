@@ -19,6 +19,7 @@ import (
 	"github.com/bamboo-services/bamboo-utils/berror"
 	"github.com/bamboo-services/bamboo-utils/butil"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/google/uuid"
 )
 
 // CheckAlbumExist
@@ -90,6 +91,36 @@ func (s *sAcgurl) CreateAlbum(
 		Visible:     visible,
 	}
 	if _, err = dao.Album.Ctx(ctx).Insert(album); err != nil {
+		return err
+	}
+	return nil
+}
+
+// DeleteAlbum
+//
+// # 删除图库
+//
+// 删除一个图库，用于删除一个图库操作；
+//
+// # 参数
+//   - ctx			上下文(context.Context)
+//   - albumUUID	图库唯一标识(uuid.UUID)
+//
+// # 返回
+//   - err		错误信息(error)
+func (s *sAcgurl) DeleteAlbum(ctx context.Context, albumUUID uuid.UUID) (err error) {
+	g.Log().Notice(ctx, "[SERV] acgurl.DeleteAlbum | 删除图库")
+	// 检查图库是否存在
+	getAlbum, err := s.getAlbumByUUID(ctx, albumUUID)
+	if err != nil {
+		return err
+	}
+	if getAlbum == nil {
+		return berror.NewError(bcode.NotExist, "图库不存在")
+	}
+	// 删除图库
+	err = s.deleteAlbum(ctx, butil.StringToUUID(getAlbum.AlbumUuid))
+	if err != nil {
 		return err
 	}
 	return nil

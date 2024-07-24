@@ -21,12 +21,12 @@ import "github.com/gogf/gf/v2/frame/g"
 // # 参数
 //   - Referer			来源地址(string)
 //   - Authorization	授权码(string)
-//   - AlbumID			图库ID(string)
+//   - AlbumUUID			图库ID(string)
 type AcgurlDeleteAlbumReq struct {
 	g.Meta        `path:"/acgurl/album" method:"Delete" tags:"图库控制器" summary:"删除图库" dc:"删除一个图库"`
 	Referer       string `json:"Referer" v:"required|url#请输入来源地址|来源地址格式不正确" in:"header"`
 	Authorization string `json:"Authorization" v:"required#请输入授权码" in:"header"`
-	AlbumID       string `json:"album_id" v:"required|regex:^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$#请输入图库ID|图库ID格式不正确"` //nolint:lll
+	AlbumUUID     string `json:"album_uuid" v:"required|regex:^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$#请输入图库ID|图库ID格式不正确"` //nolint:lll
 }
 
 // AcgurlDeleteAlbumRes

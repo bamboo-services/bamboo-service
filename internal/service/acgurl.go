@@ -17,6 +17,8 @@ package service
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 type (
@@ -53,6 +55,19 @@ type (
 		// # 返回
 		//   - err		错误信息(error)
 		CreateAlbum(ctx context.Context, authorization, name, displayName, description, cover string, visible bool) (err error)
+		// DeleteAlbum
+		//
+		// # 删除图库
+		//
+		// 删除一个图库，用于删除一个图库操作；
+		//
+		// # 参数
+		//   - ctx			上下文(context.Context)
+		//   - albumUUID	图库唯一标识(uuid.UUID)
+		//
+		// # 返回
+		//   - err		错误信息(error)
+		DeleteAlbum(ctx context.Context, albumUUID uuid.UUID) (err error)
 	}
 )
 

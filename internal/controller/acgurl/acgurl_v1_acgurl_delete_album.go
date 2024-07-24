@@ -11,14 +11,40 @@
 package acgurl
 
 import (
+	"bamboo-service/internal/service"
 	"context"
-
-	"github.com/gogf/gf/v2/errors/gcode"
-	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/bamboo-services/bamboo-utils/butil"
+	"github.com/gogf/gf/v2/frame/g"
 
 	"bamboo-service/api/acgurl/v1"
 )
 
-func (c *ControllerV1) AcgurlDeleteAlbum(ctx context.Context, req *v1.AcgurlDeleteAlbumReq) (res *v1.AcgurlDeleteAlbumRes, err error) {
-	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+// AcgurlDeleteAlbum
+//
+// # 删除图库
+//
+// 删除一个图库，用于删除一个图库操作；
+//
+// # 参数
+//   - ctx		上下文(context.Context)
+//   - req		请求(*v1.AcgurlDeleteAlbumReq)
+//
+// # 返回
+//   - res		响应(*v1.AcgurlDeleteAlbumRes)
+//   - err		错误(error)
+func (c *ControllerV1) AcgurlDeleteAlbum(
+	ctx context.Context,
+	req *v1.AcgurlDeleteAlbumReq,
+) (res *v1.AcgurlDeleteAlbumRes, err error) {
+	g.Log().Notice(ctx, "[CONT] 删除图库")
+	// 权限校验
+	if err = service.Auth().CheckUserHasLogin(ctx, req.Authorization); err != nil {
+		return nil, err
+	}
+	// 删除图库
+	err = service.Acgurl().DeleteAlbum(ctx, butil.StringToUUID(req.AlbumUUID))
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
 }
