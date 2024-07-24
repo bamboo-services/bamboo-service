@@ -12,6 +12,7 @@ package acgurl
 
 import (
 	"bamboo-service/internal/dao"
+	"bamboo-service/internal/model/dto"
 	"bamboo-service/internal/model/entity"
 	"bamboo-service/internal/service"
 	"context"
@@ -19,6 +20,7 @@ import (
 	"github.com/bamboo-services/bamboo-utils/berror"
 	"github.com/bamboo-services/bamboo-utils/butil"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/google/uuid"
 )
 
@@ -124,4 +126,45 @@ func (s *sAcgurl) DeleteAlbum(ctx context.Context, albumUUID uuid.UUID) (err err
 		return err
 	}
 	return nil
+}
+
+// GetAlbumInfo
+//
+// # 获取图库信息
+//
+// 获取图库信息，用于获取图库信息；
+//
+// # 参数
+//   - ctx			上下文(context.Context)
+//   - albumUUID	图库唯一标识(uuid.UUID)
+func (s *sAcgurl) GetAlbumInfo(ctx context.Context, albumUUID uuid.UUID) (album *dto.AlbumInfoDTO, err error) {
+	g.Log().Notice(ctx, "[SERV] acgurl.GetAlbumInfo | 获取图库信息")
+	// 检查图库是否存在
+	getAlbum, err := s.getAlbumByUUID(ctx, albumUUID)
+	if err != nil {
+		return nil, err
+	}
+	if getAlbum == nil {
+		return nil, berror.NewError(bcode.NotExist, "图库不存在")
+	}
+	// 获取用户的信息
+	getUser, err := service.User().GetUserByUUID(ctx, butil.StringToUUID(getAlbum.Uuid))
+	if err != nil {
+		return nil, err
+	}
+	pattern := "未知模式"
+	switch getAlbum.ExcludePattern {
+	case 0:
+		pattern = "常规模式"
+	case 1:
+		pattern = "黑名单模式"
+	case 2:
+		pattern = "白名单模式"
+	}
+	// 对数据进行可视化整理
+	err = gconv.Struct(getAlbum, &album, map[string]string{"User": getUser.Username, "Pattern": pattern})
+	if err != nil {
+		return nil, berror.NewErrorHasError(bcode.ServerInternalError, err, "数据转换失败")
+	}
+	return album, nil
 }

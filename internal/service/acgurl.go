@@ -16,6 +16,7 @@
 package service
 
 import (
+	"bamboo-service/internal/model/dto"
 	"context"
 
 	"github.com/google/uuid"
@@ -68,6 +69,16 @@ type (
 		// # 返回
 		//   - err		错误信息(error)
 		DeleteAlbum(ctx context.Context, albumUUID uuid.UUID) (err error)
+		// GetAlbumInfo
+		//
+		// # 获取图库信息
+		//
+		// 获取图库信息，用于获取图库信息；
+		//
+		// # 参数
+		//   - ctx			上下文(context.Context)
+		//   - albumUUID	图库唯一标识(uuid.UUID)
+		GetAlbumInfo(ctx context.Context, albumUUID uuid.UUID) (album *dto.AlbumInfoDTO, err error)
 	}
 )
 
