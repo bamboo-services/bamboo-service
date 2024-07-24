@@ -18,6 +18,8 @@ var (
 	// 管理员角色权限，用于管理管理员角色的权限；
 	AdminRolePermission = []string{
 		PermissionChangePassword,
+		AdminPermissionAcgurlDelete,
+		AdminPermissionAcgurlEdit,
 	}
 
 	// UserRolePermission

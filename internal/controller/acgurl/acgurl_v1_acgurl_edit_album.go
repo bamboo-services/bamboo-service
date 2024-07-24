@@ -13,36 +13,35 @@ package acgurl
 import (
 	"bamboo-service/internal/service"
 	"context"
-	"github.com/bamboo-services/bamboo-utils/butil"
 	"github.com/gogf/gf/v2/frame/g"
 
 	"bamboo-service/api/acgurl/v1"
 )
 
-// AcgurlDeleteAlbum
+// AcgurlEditAlbum
 //
-// # 删除图库
+// # 编辑图库
 //
-// 删除一个图库，用于删除一个图库操作；
+// 编辑一个图库，用于编辑一个图库操作；
 //
 // # 参数
 //   - ctx		上下文(context.Context)
-//   - req		请求(*v1.AcgurlDeleteAlbumReq)
+//   - req		请求(*v1.AcgurlEditAlbumReq)
 //
 // # 返回
-//   - res		响应(*v1.AcgurlDeleteAlbumRes)
+//   - res		响应(*v1.AcgurlEditAlbumRes)
 //   - err		错误(error)
-func (c *ControllerV1) AcgurlDeleteAlbum(
+func (c *ControllerV1) AcgurlEditAlbum(
 	ctx context.Context,
-	req *v1.AcgurlDeleteAlbumReq,
-) (res *v1.AcgurlDeleteAlbumRes, err error) {
-	g.Log().Notice(ctx, "[CONT] 删除图库")
+	req *v1.AcgurlEditAlbumReq,
+) (res *v1.AcgurlEditAlbumRes, err error) {
+	g.Log().Notice(ctx, "[CONT] 编辑图库")
 	// 权限校验
 	if err = service.Auth().CheckUserHasLogin(ctx, req.Authorization); err != nil {
 		return nil, err
 	}
-	// 删除图库
-	err = service.Acgurl().DeleteAlbum(ctx, butil.StringToUUID(req.AlbumUUID), req.Authorization)
+	// 编辑图库
+	err = service.Acgurl().EditAlbum(ctx, req)
 	if err != nil {
 		return nil, err
 	}

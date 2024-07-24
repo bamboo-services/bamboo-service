@@ -15,10 +15,12 @@ package constant
 // ------------------------------------------------------------
 
 const (
-	PermissionChangePassword = "auth:change_password" // 修改密码
-	PermissionChangePhone    = "auth:change_phone"    // 修改手机号
-	PermissionChangeEmail    = "auth:change_email"    // 修改邮箱
-	PermissionChangeUsername = "auth:change_username" // 修改用户名
-	PermissionChangeAvatar   = "auth:change_avatar"   // 修改头像
-	PermissionChangeInfo     = "auth:change_info"     // 修改信息
+	PermissionChangePassword    = "auth:change_password" // 修改密码
+	PermissionChangePhone       = "auth:change_phone"    // 修改手机号
+	PermissionChangeEmail       = "auth:change_email"    // 修改邮箱
+	PermissionChangeUsername    = "auth:change_username" // 修改用户名
+	PermissionChangeAvatar      = "auth:change_avatar"   // 修改头像
+	PermissionChangeInfo        = "auth:change_info"     // 修改信息
+	AdminPermissionAcgurlDelete = "acgurl:admin-delete"  // (管理员)删除图库
+	AdminPermissionAcgurlEdit   = "acgurl:admin-edit"    // (管理员)编辑图库
 )

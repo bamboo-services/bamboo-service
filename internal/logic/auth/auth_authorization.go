@@ -69,19 +69,9 @@ func (s *sAuth) CheckUserHasSuperAdmin(ctx context.Context, authorization string
 //   - error	错误信息
 func (s *sAuth) CheckUserHasAdmin(ctx context.Context, authorization string) (err error) {
 	g.Log().Notice(ctx, "[SERV] auth.CheckUserHasAdmin | 检查用户是否有管理员权限")
-	// 通过用户唯一令牌查询用户信息
-	getUserUUID, err := g.Redis().Get(ctx, "token:"+butil.TokenRemoveBearer(authorization))
+	getUser, err := s.GetUserByAuthorization(ctx, authorization)
 	if err != nil {
-		return berror.NewErrorHasError(bcode.ServerInternalError, err, "用户令牌无效")
-	}
-	// 查询用户信息
-	var getUser *entity.User
-	err = dao.User.Ctx(ctx).Where(do.User{Uuid: getUserUUID.String()}).Scan(&getUser)
-	if err != nil {
-		return berror.NewErrorHasError(bcode.ServerInternalError, err, "查询用户信息失败")
-	}
-	if getUser == nil {
-		return berror.NewError(bcode.NotExist, "用户不存在")
+		return err
 	}
 	// 获取所在角色
 	var getRole *entity.Role
@@ -110,19 +100,9 @@ func (s *sAuth) CheckUserHasAdmin(ctx context.Context, authorization string) (er
 //   - error	错误信息
 func (s *sAuth) CheckUserHasLogin(ctx context.Context, authorization string) (err error) {
 	g.Log().Notice(ctx, "[SERV] auth.CheckUserHasLogin | 检查用户是否登录")
-	// 通过用户唯一令牌查询用户信息
-	getUserUUID, err := g.Redis().Get(ctx, "token:"+butil.TokenRemoveBearer(authorization))
+	getUser, err := s.GetUserByAuthorization(ctx, authorization)
 	if err != nil {
-		return berror.NewErrorHasError(bcode.ServerInternalError, err, "用户令牌无效")
-	}
-	// 查询用户信息
-	var getUser *entity.User
-	err = dao.User.Ctx(ctx).Where(do.User{Uuid: getUserUUID.String()}).Scan(&getUser)
-	if err != nil {
-		return berror.NewErrorHasError(bcode.ServerInternalError, err, "查询用户信息失败")
-	}
-	if getUser == nil {
-		return berror.NewError(bcode.NotExist, "用户不存在")
+		return err
 	}
 	// 获取用户所在角色组为非禁用状态
 	var getRole *entity.Role

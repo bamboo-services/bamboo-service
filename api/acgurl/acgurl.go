@@ -24,5 +24,6 @@ type IAcgurlV1 interface {
 	AcgurlAddPhotoLink(ctx context.Context, req *v1.AcgurlAddPhotoLinkReq) (res *v1.AcgurlAddPhotoLinkRes, err error)
 	AcgurlCreateAlbum(ctx context.Context, req *v1.AcgurlCreateAlbumReq) (res *v1.AcgurlCreateAlbumRes, err error)
 	AcgurlDeleteAlbum(ctx context.Context, req *v1.AcgurlDeleteAlbumReq) (res *v1.AcgurlDeleteAlbumRes, err error)
+	AcgurlEditAlbum(ctx context.Context, req *v1.AcgurlEditAlbumReq) (res *v1.AcgurlEditAlbumRes, err error)
 	AcgurlGetAlbum(ctx context.Context, req *v1.AcgurlGetAlbumReq) (res *v1.AcgurlGetAlbumRes, err error)
 }

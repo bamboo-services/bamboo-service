@@ -11,6 +11,7 @@
 package acgurl
 
 import (
+	v1 "bamboo-service/api/acgurl/v1"
 	"bamboo-service/internal/dao"
 	"bamboo-service/internal/model/dto"
 	"bamboo-service/internal/model/entity"
@@ -19,6 +20,7 @@ import (
 	"github.com/bamboo-services/bamboo-utils/bcode"
 	"github.com/bamboo-services/bamboo-utils/berror"
 	"github.com/bamboo-services/bamboo-utils/butil"
+	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/google/uuid"
@@ -110,7 +112,7 @@ func (s *sAcgurl) CreateAlbum(
 //
 // # 返回
 //   - err		错误信息(error)
-func (s *sAcgurl) DeleteAlbum(ctx context.Context, albumUUID uuid.UUID) (err error) {
+func (s *sAcgurl) DeleteAlbum(ctx context.Context, albumUUID uuid.UUID, authorization string) (err error) {
 	g.Log().Notice(ctx, "[SERV] acgurl.DeleteAlbum | 删除图库")
 	// 检查图库是否存在
 	getAlbum, err := s.getAlbumByUUID(ctx, albumUUID)
@@ -119,6 +121,11 @@ func (s *sAcgurl) DeleteAlbum(ctx context.Context, albumUUID uuid.UUID) (err err
 	}
 	if getAlbum == nil {
 		return berror.NewError(bcode.NotExist, "图库不存在")
+	}
+	// 检查用户权限
+	err = service.Auth().IsUserCanDo(ctx, authorization, getAlbum.Uuid, "acgurl:admin-delete")
+	if err != nil {
+		return err
 	}
 	// 删除图库
 	err = s.deleteAlbum(ctx, butil.StringToUUID(getAlbum.AlbumUuid))
@@ -167,4 +174,45 @@ func (s *sAcgurl) GetAlbumInfo(ctx context.Context, albumUUID uuid.UUID) (album 
 		return nil, berror.NewErrorHasError(bcode.ServerInternalError, err, "数据转换失败")
 	}
 	return album, nil
+}
+
+// EditAlbum
+//
+// # 编辑图库
+//
+// 编辑一个图库，用于编辑一个图库操作；
+//
+// # 参数
+//   - ctx		上下文(context.Context)
+//   - req		请求(*v1.AcgurlEditAlbumReq)
+//
+// # 返回
+//   - err		错误(error)
+func (s *sAcgurl) EditAlbum(ctx context.Context, req *v1.AcgurlEditAlbumReq) (err error) {
+	g.Log().Notice(ctx, "[SERV] acgurl.EditAlbum | 编辑图库")
+	// 检查图库是否存在
+	getAlbum, err := s.getAlbumByUUID(ctx, butil.StringToUUID(req.AlbumUUID))
+	if err != nil {
+		return err
+	}
+	if getAlbum == nil {
+		return berror.NewError(bcode.NotExist, "图库不存在")
+	}
+	// 检查用户权限
+	err = service.Auth().IsUserCanDo(ctx, req.Authorization, getAlbum.Uuid, "acgurl:admin-edit")
+	if err != nil {
+		return err
+	}
+	// 编辑图库
+	getAlbum.DisplayName = req.AlbumDisplay
+	getAlbum.Description = req.AlbumDesc
+	getAlbum.Visible = req.AlbumOpen
+	getAlbum.Cover = req.AlbumCover
+	getAlbum.ExcludePattern = gconv.Int(req.AlbumPattern)
+	getAlbum.MatchAddress = gjson.New(req.MatchAddress)
+	err = s.editAlbum(ctx, getAlbum)
+	if err != nil {
+		return err
+	}
+	return nil
 }

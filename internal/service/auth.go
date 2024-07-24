@@ -63,7 +63,38 @@ type (
 		// # 返回
 		//   - error	错误信息
 		CheckUserHasLogin(ctx context.Context, authorization string) (err error)
+		// GetUserByAuthorization
+		//
+		// # 通过用户唯一令牌获取用户信息
+		//
+		// 通过用户唯一令牌获取用户信息，用于通过用户唯一令牌获取用户信息；
+		// 用于通过用户唯一令牌获取用户信息；
+		//
+		// # 参数
+		//   - ctx				上下文(context.Context)
+		//   - authorization	用户唯一令牌(string)
+		//
+		// # 返回
+		//   - user		用户信息(*entity.User)
+		//   - error	错误信息
 		GetUserByAuthorization(ctx context.Context, authorization string) (user *entity.User, err error)
+		// IsUserCanDo
+		//
+		// # 检查用户是否有权限
+		//
+		// 检查用户是否有权限，用于检查用户是否有权限；
+		// 用于服务层之间进行用户是否有权限操作；
+		// 一般用作个人业务，个人有权限进行操作，有权限的人也可以进行操作，超级管理员也可以进行操作；
+		//
+		// # 参数
+		//   - ctx				上下文(context.Context)
+		//   - authorization	用户唯一令牌(string)
+		//   - userUUID			用户唯一标识(string)
+		//   - permission		权限(string)
+		//
+		// # 返回
+		//   - error	错误信息
+		IsUserCanDo(ctx context.Context, authorization, userUUID string, permission string) (err error)
 	}
 )
 

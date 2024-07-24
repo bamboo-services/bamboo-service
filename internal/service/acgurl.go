@@ -16,6 +16,7 @@
 package service
 
 import (
+	v1 "bamboo-service/api/acgurl/v1"
 	"bamboo-service/internal/model/dto"
 	"context"
 
@@ -68,7 +69,7 @@ type (
 		//
 		// # 返回
 		//   - err		错误信息(error)
-		DeleteAlbum(ctx context.Context, albumUUID uuid.UUID) (err error)
+		DeleteAlbum(ctx context.Context, albumUUID uuid.UUID, authorization string) (err error)
 		// GetAlbumInfo
 		//
 		// # 获取图库信息
@@ -79,6 +80,19 @@ type (
 		//   - ctx			上下文(context.Context)
 		//   - albumUUID	图库唯一标识(uuid.UUID)
 		GetAlbumInfo(ctx context.Context, albumUUID uuid.UUID) (album *dto.AlbumInfoDTO, err error)
+		// EditAlbum
+		//
+		// # 编辑图库
+		//
+		// 编辑一个图库，用于编辑一个图库操作；
+		//
+		// # 参数
+		//   - ctx		上下文(context.Context)
+		//   - req		请求(*v1.AcgurlEditAlbumReq)
+		//
+		// # 返回
+		//   - err		错误(error)
+		EditAlbum(ctx context.Context, req *v1.AcgurlEditAlbumReq) (err error)
 	}
 )
 
