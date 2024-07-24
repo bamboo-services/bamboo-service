@@ -8,18 +8,17 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package acgurl
 
 import (
-	_ "bamboo-service/internal/logic/acgurl"
-	_ "bamboo-service/internal/logic/auth"
-	_ "bamboo-service/internal/logic/avatar"
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/ip"
-	_ "bamboo-service/internal/logic/mail"
-	_ "bamboo-service/internal/logic/sms"
-	_ "bamboo-service/internal/logic/token"
-	_ "bamboo-service/internal/logic/user"
+	"context"
+
+	"github.com/gogf/gf/v2/errors/gcode"
+	"github.com/gogf/gf/v2/errors/gerror"
+
+	"bamboo-service/api/acgurl/v1"
 )
+
+func (c *ControllerV1) AcgurlDeleteAlbum(ctx context.Context, req *v1.AcgurlDeleteAlbumReq) (res *v1.AcgurlDeleteAlbumRes, err error) {
+	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+}

@@ -35,6 +35,8 @@ func (s *systemStart) initialDatabaseStartup() {
 	createDatabase(s.ctx, "fy_user")
 	createDatabase(s.ctx, "fy_location_ipv4")
 	createDatabase(s.ctx, "fy_location_ipv6")
+	createDatabase(s.ctx, "fy_album")
+	createDatabase(s.ctx, "fy_photo_list")
 }
 
 // initialTableContentStartup

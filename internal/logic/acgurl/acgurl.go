@@ -8,18 +8,17 @@
  * ------------------------------------------------------------
  */
 
-package logic
+package acgurl
 
-import (
-	_ "bamboo-service/internal/logic/acgurl"
-	_ "bamboo-service/internal/logic/auth"
-	_ "bamboo-service/internal/logic/avatar"
-	_ "bamboo-service/internal/logic/dogecloud"
-	_ "bamboo-service/internal/logic/info"
-	_ "bamboo-service/internal/logic/init"
-	_ "bamboo-service/internal/logic/ip"
-	_ "bamboo-service/internal/logic/mail"
-	_ "bamboo-service/internal/logic/sms"
-	_ "bamboo-service/internal/logic/token"
-	_ "bamboo-service/internal/logic/user"
-)
+import "bamboo-service/internal/service"
+
+type sAcgurl struct {
+}
+
+func init() {
+	service.RegisterAcgurl(New())
+}
+
+func New() *sAcgurl {
+	return &sAcgurl{}
+}

@@ -36,7 +36,7 @@ import (
 // # 返回
 //   - error	错误信息
 func (s *sAuth) CheckUserHasSuperAdmin(ctx context.Context, authorization string) (err error) {
-	g.Log().Notice(ctx, "[LOGIC] auth.CheckUserHasSuperAdmin | 检查用户是否有超级管理员权限")
+	g.Log().Notice(ctx, "[SERV] auth.CheckUserHasSuperAdmin | 检查用户是否有超级管理员权限")
 	// 通过用户唯一令牌查询用户信息
 	getUserUUID, err := g.Redis().Get(ctx, "token:"+butil.TokenRemoveBearer(authorization))
 	if err != nil {
@@ -68,7 +68,7 @@ func (s *sAuth) CheckUserHasSuperAdmin(ctx context.Context, authorization string
 // # 返回
 //   - error	错误信息
 func (s *sAuth) CheckUserHasAdmin(ctx context.Context, authorization string) (err error) {
-	g.Log().Notice(ctx, "[LOGIC] auth.CheckUserHasAdmin | 检查用户是否有管理员权限")
+	g.Log().Notice(ctx, "[SERV] auth.CheckUserHasAdmin | 检查用户是否有管理员权限")
 	// 通过用户唯一令牌查询用户信息
 	getUserUUID, err := g.Redis().Get(ctx, "token:"+butil.TokenRemoveBearer(authorization))
 	if err != nil {
@@ -81,7 +81,7 @@ func (s *sAuth) CheckUserHasAdmin(ctx context.Context, authorization string) (er
 		return berror.NewErrorHasError(bcode.ServerInternalError, err, "查询用户信息失败")
 	}
 	if getUser == nil {
-		return berror.NewError(bcode.NotExist, "授权信息不存在")
+		return berror.NewError(bcode.NotExist, "用户不存在")
 	}
 	// 获取所在角色
 	var getRole *entity.Role
@@ -94,4 +94,77 @@ func (s *sAuth) CheckUserHasAdmin(ctx context.Context, authorization string) (er
 	} else {
 		return berror.NewError(bcode.Unauthorized, "用户无权限")
 	}
+}
+
+// CheckUserHasLogin
+//
+// # 检查用户是否登录
+//
+// 检查用户是否登录，用于检查用户是否登录；
+//
+// # 参数
+//   - ctx				上下文(context.Context)
+//   - authorization	用户唯一令牌(string)
+//
+// # 返回
+//   - error	错误信息
+func (s *sAuth) CheckUserHasLogin(ctx context.Context, authorization string) (err error) {
+	g.Log().Notice(ctx, "[SERV] auth.CheckUserHasLogin | 检查用户是否登录")
+	// 通过用户唯一令牌查询用户信息
+	getUserUUID, err := g.Redis().Get(ctx, "token:"+butil.TokenRemoveBearer(authorization))
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "用户令牌无效")
+	}
+	// 查询用户信息
+	var getUser *entity.User
+	err = dao.User.Ctx(ctx).Where(do.User{Uuid: getUserUUID.String()}).Scan(&getUser)
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "查询用户信息失败")
+	}
+	if getUser == nil {
+		return berror.NewError(bcode.NotExist, "用户不存在")
+	}
+	// 获取用户所在角色组为非禁用状态
+	var getRole *entity.Role
+	err = dao.Role.Ctx(ctx).Where(do.Role{Ruuid: getUser.Ruuid}).Scan(&getRole)
+	if err != nil {
+		return berror.NewErrorHasError(bcode.ServerInternalError, err, "查询用户角色失败")
+	}
+	if getRole.Name == "bad" {
+		return berror.NewError(bcode.Unauthorized, "用户无权限")
+	} else {
+		return nil
+	}
+}
+
+// GetUserByAuthorization
+//
+// # 通过用户唯一令牌获取用户信息
+//
+// 通过用户唯一令牌获取用户信息，用于通过用户唯一令牌获取用户信息；
+// 用于通过用户唯一令牌获取用户信息；
+//
+// # 参数
+//   - ctx				上下文(context.Context)
+//   - authorization	用户唯一令牌(string)
+//
+// # 返回
+//   - user		用户信息(*entity.User)
+//   - error	错误信息
+func (s *sAuth) GetUserByAuthorization(ctx context.Context, authorization string) (user *entity.User, err error) {
+	g.Log().Notice(ctx, "[SERV] auth.GetUserByAuthorization | 通过用户唯一令牌获取用户信息")
+	// 通过用户唯一令牌查询用户信息
+	getUserUUID, err := g.Redis().Get(ctx, "token:"+butil.TokenRemoveBearer(authorization))
+	if err != nil {
+		return nil, berror.NewErrorHasError(bcode.ServerInternalError, err, "用户令牌无效")
+	}
+	// 查询用户信息
+	err = dao.User.Ctx(ctx).Where(do.User{Uuid: getUserUUID.String()}).Scan(&user)
+	if err != nil {
+		return nil, berror.NewErrorHasError(bcode.ServerInternalError, err, "查询用户信息失败")
+	}
+	if user == nil {
+		return nil, berror.NewError(bcode.NotExist, "用户不存在")
+	}
+	return user, nil
 }

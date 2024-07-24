@@ -13,6 +13,7 @@ package cmd
 import (
 	"bamboo-service/internal/config/middleware"
 	"bamboo-service/internal/config/startup"
+	"bamboo-service/internal/controller/acgurl"
 	"bamboo-service/internal/controller/auth"
 	"bamboo-service/internal/controller/avatar"
 	"bamboo-service/internal/controller/info"
@@ -56,11 +57,12 @@ var (
 						sms.NewV1(),
 						mail.NewV1(),
 						ip.NewV1(),
+						acgurl.NewV1(),
 					)
 				})
 
 				// V2 版本路由
-				group.Group("/v1", func(group *ghttp.RouterGroup) {
+				group.Group("/v2", func(group *ghttp.RouterGroup) {
 					group.Middleware(bmiddle.BambooMiddleDefaultCors)
 					group.Middleware(bmiddle.BambooMiddleRequestCheck)
 

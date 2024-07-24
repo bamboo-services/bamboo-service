@@ -16,6 +16,7 @@
 package service
 
 import (
+	"bamboo-service/internal/model/entity"
 	"context"
 )
 
@@ -49,6 +50,20 @@ type (
 		// # 返回
 		//   - error	错误信息
 		CheckUserHasAdmin(ctx context.Context, authorization string) (err error)
+		// CheckUserHasLogin
+		//
+		// # 检查用户是否登录
+		//
+		// 检查用户是否登录，用于检查用户是否登录；
+		//
+		// # 参数
+		//   - ctx				上下文(context.Context)
+		//   - authorization	用户唯一令牌(string)
+		//
+		// # 返回
+		//   - error	错误信息
+		CheckUserHasLogin(ctx context.Context, authorization string) (err error)
+		GetUserByAuthorization(ctx context.Context, authorization string) (user *entity.User, err error)
 	}
 )
 
