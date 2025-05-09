@@ -1,13 +1,14 @@
 package cmd
 
 import (
+	"bamboo-service/internal/controller/auth"
 	"context"
+	"github.com/bamboo-services/bamboo-utils/bhandler/bhook"
+	"github.com/bamboo-services/bamboo-utils/bhandler/bmiddle"
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gcmd"
-
-	"bamboo-service/internal/controller/hello"
 )
 
 var (
@@ -17,12 +18,26 @@ var (
 		Brief: "start http server",
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			s := g.Server()
-			s.Group("/", func(group *ghttp.RouterGroup) {
-				group.Middleware(ghttp.MiddlewareHandlerResponse)
-				group.Bind(
-					hello.NewV1(),
-				)
+
+			// 绑定事件
+			s.BindHookHandler("/api/*", ghttp.HookBeforeServe, bhook.BambooHookDefaultCors)
+			s.BindHookHandler("/api/*", ghttp.HookBeforeServe, bhook.BambooHookRequestInfo)
+
+			// API 接口
+			s.Group("/api", func(api *ghttp.RouterGroup) {
+				api.Middleware(bmiddle.BambooHandlerResponse)
+				api.Group("/v1", func(v1 *ghttp.RouterGroup) {
+					v1.Bind(
+						auth.NewV1(),
+					)
+				})
 			})
+
+			// 静态资源和前端
+			s.Group("/", func(route *ghttp.RouterGroup) {
+				route.Bind()
+			})
+
 			s.Run()
 			return nil
 		},
