@@ -1,13 +1,14 @@
 package main
 
 import (
+	"bamboo-service/internal/config/cmd"
+	"bamboo-service/internal/config/setup"
+	_ "bamboo-service/internal/logic"
 	_ "bamboo-service/internal/packed"
 	_ "github.com/gogf/gf/contrib/drivers/pgsql/v2"
-	"github.com/gogf/gf/v2/os/gtime"
-
+	_ "github.com/gogf/gf/contrib/nosql/redis/v2"
 	"github.com/gogf/gf/v2/os/gctx"
-
-	"bamboo-service/internal/cmd"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 func main() {
@@ -17,6 +18,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	su := setup.New(initCtx)
+	su.CheckUserSuperAdminExist()
 
 	cmd.Main.Run(initCtx)
 }

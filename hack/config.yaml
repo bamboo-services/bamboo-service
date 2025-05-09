@@ -10,7 +10,6 @@ gfcli:
         removePrefix: "fy_"
         withTime: true
         gJsonSupport: true
-        clear: true
 
   docker:
     build: "-a amd64 -s linux -p temp -ew"

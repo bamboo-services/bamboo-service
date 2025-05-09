@@ -1,5 +1,5 @@
 // =================================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2025-05-09 21:32:25
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2025-05-10 03:00:04
 // =================================================================================
 
 package do
@@ -28,6 +28,7 @@ type User struct {
 	TwoFactorSecret  interface{} // 两因素认证密钥
 	Nickname         interface{} // 用户昵称
 	AvatarUrl        interface{} // 头像URL
+	AvatarBase64     interface{} // 头像Base64编码
 	Gender           interface{} // 性别
 	BirthDate        *gtime.Time // 出生日期
 	Bio              interface{} // 个人简介

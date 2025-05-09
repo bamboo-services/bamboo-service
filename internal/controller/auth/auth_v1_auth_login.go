@@ -2,28 +2,20 @@ package auth
 
 import (
 	"bamboo-service/api/auth/v1"
-	"bamboo-service/internal/model/dto"
+	"bamboo-service/internal/service"
 	"context"
+	"github.com/XiaoLFeng/bamboo-utils/blog"
 	"github.com/XiaoLFeng/bamboo-utils/bresult"
-	"github.com/gogf/gf/v2/encoding/gjson"
-	"github.com/gogf/gf/v2/os/gtime"
-	"github.com/google/uuid"
 )
 
 func (c *ControllerV1) AuthLogin(ctx context.Context, req *v1.AuthLoginReq) (res *v1.AuthLoginRes, err error) {
-
-	response := dto.UserInfoDTO{
-		UserUUID:   uuid.UUID{},
-		Username:   "",
-		Email:      "",
-		Phone:      "",
-		Role:       "",
-		Permission: gjson.Json{},
-		CreatedAt:  gtime.Time{},
-		UpdatedAt:  gtime.Time{},
+	iAuth := service.Auth()
+	userInfo, errorCode := iAuth.UserLogin(ctx, req.Username, req.Password)
+	if errorCode != nil {
+		blog.ControllerDebug(ctx, "AuthLogin", errorCode.Error())
+		return nil, errorCode
 	}
-
 	return &v1.AuthLoginRes{
-		ResponseDTO: bresult.SuccessHasData(ctx, "验证码获取成功", &response),
+		ResponseDTO: bresult.SuccessHasData(ctx, "登录成功", userInfo),
 	}, nil
 }

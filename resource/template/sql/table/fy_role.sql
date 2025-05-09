@@ -31,4 +31,4 @@ INSERT INTO fy_role (role_uuid, role_name, role_nickname, role_description, role
 VALUES
     (uuid_in('60adc6c5-ae95-4051-b408-31a376654cf9'), 'super_admin',  '超级管理员', '超级管理员，拥有最高权限', jsonb_build_array(), TRUE),
     (uuid_in('fec12068-0c50-4198-8ece-968599ea4155'), 'admin',  '管理员', '管理员，可以管理系统内部的内容', jsonb_build_array(), TRUE),
-    (uuid_in('058db8f6-664b-4d2d-99dc-1bdc3404da95'), 'user',  '普通用户', '普通用户，可以进行部分操作', jsonb_build_array(), TRUE);
+    (uuid_in('058db8f6-664b-4d2d-99dc-1bdc3404da95'), 'duser',  '普通用户', '普通用户，可以进行部分操作', jsonb_build_array(), TRUE);

@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2025-05-09 21:32:25
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2025-05-10 03:00:04
 // ==========================================================================
 
 package internal
@@ -36,6 +36,7 @@ type UserColumns struct {
 	TwoFactorSecret  string // 两因素认证密钥
 	Nickname         string // 用户昵称
 	AvatarUrl        string // 头像URL
+	AvatarBase64     string // 头像Base64编码
 	Gender           string // 性别
 	BirthDate        string // 出生日期
 	Bio              string // 个人简介
@@ -64,6 +65,7 @@ var userColumns = UserColumns{
 	TwoFactorSecret:  "two_factor_secret",
 	Nickname:         "nickname",
 	AvatarUrl:        "avatar_url",
+	AvatarBase64:     "avatar_base64",
 	Gender:           "gender",
 	BirthDate:        "birth_date",
 	Bio:              "bio",

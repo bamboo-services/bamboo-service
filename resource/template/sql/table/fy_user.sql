@@ -3,10 +3,10 @@ CREATE TABLE fy_user
 (
     -- 核心字段 (来自 DTO)
     user_uuid          UUID PRIMARY KEY,                                       -- 用户唯一标识符 (主键), 建议由应用层生成以保持一致性
-    username           VARCHAR(255) UNIQUE NOT NULL,                           -- 用户名, 唯一且不能为空
+    username           VARCHAR(64) UNIQUE  NOT NULL,                           -- 用户名, 唯一且不能为空
     email              VARCHAR(255) UNIQUE NOT NULL,                           -- 电子邮箱, 唯一且不能为空
-    phone              VARCHAR(30) UNIQUE,                                     -- 手机号码, 唯一 (可选)
-    role               VARCHAR(50)         NOT NULL DEFAULT 'user',            -- 用户角色, 不能为空, 默认为 'user'
+    phone              VARCHAR(15) UNIQUE,                                     -- 手机号码, 唯一 (可选)
+    role               UUID                NOT NULL,                           -- 用户角色, 不能为空
     permissions        JSONB,                                                  -- 用户权限, 使用 JSONB 类型以支持复杂结构和高效查询
     created_at         TIMESTAMPTZ         NOT NULL DEFAULT CURRENT_TIMESTAMP, -- 记录创建时间, 不能为空, 默认为当前时间戳
     updated_at         TIMESTAMPTZ         NOT NULL DEFAULT CURRENT_TIMESTAMP, -- 记录更新时间, 不能为空, 默认为当前时间戳
@@ -21,6 +21,7 @@ CREATE TABLE fy_user
     -- 扩展字段：用户个人信息
     nickname           VARCHAR(100),                                           -- 昵称 (可选)
     avatar_url         TEXT,                                                   -- 用户头像链接 (可选)
+    avatar_base64      TEXT,                                                   -- 用户头像的Base64编码 (可选)
     gender             VARCHAR(10),                                            -- 性别 (可选, 例如: 'male', 'female', 'other', 'unknown')
     birth_date         DATE,                                                   -- 出生日期 (可选)
     bio                TEXT,                                                   -- 个人简介 (可选)
@@ -37,6 +38,9 @@ CREATE TABLE fy_user
 );
 
 -- 为常用查询字段创建索引
+CREATE INDEX idx_fy_user_username ON fy_user (username);
+CREATE INDEX idx_fy_user_email ON fy_user (email);
+CREATE INDEX idx_fy_user_phone ON fy_user (phone);
 CREATE INDEX idx_fy_user_role ON fy_user (role);
 CREATE INDEX idx_fy_user_status ON fy_user (status);
 CREATE INDEX idx_fy_user_deleted_at ON fy_user (deleted_at); -- 配合软删除查询
@@ -62,6 +66,7 @@ COMMENT ON COLUMN fy_user.two_factor_enabled IS '是否启用两因素认证';
 COMMENT ON COLUMN fy_user.two_factor_secret IS '两因素认证密钥';
 COMMENT ON COLUMN fy_user.nickname IS '用户昵称';
 COMMENT ON COLUMN fy_user.avatar_url IS '头像URL';
+COMMENT ON COLUMN fy_user.avatar_base64 IS '头像Base64编码';
 COMMENT ON COLUMN fy_user.gender IS '性别';
 COMMENT ON COLUMN fy_user.birth_date IS '出生日期';
 COMMENT ON COLUMN fy_user.bio IS '个人简介';
@@ -71,6 +76,11 @@ COMMENT ON COLUMN fy_user.last_login_at IS '最后登录时间';
 COMMENT ON COLUMN fy_user.last_login_ip IS '最后登录IP地址';
 COMMENT ON COLUMN fy_user.registration_ip IS '注册IP地址';
 COMMENT ON COLUMN fy_user.deleted_at IS '删除时间（软删除）';
+
+-- 配置外键
+ALTER TABLE fy_user
+    ADD CONSTRAINT fk_fy_user_role FOREIGN KEY (role) REFERENCES fy_role (role_uuid)
+        ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- 将触发器绑定到 fy_user 表的 UPDATE 操作上
 CREATE TRIGGER trigger_fy_user_updated_at
