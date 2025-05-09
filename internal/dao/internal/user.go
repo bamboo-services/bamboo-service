@@ -1,5 +1,5 @@
 // ==========================================================================
-// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT.
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT. Created at 2025-05-09 14:40:56
 // ==========================================================================
 
 package internal
@@ -11,44 +11,44 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// FyUserDao is the data access object for the table fy_user.
-type FyUserDao struct {
+// UserDao is the data access object for the table fy_user.
+type UserDao struct {
 	table    string             // table is the underlying table name of the DAO.
 	group    string             // group is the database configuration group name of the current DAO.
-	columns  FyUserColumns      // columns contains all the column names of Table for convenient usage.
+	columns  UserColumns        // columns contains all the column names of Table for convenient usage.
 	handlers []gdb.ModelHandler // handlers for customized model modification.
 }
 
-// FyUserColumns defines and stores column names for the table fy_user.
-type FyUserColumns struct {
-	UserUuid         string //
-	Username         string //
-	Email            string //
-	Phone            string //
-	Role             string //
-	Permissions      string //
-	CreatedAt        string //
-	UpdatedAt        string //
-	PasswordHash     string //
-	EmailVerifiedAt  string //
-	PhoneVerifiedAt  string //
-	TwoFactorEnabled string //
-	TwoFactorSecret  string //
-	Nickname         string //
-	AvatarUrl        string //
-	Gender           string //
-	BirthDate        string //
-	Bio              string //
-	QqEmail          string //
-	Status           string //
-	LastLoginAt      string //
-	LastLoginIp      string //
-	RegistrationIp   string //
-	DeletedAt        string //
+// UserColumns defines and stores column names for the table fy_user.
+type UserColumns struct {
+	UserUuid         string // 用户唯一标识符
+	Username         string // 用户名
+	Email            string // 电子邮箱
+	Phone            string // 手机号码
+	Role             string // 用户角色
+	Permissions      string // 用户权限
+	CreatedAt        string // 记录创建时间
+	UpdatedAt        string // 记录更新时间
+	PasswordHash     string // 密码哈希值
+	EmailVerifiedAt  string // 邮箱验证时间
+	PhoneVerifiedAt  string // 手机验证时间
+	TwoFactorEnabled string // 是否启用两因素认证
+	TwoFactorSecret  string // 两因素认证密钥
+	Nickname         string // 用户昵称
+	AvatarUrl        string // 头像URL
+	Gender           string // 性别
+	BirthDate        string // 出生日期
+	Bio              string // 个人简介
+	QqEmail          string // QQ邮箱
+	Status           string // 用户账户状态
+	LastLoginAt      string // 最后登录时间
+	LastLoginIp      string // 最后登录IP地址
+	RegistrationIp   string // 注册IP地址
+	DeletedAt        string // 删除时间（软删除）
 }
 
-// fyUserColumns holds the columns for the table fy_user.
-var fyUserColumns = FyUserColumns{
+// userColumns holds the columns for the table fy_user.
+var userColumns = UserColumns{
 	UserUuid:         "user_uuid",
 	Username:         "username",
 	Email:            "email",
@@ -75,38 +75,38 @@ var fyUserColumns = FyUserColumns{
 	DeletedAt:        "deleted_at",
 }
 
-// NewFyUserDao creates and returns a new DAO object for table data access.
-func NewFyUserDao(handlers ...gdb.ModelHandler) *FyUserDao {
-	return &FyUserDao{
+// NewUserDao creates and returns a new DAO object for table data access.
+func NewUserDao(handlers ...gdb.ModelHandler) *UserDao {
+	return &UserDao{
 		group:    "default",
 		table:    "fy_user",
-		columns:  fyUserColumns,
+		columns:  userColumns,
 		handlers: handlers,
 	}
 }
 
 // DB retrieves and returns the underlying raw database management object of the current DAO.
-func (dao *FyUserDao) DB() gdb.DB {
+func (dao *UserDao) DB() gdb.DB {
 	return g.DB(dao.group)
 }
 
 // Table returns the table name of the current DAO.
-func (dao *FyUserDao) Table() string {
+func (dao *UserDao) Table() string {
 	return dao.table
 }
 
 // Columns returns all column names of the current DAO.
-func (dao *FyUserDao) Columns() FyUserColumns {
+func (dao *UserDao) Columns() UserColumns {
 	return dao.columns
 }
 
 // Group returns the database configuration group name of the current DAO.
-func (dao *FyUserDao) Group() string {
+func (dao *UserDao) Group() string {
 	return dao.group
 }
 
 // Ctx creates and returns a Model for the current DAO. It automatically sets the context for the current operation.
-func (dao *FyUserDao) Ctx(ctx context.Context) *gdb.Model {
+func (dao *UserDao) Ctx(ctx context.Context) *gdb.Model {
 	model := dao.DB().Model(dao.table)
 	for _, handler := range dao.handlers {
 		model = handler(model)
@@ -120,6 +120,6 @@ func (dao *FyUserDao) Ctx(ctx context.Context) *gdb.Model {
 //
 // Note: Do not commit or roll back the transaction in function f,
 // as it is automatically handled by this function.
-func (dao *FyUserDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
+func (dao *UserDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
 	return dao.Ctx(ctx).Transaction(ctx, f)
 }

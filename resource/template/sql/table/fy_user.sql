@@ -45,6 +45,32 @@ CREATE INDEX idx_fy_user_qq_email ON fy_user (qq_email) WHERE qq_email IS NOT NU
 -- 为 JSONB 类型的 permissions 字段创建 GIN 索引，以提高查询性能
 CREATE INDEX idx_fy_user_permissions ON fy_user USING GIN (permissions);
 
+-- 为每个字段添加注释
+COMMENT ON COLUMN fy_user.user_uuid IS '用户唯一标识符';
+COMMENT ON COLUMN fy_user.username IS '用户名';
+COMMENT ON COLUMN fy_user.email IS '电子邮箱';
+COMMENT ON COLUMN fy_user.phone IS '手机号码';
+COMMENT ON COLUMN fy_user.role IS '用户角色';
+COMMENT ON COLUMN fy_user.permissions IS '用户权限';
+COMMENT ON COLUMN fy_user.created_at IS '记录创建时间';
+COMMENT ON COLUMN fy_user.updated_at IS '记录更新时间';
+COMMENT ON COLUMN fy_user.password_hash IS '密码哈希值';
+COMMENT ON COLUMN fy_user.email_verified_at IS '邮箱验证时间';
+COMMENT ON COLUMN fy_user.phone_verified_at IS '手机验证时间';
+COMMENT ON COLUMN fy_user.two_factor_enabled IS '是否启用两因素认证';
+COMMENT ON COLUMN fy_user.two_factor_secret IS '两因素认证密钥';
+COMMENT ON COLUMN fy_user.nickname IS '用户昵称';
+COMMENT ON COLUMN fy_user.avatar_url IS '头像URL';
+COMMENT ON COLUMN fy_user.gender IS '性别';
+COMMENT ON COLUMN fy_user.birth_date IS '出生日期';
+COMMENT ON COLUMN fy_user.bio IS '个人简介';
+COMMENT ON COLUMN fy_user.qq_email IS 'QQ邮箱';
+COMMENT ON COLUMN fy_user.status IS '用户账户状态';
+COMMENT ON COLUMN fy_user.last_login_at IS '最后登录时间';
+COMMENT ON COLUMN fy_user.last_login_ip IS '最后登录IP地址';
+COMMENT ON COLUMN fy_user.registration_ip IS '注册IP地址';
+COMMENT ON COLUMN fy_user.deleted_at IS '删除时间（软删除）';
+
 -- 将触发器绑定到 fy_user 表的 UPDATE 操作上
 CREATE TRIGGER trigger_fy_user_updated_at
     BEFORE UPDATE

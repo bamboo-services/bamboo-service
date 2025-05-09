@@ -8,15 +8,15 @@ import (
 	"bamboo-service/internal/dao/internal"
 )
 
-// fyUserDao is the data access object for the table fy_user.
+// userDao is the data access object for the table fy_user.
 // You can define custom methods on it to extend its functionality as needed.
-type fyUserDao struct {
-	*internal.FyUserDao
+type userDao struct {
+	*internal.UserDao
 }
 
 var (
-	// FyUser is a globally accessible object for table fy_user operations.
-	FyUser = fyUserDao{internal.NewFyUserDao()}
+	// User is a globally accessible object for table fy_user operations.
+	User = userDao{internal.NewUserDao()}
 )
 
 // Add your custom methods and functionality below.
