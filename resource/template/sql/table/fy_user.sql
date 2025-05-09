@@ -46,6 +46,7 @@ CREATE INDEX idx_fy_user_qq_email ON fy_user (qq_email) WHERE qq_email IS NOT NU
 CREATE INDEX idx_fy_user_permissions ON fy_user USING GIN (permissions);
 
 -- 为每个字段添加注释
+COMMENT ON TABLE fy_user IS '用户表';
 COMMENT ON COLUMN fy_user.user_uuid IS '用户唯一标识符';
 COMMENT ON COLUMN fy_user.username IS '用户名';
 COMMENT ON COLUMN fy_user.email IS '电子邮箱';

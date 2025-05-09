@@ -3,9 +3,8 @@ package cmd
 import (
 	"bamboo-service/internal/controller/auth"
 	"context"
-	"github.com/bamboo-services/bamboo-utils/bhandler/bhook"
-	"github.com/bamboo-services/bamboo-utils/bhandler/bmiddle"
-
+	"github.com/XiaoLFeng/bamboo-utils/bhandler/bhook"
+	"github.com/XiaoLFeng/bamboo-utils/bhandler/bmiddle"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gcmd"
@@ -21,7 +20,6 @@ var (
 
 			// 绑定事件
 			s.BindHookHandler("/api/*", ghttp.HookBeforeServe, bhook.BambooHookDefaultCors)
-			s.BindHookHandler("/api/*", ghttp.HookBeforeServe, bhook.BambooHookRequestInfo)
 
 			// API 接口
 			s.Group("/api", func(api *ghttp.RouterGroup) {
