@@ -39,4 +39,5 @@ VALUES
     (uuid_in('a70ab77e-a0f9-49f3-8ad6-09e6794930ae'), 'system_version', '1.0.0-SNAPSHOT', 1),
     (uuid_in('407e7a1e-7cbf-4f44-a65e-ed40d0d25446'), 'system_name', '筱服务', 1),
     (uuid_in('6d6288ce-38a7-4b1d-b65f-c176465710d8'), 'system_description', '提供高可用、高性能的RESTful API接口服务',1),
-    (uuid_in('f0c0f0f0-0f0f-0f0f-0f0f-0f0f0f0f0f0f'), 'system_able_register', 'false', 1);
+    (uuid_in('34f898df-1a0d-460f-a749-8c2dc8af915b'), 'system_able_register', 'false', 1),
+    (uuid_in('ee86b909-0570-4c3c-b8f0-98d4d0c6fbd9'), 'system_super_admin_uuid', null, 1);

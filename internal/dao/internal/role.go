@@ -11,66 +11,70 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// SystemDao is the data access object for the table fy_system.
-type SystemDao struct {
+// RoleDao is the data access object for the table fy_role.
+type RoleDao struct {
 	table    string             // table is the underlying table name of the DAO.
 	group    string             // group is the database configuration group name of the current DAO.
-	columns  SystemColumns      // columns contains all the column names of Table for convenient usage.
+	columns  RoleColumns        // columns contains all the column names of Table for convenient usage.
 	handlers []gdb.ModelHandler // handlers for customized model modification.
 }
 
-// SystemColumns defines and stores column names for the table fy_system.
-type SystemColumns struct {
-	SystemUuid string // 系统唯一标识符
-	Key        string // 键
-	Value      string // 值
-	Version    string // 版本
-	CreatedAt  string // 创建时间
-	UpdatedAt  string // 更新时间
+// RoleColumns defines and stores column names for the table fy_role.
+type RoleColumns struct {
+	RoleUuid        string //
+	RoleName        string // 角色名称
+	RoleNickname    string // 角色昵称
+	RoleDescription string // 角色描述
+	RolePermission  string // 角色权限
+	RoleStatus      string // 角色状态(开启和关闭)
+	CreatedAt       string // 创建时间
+	UpdatedAt       string // 更新时间
 }
 
-// systemColumns holds the columns for the table fy_system.
-var systemColumns = SystemColumns{
-	SystemUuid: "system_uuid",
-	Key:        "key",
-	Value:      "value",
-	Version:    "version",
-	CreatedAt:  "created_at",
-	UpdatedAt:  "updated_at",
+// roleColumns holds the columns for the table fy_role.
+var roleColumns = RoleColumns{
+	RoleUuid:        "role_uuid",
+	RoleName:        "role_name",
+	RoleNickname:    "role_nickname",
+	RoleDescription: "role_description",
+	RolePermission:  "role_permission",
+	RoleStatus:      "role_status",
+	CreatedAt:       "created_at",
+	UpdatedAt:       "updated_at",
 }
 
-// NewSystemDao creates and returns a new DAO object for table data access.
-func NewSystemDao(handlers ...gdb.ModelHandler) *SystemDao {
-	return &SystemDao{
+// NewRoleDao creates and returns a new DAO object for table data access.
+func NewRoleDao(handlers ...gdb.ModelHandler) *RoleDao {
+	return &RoleDao{
 		group:    "default",
-		table:    "fy_system",
-		columns:  systemColumns,
+		table:    "fy_role",
+		columns:  roleColumns,
 		handlers: handlers,
 	}
 }
 
 // DB retrieves and returns the underlying raw database management object of the current DAO.
-func (dao *SystemDao) DB() gdb.DB {
+func (dao *RoleDao) DB() gdb.DB {
 	return g.DB(dao.group)
 }
 
 // Table returns the table name of the current DAO.
-func (dao *SystemDao) Table() string {
+func (dao *RoleDao) Table() string {
 	return dao.table
 }
 
 // Columns returns all column names of the current DAO.
-func (dao *SystemDao) Columns() SystemColumns {
+func (dao *RoleDao) Columns() RoleColumns {
 	return dao.columns
 }
 
 // Group returns the database configuration group name of the current DAO.
-func (dao *SystemDao) Group() string {
+func (dao *RoleDao) Group() string {
 	return dao.group
 }
 
 // Ctx creates and returns a Model for the current DAO. It automatically sets the context for the current operation.
-func (dao *SystemDao) Ctx(ctx context.Context) *gdb.Model {
+func (dao *RoleDao) Ctx(ctx context.Context) *gdb.Model {
 	model := dao.DB().Model(dao.table)
 	for _, handler := range dao.handlers {
 		model = handler(model)
@@ -84,6 +88,6 @@ func (dao *SystemDao) Ctx(ctx context.Context) *gdb.Model {
 //
 // Note: Do not commit or roll back the transaction in function f,
 // as it is automatically handled by this function.
-func (dao *SystemDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
+func (dao *RoleDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
 	return dao.Ctx(ctx).Transaction(ctx, f)
 }
