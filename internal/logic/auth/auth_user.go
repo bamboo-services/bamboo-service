@@ -1,8 +1,8 @@
 package auth
 
 import (
+	"bamboo-service/internal/command/duser"
 	"bamboo-service/internal/custom"
-	"bamboo-service/internal/dao/command/duser"
 	"bamboo-service/internal/model/dto"
 	"context"
 	"github.com/XiaoLFeng/bamboo-utils/berror"

@@ -3,7 +3,7 @@ module bamboo-service
 go 1.24.1
 
 require (
-	github.com/XiaoLFeng/bamboo-utils v1.0.1-alpha.3
+	github.com/XiaoLFeng/bamboo-utils v1.0.1-alpha.6
 	github.com/gogf/gf/contrib/drivers/pgsql/v2 v2.9.0
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.9.0
 	github.com/gogf/gf/v2 v2.9.0
