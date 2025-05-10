@@ -9,6 +9,15 @@ import (
 	"github.com/XiaoLFeng/bamboo-utils/bresult"
 )
 
+// AuthLogin 用户登录并获取授权令牌。
+//
+// 参数:
+//   - ctx: 上下文信息。
+//   - req: 用户登录请求，包含用户名和密码。
+//
+// 返回:
+//   - res: 用户登录响应，包含用户基本信息和授权令牌。
+//   - err: 执行过程中可能发生的错误。
 func (c *ControllerV1) AuthLogin(ctx context.Context, req *v1.AuthLoginReq) (res *v1.AuthLoginRes, err error) {
 	iAuth := service.Auth()
 	// 登录

@@ -16,4 +16,14 @@ const (
 	//   - %s:  用户 UUID
 	//   - %s:  令牌
 	RedisUserToken = "user:token:%s:%s"
+
+	// RedisUserEmail 邮箱缓存用户数据的 Redis 键模板
+	//
+	//   - %s:  邮箱
+	RedisUserEmail = "user:email:%s"
+
+	// RedisUserPhone 手机号缓存用户数据的 Redis 键模板
+	//
+	//   - %s:  手机号
+	RedisUserPhone = "user:phone:%s"
 )

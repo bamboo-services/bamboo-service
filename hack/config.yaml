@@ -8,7 +8,6 @@ gfcli:
         descriptionTag: true
         jsonCase:  "Snake"
         removePrefix: "fy_"
-        withTime: true
         gJsonSupport: true
 
   docker:
