@@ -19,6 +19,7 @@ import (
 //   - res: 用户登录响应，包含用户基本信息和授权令牌。
 //   - err: 执行过程中可能发生的错误。
 func (c *ControllerV1) AuthLogin(ctx context.Context, req *v1.AuthLoginReq) (res *v1.AuthLoginRes, err error) {
+	blog.ControllerInfo(ctx, "AuthLogin", "用户登录")
 	iAuth := service.Auth()
 	// 登录
 	userInfo, errorCode := iAuth.UserLogin(ctx, req.Username, req.Password)

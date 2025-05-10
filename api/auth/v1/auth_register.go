@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"bamboo-service/internal/model/dto"
 	"github.com/XiaoLFeng/bamboo-utils/bmodels"
 	"github.com/gogf/gf/v2/frame/g"
 )
@@ -16,5 +17,5 @@ type AuthRegisterReq struct {
 
 type AuthRegisterRes struct {
 	g.Meta `mime:"application/json;charset=utf-8"`
-	*bmodels.ResponseDTO[any]
+	*bmodels.ResponseDTO[*dto.UserInfoDTO]
 }

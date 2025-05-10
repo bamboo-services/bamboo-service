@@ -45,7 +45,7 @@ var (
 //   - berror.ErrCacheError: 缓存获取失败或保存失败。
 //   - berror.ErrDatabaseError: 数据库查询错误。
 //   - berror.ErrInternalServer: 数据构造或解析错误。
-func GetUserByUUID(ctx context.Context, userUUID string) (*entity.User, *berror.ErrorCode) {
+func (u *userDao) GetUserByUUID(ctx context.Context, userUUID string) (*entity.User, *berror.ErrorCode) {
 	blog.DaoInfo(ctx, "GetUserByUUID", "通过 UUID 获取用户")
 	redisRecord, redisErr := g.Redis().HGetAll(ctx, fmt.Sprintf(consts.RedisUserUUID, userUUID))
 	if redisErr != nil {
@@ -54,7 +54,7 @@ func GetUserByUUID(ctx context.Context, userUUID string) (*entity.User, *berror.
 	var user *entity.User
 	if redisRecord.IsNil() || redisRecord.IsEmpty() {
 		// 数据库获取
-		sqlErr := User.Ctx(ctx).Where(do.User{UserUuid: userUUID}).Scan(&user)
+		sqlErr := u.Ctx(ctx).Where(do.User{UserUuid: userUUID}).Scan(&user)
 		if sqlErr != nil {
 			return nil, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr.Error())
 		}
@@ -94,7 +94,7 @@ func GetUserByUUID(ctx context.Context, userUUID string) (*entity.User, *berror.
 //   - berror.ErrCacheError: 缓存获取失败或保存失败。
 //   - berror.ErrDatabaseError: 数据库查询错误。
 //   - berror.ErrInternalServer: 数据构造或解析错误。
-func GetUserByEmail(ctx context.Context, email string) (*entity.User, *berror.ErrorCode) {
+func (u *userDao) GetUserByEmail(ctx context.Context, email string) (*entity.User, *berror.ErrorCode) {
 	blog.DaoInfo(ctx, "GetUserByEmail", "通过 Email 获取用户")
 	redisRecord, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisUserEmail, email))
 	if redisErr != nil {
@@ -102,7 +102,7 @@ func GetUserByEmail(ctx context.Context, email string) (*entity.User, *berror.Er
 	}
 	var user *entity.User
 	if redisRecord.IsNil() || redisRecord.IsEmpty() {
-		redisErr := User.Ctx(ctx).Where(do.User{Email: email}).Scan(&user)
+		redisErr := u.Ctx(ctx).Where(do.User{Email: email}).Scan(&user)
 		if redisErr != nil {
 			return nil, berror.ErrorAddData(berror.ErrDatabaseError, redisErr)
 		}
@@ -116,7 +116,7 @@ func GetUserByEmail(ctx context.Context, email string) (*entity.User, *berror.Er
 		}
 		return user, nil
 	} else {
-		getUser, errorCode := GetUserByUUID(ctx, redisRecord.String())
+		getUser, errorCode := u.GetUserByUUID(ctx, redisRecord.String())
 		if errorCode != nil {
 			return nil, errorCode
 		}
@@ -140,7 +140,7 @@ func GetUserByEmail(ctx context.Context, email string) (*entity.User, *berror.Er
 //   - berror.ErrCacheError: 缓存获取失败或保存失败。
 //   - berror.ErrDatabaseError: 数据库查询错误。
 //   - berror.ErrInternalServer: 数据构造或解析错误。
-func GetUserByPhone(ctx context.Context, phone string) (*entity.User, *berror.ErrorCode) {
+func (u *userDao) GetUserByPhone(ctx context.Context, phone string) (*entity.User, *berror.ErrorCode) {
 	blog.DaoInfo(ctx, "GetUserByPhone", "通过 Phone 获取用户")
 	redisRecord, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisUserPhone, phone))
 	if redisErr != nil {
@@ -148,7 +148,7 @@ func GetUserByPhone(ctx context.Context, phone string) (*entity.User, *berror.Er
 	}
 	var user *entity.User
 	if redisRecord.IsNil() || redisRecord.IsEmpty() {
-		redisErr := User.Ctx(ctx).Where(do.User{Phone: phone}).Scan(&user)
+		redisErr := u.Ctx(ctx).Where(do.User{Phone: phone}).Scan(&user)
 		if redisErr != nil {
 			return nil, berror.ErrorAddData(berror.ErrDatabaseError, redisErr)
 		}
@@ -162,7 +162,7 @@ func GetUserByPhone(ctx context.Context, phone string) (*entity.User, *berror.Er
 		}
 		return user, nil
 	} else {
-		getUser, errorCode := GetUserByUUID(ctx, redisRecord.String())
+		getUser, errorCode := u.GetUserByUUID(ctx, redisRecord.String())
 		if errorCode != nil {
 			return nil, errorCode
 		}
@@ -186,7 +186,7 @@ func GetUserByPhone(ctx context.Context, phone string) (*entity.User, *berror.Er
 //   - berror.ErrCacheError: 缓存获取失败或保存失败。
 //   - berror.ErrDatabaseError: 数据库查询错误。
 //   - berror.ErrInternalServer: 数据构造或解析错误。
-func GetUserByUsername(ctx context.Context, username string) (*entity.User, *berror.ErrorCode) {
+func (u *userDao) GetUserByUsername(ctx context.Context, username string) (*entity.User, *berror.ErrorCode) {
 	blog.DaoInfo(ctx, "GetUserByUsername", "通过 Username 获取用户")
 	redisRecord, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisUserUsername, username))
 	if redisErr != nil {
@@ -194,7 +194,7 @@ func GetUserByUsername(ctx context.Context, username string) (*entity.User, *ber
 	}
 	var user *entity.User
 	if redisRecord.IsNil() || redisRecord.IsEmpty() {
-		redisErr := User.Ctx(ctx).Where(do.User{Username: username}).Scan(&user)
+		redisErr := u.Ctx(ctx).Where(do.User{Username: username}).Scan(&user)
 		if redisErr != nil {
 			return nil, berror.ErrorAddData(berror.ErrDatabaseError, redisErr)
 		}
@@ -208,7 +208,7 @@ func GetUserByUsername(ctx context.Context, username string) (*entity.User, *ber
 		}
 		return user, nil
 	} else {
-		getUser, errorCode := GetUserByUUID(ctx, redisRecord.String())
+		getUser, errorCode := u.GetUserByUUID(ctx, redisRecord.String())
 		if errorCode != nil {
 			return nil, errorCode
 		}

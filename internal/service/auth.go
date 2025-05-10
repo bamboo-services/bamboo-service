@@ -73,7 +73,7 @@ type (
 		//
 		// 返回:
 		//   - 错误代码，表示注册失败的原因或 nil 表示成功。
-		UserRegister(ctx context.Context, request *v1.AuthLoginReq) berror.ErrorCode
+		UserRegister(ctx context.Context, request *v1.AuthRegisterReq) (*dto.UserInfoDTO, *berror.ErrorCode)
 	}
 )
 
