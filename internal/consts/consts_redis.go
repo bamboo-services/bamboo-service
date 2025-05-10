@@ -10,4 +10,10 @@ const (
 	//
 	//   - %s:  用户名
 	RedisUserUsername = "user:username:%s"
+
+	// RedisUserToken 用户登录令牌缓存用户数据的 Redis 键模板
+	//
+	//   - %s:  用户 UUID
+	//   - %s:  令牌
+	RedisUserToken = "user:token:%s:%s"
 )

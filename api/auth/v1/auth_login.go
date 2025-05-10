@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"bamboo-service/internal/model/dto"
+	"bamboo-service/internal/model/dto/dsingle"
 	"github.com/XiaoLFeng/bamboo-utils/bmodels"
 	"github.com/gogf/gf/v2/frame/g"
 )
@@ -14,5 +14,5 @@ type AuthLoginReq struct {
 
 type AuthLoginRes struct {
 	g.Meta `mime:"application/json;charset=utf-8"`
-	*bmodels.ResponseDTO[*dto.UserInfoDTO]
+	*bmodels.ResponseDTO[*dsingle.UserLoginDTO]
 }

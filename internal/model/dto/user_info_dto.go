@@ -1,5 +1,8 @@
 package dto
 
+// UserInfoDTO 表示用户信息的数据传输对象。
+//
+// 包含用户的基础信息，如唯一标识符、用户名、邮箱、手机号码、角色及昵称，用于数据传输过程中的封装与解析。
 type UserInfoDTO struct {
 	UserUuid string `json:"user_uuid"          orm:"user_uuid"          description:"用户唯一标识符"` // 用户唯一标识符
 	Username string `json:"username"           orm:"username"           description:"用户名"`     // 用户名
