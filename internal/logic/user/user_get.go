@@ -3,69 +3,71 @@ package user
 import (
 	"bamboo-service/internal/custom"
 	"bamboo-service/internal/dao"
+	"bamboo-service/internal/model/entity"
 	"context"
 	"github.com/XiaoLFeng/bamboo-utils/berror"
 	"github.com/XiaoLFeng/bamboo-utils/blog"
 )
 
-// CheckUserExistByUsername 检查指定用户名的用户是否存在。
-//
-// 当用户
+// GetUserByUsername 根据用户名检查用户是否存在并返回用户信息。
 //
 // 参数:
 //   - ctx: 请求上下文信息，用于控制操作的生命周期。
-//   - Username: 需要检查的用户名。
+//   - username: 需要检查的用户名。
 //
 // 返回:
-//   - err: 错误代码，表示用户不存在或其他错误情况。
-func (s *sUser) CheckUserExistByUsername(ctx context.Context, username string) *berror.ErrorCode {
-	blog.ServiceInfo(ctx, "CheckUserExistByUsername", "检查用户名 %s 是否存在", username)
+//   - *entity.User: 用户信息，若用户存在则返回详细信息，否则为nil。
+//   - *berror.ErrorCode: 错误代码，表示用户不存在或其他错误情况。
+func (s *sUser) GetUserByUsername(ctx context.Context, username string) (*entity.User, *berror.ErrorCode) {
+	blog.ServiceInfo(ctx, "GetUserByUsername", "根据用户名 %s 获取用户信息", username)
 	getUser, errorCode := dao.User.GetUserByUsername(ctx, username)
 	if errorCode != nil {
-		return errorCode
+		return nil, errorCode
 	}
-	if getUser != nil {
-		return custom.ErrorUserExist
+	if getUser == nil {
+		return nil, custom.ErrorUserNotExist
 	}
-	return nil
+	return getUser, nil
 }
 
-// CheckUserExistByEmail 检查指定邮箱的用户是否存在。
+// GetUserByEmail 根据邮箱检查用户是否存在并返回用户信息。
 //
 // 参数:
-//   - ctx: 请求上下文，用于控制操作生命周期。
-//   - Email: 需要检查的邮箱地址。
+//   - ctx: 请求上下文信息，用于控制操作的生命周期。
+//   - email: 需要检查的邮箱地址。
 //
 // 返回:
-//   - 错误代码，表示用户是否存在或其他错误情况。
-func (s *sUser) CheckUserExistByEmail(ctx context.Context, email string) *berror.ErrorCode {
-	blog.ServiceInfo(ctx, "CheckUserExistByEmail", "检查邮箱 %s 是否存在", email)
+//   - *entity.User: 用户信息，若用户存在则返回详细信息，否则为nil。
+//   - *berror.ErrorCode: 错误代码，表示用户不存在或其他错误情况。
+func (s *sUser) GetUserByEmail(ctx context.Context, email string) (*entity.User, *berror.ErrorCode) {
+	blog.ServiceInfo(ctx, "GetUserByEmail", "检查邮箱 %s 是否存在", email)
 	getUser, errorCode := dao.User.GetUserByEmail(ctx, email)
 	if errorCode != nil {
-		return errorCode
+		return nil, errorCode
 	}
 	if getUser != nil {
-		return custom.ErrorUserExist
+		return nil, custom.ErrorUserNotExist
 	}
-	return nil
+	return getUser, nil
 }
 
-// CheckUserExistByPhone 检查指定手机号的用户是否存在。
+// GetUserByPhone 根据手机号检查用户是否存在并返回用户信息。
 //
 // 参数:
-//   - ctx: 请求上下文，用于控制操作生命周期。
+//   - ctx: 请求上下文信息，用于控制操作的生命周期。
 //   - phone: 需要检查的手机号。
 //
 // 返回:
-//   - 错误代码，表示用户是否存在或其他错误情况。
-func (s *sUser) CheckUserExistByPhone(ctx context.Context, phone string) *berror.ErrorCode {
-	blog.ServiceInfo(ctx, "CheckUserExistByPhone", "检查手机号 %s 是否存在", phone)
+//   - *entity.User: 用户信息，若用户存在则返回详细信息，否则为 nil。
+//   - *berror.ErrorCode: 错误代码，表示用户不存在或其他错误情况。
+func (s *sUser) GetUserByPhone(ctx context.Context, phone string) (*entity.User, *berror.ErrorCode) {
+	blog.ServiceInfo(ctx, "GetUserByPhone", "根据手机号 %s 获取用户信息", phone)
 	getUser, errorCode := dao.User.GetUserByPhone(ctx, phone)
 	if errorCode != nil {
-		return errorCode
+		return nil, errorCode
 	}
 	if getUser != nil {
-		return custom.ErrorUserExist
+		return nil, custom.ErrorUserNotExist
 	}
-	return nil
+	return getUser, nil
 }

@@ -9,6 +9,15 @@ import (
 	"bamboo-service/api/auth/v1"
 )
 
+// AuthResetPassword 处理用户重置密码请求。
+//
+// 参数:
+//   - ctx: 上下文信息。
+//   - req: 密码重置请求，包含用户邮箱、验证码和新密码。
+//
+// 返回:
+//   - res: 密码重置响应，表示重置结果。
+//   - err: 执行过程中可能发生的错误。
 func (c *ControllerV1) AuthResetPassword(ctx context.Context, req *v1.AuthResetPasswordReq) (res *v1.AuthResetPasswordRes, err error) {
 	blog.ControllerInfo(ctx, "AuthResetPassword", "重置密码")
 
@@ -27,7 +36,11 @@ func (c *ControllerV1) AuthResetPassword(ctx context.Context, req *v1.AuthResetP
 	}
 
 	// 重置密码
-	// TODO-25051301 密码重置逻辑
+	iAuth := service.Auth()
+	errorCode = iAuth.ResetPassword(ctx, req.Email, req.Password)
+	if errorCode != nil {
+		return nil, errorCode
+	}
 
 	return &v1.AuthResetPasswordRes{
 		ResponseDTO: bresult.Success(ctx, "密码重置成功"),

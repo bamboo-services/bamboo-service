@@ -49,30 +49,31 @@ func (cDao *userDao) GetUserByUUID(ctx context.Context, userUUID string) (*entit
 	blog.DaoInfo(ctx, "GetUserByUUID", "通过 UUID 获取用户")
 	redisRecord, redisErr := g.Redis().HGetAll(ctx, fmt.Sprintf(consts.RedisUserUUID, userUUID))
 	if redisErr != nil {
-		return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr.Error())
+		return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr)
 	}
 	var user *entity.User
 	if redisRecord.IsNil() || redisRecord.IsEmpty() {
 		// 数据库获取
 		sqlErr := cDao.Ctx(ctx).Where(do.User{UserUuid: userUUID}).Scan(&user)
 		if sqlErr != nil {
-			return nil, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr.Error())
+			return nil, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
 		}
 		if user != nil {
 			_, redisErr := g.Redis().HSet(ctx, fmt.Sprintf(consts.RedisUserUUID, userUUID), butil.StructToMap(user))
 			if redisErr != nil {
-				return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr.Error())
+				return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr)
 			}
 			_, redisErr = g.Redis().Expire(ctx, fmt.Sprintf(consts.RedisUserUUID, userUUID), int64(time.Hour))
 			if redisErr != nil {
-				return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr.Error())
+				return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr)
 			}
 		}
 		return user, nil
 	} else {
 		user, operateErr := butil.MapToStruct(redisRecord.Map(), user)
 		if operateErr != nil {
-			return nil, berror.ErrorAddData(berror.ErrInternalServer, operateErr.Error())
+			blog.DaoError(ctx, "GetUserByUUID", "数据构造或解析错误", operateErr)
+			return nil, berror.ErrorAddData(berror.ErrInternalServer, operateErr)
 		}
 		return user, nil
 	}
@@ -98,21 +99,25 @@ func (cDao *userDao) GetUserByEmail(ctx context.Context, email string) (*entity.
 	blog.DaoInfo(ctx, "GetUserByEmail", "通过 Email 获取用户")
 	redisRecord, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisUserEmail, email))
 	if redisErr != nil {
-		return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr.Error())
+		blog.DaoError(ctx, "GetUserByEmail", "缓存获取失败", redisErr)
+		return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr)
 	}
 	var user *entity.User
 	if redisRecord.IsNil() || redisRecord.IsEmpty() {
-		redisErr := cDao.Ctx(ctx).Where(do.User{Email: email}).Scan(&user)
-		if redisErr != nil {
-			return nil, berror.ErrorAddData(berror.ErrDatabaseError, redisErr)
+		sqlErr := cDao.Ctx(ctx).Where(do.User{Email: email}).Scan(&user)
+		if sqlErr != nil {
+			blog.DaoError(ctx, "GetUserByEmail", "数据库查询失败", sqlErr)
+			return nil, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
 		}
 		redisErr = g.Redis().SetEX(ctx, fmt.Sprintf(consts.RedisUserEmail, email), user.UserUuid, int64(time.Hour))
 		if redisErr != nil {
-			return nil, berror.ErrorAddData(berror.ErrInternalServer, redisErr)
+			blog.DaoError(ctx, "GetUserByEmail", "缓存保存失败", redisErr)
+			return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr)
 		}
 		_, redisErr = g.Redis().HSet(ctx, fmt.Sprintf(consts.RedisUserUUID, user.UserUuid), butil.StructToMap(user))
 		if redisErr != nil {
-			return nil, berror.ErrorAddData(berror.ErrInternalServer, redisErr)
+			blog.DaoError(ctx, "GetUserByEmail", "缓存保存失败", redisErr)
+			return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr)
 		}
 		return user, nil
 	} else {
@@ -144,21 +149,25 @@ func (cDao *userDao) GetUserByPhone(ctx context.Context, phone string) (*entity.
 	blog.DaoInfo(ctx, "GetUserByPhone", "通过 Phone 获取用户")
 	redisRecord, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisUserPhone, phone))
 	if redisErr != nil {
-		return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr.Error())
+		blog.DaoError(ctx, "GetUserByPhone", "缓存获取失败", redisErr)
+		return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr)
 	}
 	var user *entity.User
 	if redisRecord.IsNil() || redisRecord.IsEmpty() {
-		redisErr := cDao.Ctx(ctx).Where(do.User{Phone: phone}).Scan(&user)
-		if redisErr != nil {
-			return nil, berror.ErrorAddData(berror.ErrDatabaseError, redisErr)
+		sqlErr := cDao.Ctx(ctx).Where(do.User{Phone: phone}).Scan(&user)
+		if sqlErr != nil {
+			blog.DaoError(ctx, "GetUserByPhone", "数据库查询失败", sqlErr)
+			return nil, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
 		}
 		redisErr = g.Redis().SetEX(ctx, fmt.Sprintf(consts.RedisUserPhone, phone), user.UserUuid, int64(time.Hour))
 		if redisErr != nil {
-			return nil, berror.ErrorAddData(berror.ErrInternalServer, redisErr)
+			blog.DaoError(ctx, "GetUserByPhone", "缓存存储失败", redisErr)
+			return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr)
 		}
 		_, redisErr = g.Redis().HSet(ctx, fmt.Sprintf(consts.RedisUserUUID, user.UserUuid), butil.StructToMap(user))
 		if redisErr != nil {
-			return nil, berror.ErrorAddData(berror.ErrInternalServer, redisErr)
+			blog.DaoError(ctx, "GetUserByPhone", "缓存存储失败", redisErr)
+			return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr)
 		}
 		return user, nil
 	} else {
@@ -190,21 +199,24 @@ func (cDao *userDao) GetUserByUsername(ctx context.Context, username string) (*e
 	blog.DaoInfo(ctx, "GetUserByUsername", "通过 Username 获取用户")
 	redisRecord, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisUserUsername, username))
 	if redisErr != nil {
-		return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr.Error())
+		return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr)
 	}
 	var user *entity.User
 	if redisRecord.IsNil() || redisRecord.IsEmpty() {
 		redisErr := cDao.Ctx(ctx).Where(do.User{Username: username}).Scan(&user)
 		if redisErr != nil {
+			blog.DaoError(ctx, "GetUserByUsername", "查询用户失败 %s", redisErr)
 			return nil, berror.ErrorAddData(berror.ErrDatabaseError, redisErr)
 		}
 		redisErr = g.Redis().SetEX(ctx, fmt.Sprintf(consts.RedisUserUsername, username), user.UserUuid, int64(time.Hour))
 		if redisErr != nil {
-			return nil, berror.ErrorAddData(berror.ErrInternalServer, redisErr)
+			blog.DaoError(ctx, "GetUserByUsername", "保存用户缓存失败 %s", redisErr)
+			return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr)
 		}
 		_, redisErr = g.Redis().HSet(ctx, fmt.Sprintf(consts.RedisUserUUID, user.UserUuid), butil.StructToMap(user))
 		if redisErr != nil {
-			return nil, berror.ErrorAddData(berror.ErrInternalServer, redisErr)
+			blog.DaoError(ctx, "GetUserByUsername", "保存用户缓存失败 %s", redisErr)
+			return nil, berror.ErrorAddData(berror.ErrCacheError, redisErr)
 		}
 		return user, nil
 	} else {
@@ -214,4 +226,52 @@ func (cDao *userDao) GetUserByUsername(ctx context.Context, username string) (*e
 		}
 		return getUser, nil
 	}
+}
+
+// UpdateUser 更新用户信息。
+//
+// 删除用户相关的缓存并更新数据库中的用户信息。
+//
+// 参数:
+//   - ctx: 上下文对象，用于控制请求的生命周期。
+//   - user: 用户实体，包含需更新的用户信息。
+//
+// 返回:
+//   - *berror.ErrorCode: 错误码对象，如果出错。
+//
+// 错误:
+//   - berror.ErrCacheError: 删除缓存时发生错误。
+//   - berror.ErrDatabaseError: 数据库更新失败。
+func (cDao *userDao) UpdateUser(ctx context.Context, user *entity.User) *berror.ErrorCode {
+	blog.DaoInfo(ctx, "UpdateUser", "更新用户信息")
+	// 删除相关缓存
+	_, redisErr := g.Redis().Del(ctx, fmt.Sprintf(consts.RedisUserUUID, user.UserUuid))
+	if redisErr != nil {
+		blog.DaoError(ctx, "UpdateUser", "删除用户缓存失败 %s", redisErr)
+		return berror.ErrorAddData(berror.ErrCacheError, redisErr)
+	}
+	_, redisErr = g.Redis().Del(ctx, fmt.Sprintf(consts.RedisUserEmail, user.Email))
+	if redisErr != nil {
+		blog.DaoError(ctx, "UpdateUser", "删除用户缓存失败 %s", redisErr)
+		return berror.ErrorAddData(berror.ErrCacheError, redisErr)
+	}
+	_, redisErr = g.Redis().Del(ctx, fmt.Sprintf(consts.RedisUserPhone, user.Phone))
+	if redisErr != nil {
+		blog.DaoError(ctx, "UpdateUser", "删除用户缓存失败 %s", redisErr)
+		return berror.ErrorAddData(berror.ErrCacheError, redisErr)
+	}
+	_, redisErr = g.Redis().Del(ctx, fmt.Sprintf(consts.RedisUserUsername, user.Username))
+	if redisErr != nil {
+		blog.DaoError(ctx, "UpdateUser", "删除用户缓存失败 %s", redisErr)
+		return berror.ErrorAddData(berror.ErrCacheError, redisErr)
+	}
+
+	// 更新数据库
+	_, sqlErr := cDao.Ctx(ctx).Where(do.User{UserUuid: user.UserUuid}).Update(&user)
+	if sqlErr != nil {
+		blog.DaoError(ctx, "UpdateUser", "更新用户信息失败 %s", sqlErr)
+		return berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
+	}
+
+	return nil
 }

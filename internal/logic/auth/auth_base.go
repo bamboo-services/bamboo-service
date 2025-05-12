@@ -2,8 +2,7 @@ package auth
 
 import "bamboo-service/internal/service"
 
-type sAuth struct {
-}
+type sAuth struct{}
 
 func init() {
 	service.RegisterAuth(New())

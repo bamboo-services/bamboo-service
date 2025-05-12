@@ -27,16 +27,16 @@ func (c *ControllerV1) AuthRegister(ctx context.Context, req *v1.AuthRegisterReq
 	// 数据验证
 	iUser := service.User()
 	errorCode := iUser.CheckUserExistByUsername(ctx, req.Username)
-	if errorCode != nil {
-		return nil, errorCode
+	if errorCode == nil {
+		return nil, custom.ErrorUserExist
 	}
 	errorCode = iUser.CheckUserExistByEmail(ctx, req.Email)
-	if errorCode != nil {
-		return nil, errorCode
+	if errorCode == nil {
+		return nil, custom.ErrorUserExist
 	}
 	errorCode = iUser.CheckUserExistByPhone(ctx, req.Phone)
-	if errorCode != nil {
-		return nil, errorCode
+	if errorCode == nil {
+		return nil, custom.ErrorUserExist
 	}
 
 	// 创建用户

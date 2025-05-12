@@ -25,6 +25,20 @@ type (
 		//   - *dto.AuthorizeTokenDTO: 包含生成的授权令牌及其相关信息。
 		//   - *berror.ErrorCode: 错误代码，表示可能的存储或其他错误情况。
 		AuthorizationToken(ctx context.Context, userUUID string) (*dto.AuthorizeTokenDTO, *berror.ErrorCode)
+		// ResetPassword 重置用户密码。
+		//
+		// 参数:
+		//   - ctx: 请求上下文。
+		//   - email: 用户邮箱，用于标识将被重置密码的用户。
+		//   - password: 新密码。
+		//
+		// 返回:
+		//   - *berror.ErrorCode: 错误码对象，若发生错误。
+		//
+		// 错误:
+		//   - berror.ErrDatabaseError: 数据库操作失败。
+		//   - berror.ErrCacheError: 缓存错误。
+		ResetPassword(ctx context.Context, email string, password string) *berror.ErrorCode
 		// UserRegister 注册新用户。
 		//
 		// 参数:
