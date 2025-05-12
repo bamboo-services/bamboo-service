@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bamboo-service/internal/controller/auth"
+	"bamboo-service/internal/handler/hook"
 	"context"
 	"github.com/XiaoLFeng/bamboo-utils/bhandler/bhook"
 	"github.com/XiaoLFeng/bamboo-utils/bhandler/bmiddle"
@@ -20,6 +21,7 @@ var (
 
 			// 绑定事件
 			s.BindHookHandler("/api/*", ghttp.HookBeforeServe, bhook.BambooHookDefaultCors)
+			s.BindHookHandler("/api/*/admin/*", ghttp.HookBeforeServe, hook.BeforeAdminCheckHook)
 
 			// API 接口
 			s.Group("/api", func(api *ghttp.RouterGroup) {
