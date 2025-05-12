@@ -5,6 +5,7 @@ import (
 	"bamboo-service/internal/model/dto"
 	"bamboo-service/internal/service"
 	"context"
+	"github.com/XiaoLFeng/bamboo-utils/blog"
 	"github.com/XiaoLFeng/bamboo-utils/bresult"
 )
 
@@ -23,6 +24,7 @@ import (
 //   - 验证码生成失败
 //   - 验证码发送失败
 func (c *ControllerV1) MailSendCode(ctx context.Context, req *v1.MailSendCodeReq) (res *v1.MailSendCodeRes, err error) {
+	blog.ControllerInfo(ctx, "MailSendCode", "发送邮箱验证码")
 	iMail := service.Mail()
 	// 检查是否是允许的 Purpose
 	errorCode := iMail.CheckPurpose(ctx, req.Purpose)

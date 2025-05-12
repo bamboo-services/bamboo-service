@@ -53,6 +53,17 @@ type (
 		// 返回:
 		//   - *berror.ErrorCode: 错误信息，表示模板检查失败、邮件发送失败等可能原因。
 		SendMail(ctx context.Context, template string, mailTemplate *dto.MailSendTemplateDTO) *berror.ErrorCode
+		// VerifyMailCode 验证邮件验证码是否有效。
+		//
+		// 参数:
+		//   - ctx: 上下文，用于控制生命周期和日志记录。
+		//   - purpose: 验证码的用途描述。
+		//   - email: 邮箱地址，待验证的用户邮箱。
+		//   - code: 用户输入的验证码。
+		//
+		// 返回:
+		//   - *berror.ErrorCode: 错误信息，若验证失败则返回对应错误。
+		VerifyMailCode(ctx context.Context, purpose string, email string, code string) *berror.ErrorCode
 	}
 )
 

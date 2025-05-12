@@ -24,22 +24,23 @@ func (c *ControllerV1) AuthRegister(ctx context.Context, req *v1.AuthRegisterReq
 	if !consts.SystemAbleRegisterValue {
 		return nil, custom.ErrorSystemNotAbleRegister
 	}
-	iAuth := service.Auth()
 	// 数据验证
-	errorCode := iAuth.CheckUserExistByUsername(ctx, req.Username)
+	iUser := service.User()
+	errorCode := iUser.CheckUserExistByUsername(ctx, req.Username)
 	if errorCode != nil {
 		return nil, errorCode
 	}
-	errorCode = iAuth.CheckUserExistByEmail(ctx, req.Email)
+	errorCode = iUser.CheckUserExistByEmail(ctx, req.Email)
 	if errorCode != nil {
 		return nil, errorCode
 	}
-	errorCode = iAuth.CheckUserExistByPhone(ctx, req.Phone)
+	errorCode = iUser.CheckUserExistByPhone(ctx, req.Phone)
 	if errorCode != nil {
 		return nil, errorCode
 	}
 
 	// 创建用户
+	iAuth := service.Auth()
 	userInfo, errorCode := iAuth.UserRegister(ctx, req)
 	if errorCode != nil {
 		return nil, errorCode

@@ -49,6 +49,25 @@ func (cDao *emailCodeDao) GetMailCodeList(ctx context.Context, email string) ([]
 	return list, nil
 }
 
+// GetLastMailCode 获取指定邮箱的最新邮件验证码记录。
+//
+// 参数:
+//   - ctx: 上下文，用于控制生命周期。
+//   - email: 邮箱地址，用于查询对应的最新验证码记录。
+//
+// 返回:
+//   - *entity.EmailCode: 最新的邮件验证码实体，若未找到记录则返回 nil。
+//   - *berror.ErrorCode: 错误信息，当数据库操作失败时返回。
+func (cDao *emailCodeDao) GetLastMailCode(ctx context.Context, purpose, email string) (*entity.EmailCode, *berror.ErrorCode) {
+	blog.DaoInfo(ctx, "GetLastMailCode", "获取 %s 的最新验证码", email)
+	var mailCode *entity.EmailCode
+	sqlErr := cDao.Ctx(ctx).Where(&do.EmailCode{Email: email, Purpose: purpose}).OrderDesc(cDao.Columns().CreatedAt).Limit(1).Scan(&mailCode)
+	if sqlErr != nil {
+		return nil, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
+	}
+	return mailCode, nil
+}
+
 // RemoveMailCode 删除指定验证码记录。
 //
 // 参数:
