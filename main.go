@@ -21,6 +21,7 @@ func main() {
 
 	su := setup.New(initCtx)
 	su.CheckUserSuperAdminExist()
+	su.GetVariableSetup()
 
 	cmd.Main.Run(initCtx)
 }

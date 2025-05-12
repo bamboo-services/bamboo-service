@@ -15,6 +15,7 @@ import (
 //
 // 如果不存在超级管理员用户，则创建一个默认的超级管理员，并更新系统的超级管理员UUID值。
 func (s *Setup) CheckUserSuperAdminExist() {
+	g.Log().Info(s.ctx, "[INIT] 检查超级管理员")
 	var system *entity.System
 	err := dao.System.Ctx(s.ctx).Where(do.System{Key: consts.SystemSuperAdminUUID}).Scan(&system)
 	if err != nil {

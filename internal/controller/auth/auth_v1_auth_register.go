@@ -2,6 +2,8 @@ package auth
 
 import (
 	"bamboo-service/api/auth/v1"
+	"bamboo-service/internal/consts"
+	"bamboo-service/internal/custom"
 	"bamboo-service/internal/service"
 	"context"
 	"github.com/XiaoLFeng/bamboo-utils/blog"
@@ -19,6 +21,9 @@ import (
 //   - err: 执行过程中可能发生的错误。
 func (c *ControllerV1) AuthRegister(ctx context.Context, req *v1.AuthRegisterReq) (res *v1.AuthRegisterRes, err error) {
 	blog.ControllerInfo(ctx, "AuthRegister", "用户注册")
+	if !consts.SystemAbleRegisterValue {
+		return nil, custom.ErrorSystemNotAbleRegister
+	}
 	iAuth := service.Auth()
 	// 数据验证
 	errorCode := iAuth.CheckUserExistByUsername(ctx, req.Username)
