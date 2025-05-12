@@ -8,26 +8,25 @@ import (
 	"context"
 	"fmt"
 	"github.com/XiaoLFeng/bamboo-utils/berror"
+	"github.com/XiaoLFeng/bamboo-utils/blog"
 	"github.com/gogf/gf/v2/crypto/gmd5"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gtime"
 	"time"
 )
 
-// GetMailCode 根据邮箱地址和用途生成并返回邮件验证码。
-//
-// 功能概述:
-// 检查邮件验证码的发送频率，避免频繁发送；若符合条件，则生成新的验证码并缓存相关信息。
+// GenerateMailCode 生成邮件验证码并限制频繁发送。
 //
 // 参数:
-//   - ctx: 上下文，用于控制生命周期和传递信息。
-//   - email: 邮箱地址，接收验证码的目标地址。
-//   - purpose: 验证码的用途，如注册、密码重置等。
+//   - ctx: 上下文，用于控制生命周期和日志记录。
+//   - email: 邮箱地址，用于接收验证码的用户邮箱。
+//   - purpose: 验证码的用途描述。
 //
 // 返回:
-//   - *dto.MailCodeDTO: 封装邮箱、验证码及创建时间的传输数据对象。
-//   - *berror.ErrorCode: 错误信息，包含缓存、频率限制或验证码生成失败的原因。
-func (s *sMail) GetMailCode(ctx context.Context, email string, purpose string) (*dto.MailCodeDTO, *berror.ErrorCode) {
+//   - *dto.MailCodeDTO: 包含生成的验证码及其相关信息。
+//   - *berror.ErrorCode: 错误信息，如发送频率限制或缓存操作失败。
+func (s *sMail) GenerateMailCode(ctx context.Context, email string, purpose string) (*dto.MailCodeDTO, *berror.ErrorCode) {
+	blog.ServiceInfo(ctx, "GenerateMailCode", "生成 %s 的验证码", email)
 	// 检查最后一个发送的邮件是否少于 1 分钟
 	getLastSendTime, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisMailCodeSendTime, gmd5.MustEncrypt(email)))
 	if redisErr != nil {
@@ -57,6 +56,7 @@ func (s *sMail) GetMailCode(ctx context.Context, email string, purpose string) (
 	}
 	return &dto.MailCodeDTO{
 		Email:     mailCodeEntity.Email,
+		Code:      mailCodeEntity.Code,
 		CreatedAt: mailCodeEntity.CreatedAt,
 	}, nil
 }

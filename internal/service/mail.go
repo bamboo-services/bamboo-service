@@ -14,20 +14,36 @@ import (
 
 type (
 	IMail interface {
-		// GetMailCode 根据邮箱地址和用途生成并返回邮件验证码。
-		//
-		// 功能概述:
-		// 检查邮件验证码的发送频率，避免频繁发送；若符合条件，则生成新的验证码并缓存相关信息。
+		// GenerateMailCode 生成邮件验证码并限制频繁发送。
 		//
 		// 参数:
-		//   - ctx: 上下文，用于控制生命周期和传递信息。
-		//   - email: 邮箱地址，接收验证码的目标地址。
-		//   - purpose: 验证码的用途，如注册、密码重置等。
+		//   - ctx: 上下文，用于控制生命周期和日志记录。
+		//   - email: 邮箱地址，用于接收验证码的用户邮箱。
+		//   - purpose: 验证码的用途描述。
 		//
 		// 返回:
-		//   - *dto.MailCodeDTO: 封装邮箱、验证码及创建时间的传输数据对象。
-		//   - *berror.ErrorCode: 错误信息，包含缓存、频率限制或验证码生成失败的原因。
-		GetMailCode(ctx context.Context, email string, purpose string) (*dto.MailCodeDTO, *berror.ErrorCode)
+		//   - *dto.MailCodeDTO: 包含生成的验证码及其相关信息。
+		//   - *berror.ErrorCode: 错误信息，如发送频率限制或缓存操作失败。
+		GenerateMailCode(ctx context.Context, email string, purpose string) (*dto.MailCodeDTO, *berror.ErrorCode)
+		// CheckMailTemplate 检查提供的邮件模板名称是否有效。
+		//
+		// 参数:
+		//   - ctx: 上下文，用于控制生命周期和日志记录。
+		//   - template: 模板名称，待检查的邮件模板标识。
+		//
+		// 返回:
+		//   - *berror.ErrorCode: 错误信息，如果模板无效或为空则返回相应错误。
+		CheckMailTemplate(ctx context.Context, template string) *berror.ErrorCode
+		// SendMail 发送邮件至指定邮箱并填充模板数据。
+		//
+		// 参数:
+		//   - ctx: 用于控制请求生命周期和传递上下文信息。
+		//   - template: 模板名称，用于指定邮件内容格式。
+		//   - mailTemplate: 包含邮件模板所需的补充数据。
+		//
+		// 返回:
+		//   - *berror.ErrorCode: 错误信息，表示模板检查失败、邮件发送失败等可能原因。
+		SendMail(ctx context.Context, template string, mailTemplate *dto.MailSendTemplateDTO) *berror.ErrorCode
 	}
 )
 

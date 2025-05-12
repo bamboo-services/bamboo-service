@@ -36,6 +36,7 @@ VALUES
     (uuid_in('fda6079e-2765-450f-b3f9-ec0a3905d5f5'), 'author_english_name', 'xiao_lfeng', 1),
     (uuid_in('1eac6c01-0340-4ea1-b41a-11fc4ac50fc4'), 'author_email', 'gm@x-lf.cn', 1),
     (uuid_in('a2342da0-02ad-494d-835a-4738a70ed39c'), 'author_qq', '1144939537', 1),
+    (uuid_in('32287459-9716-42a5-ab1b-ad2c764e0e73'), 'author_link', 'https://www.x-lf.com', 1),
     (uuid_in('a70ab77e-a0f9-49f3-8ad6-09e6794930ae'), 'system_version', '1.0.0-SNAPSHOT', 1),
     (uuid_in('407e7a1e-7cbf-4f44-a65e-ed40d0d25446'), 'system_name', '筱服务', 1),
     (uuid_in('6d6288ce-38a7-4b1d-b65f-c176465710d8'), 'system_description', '提供高可用、高性能的RESTful API接口服务',1),

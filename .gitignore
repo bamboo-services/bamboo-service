@@ -17,3 +17,6 @@ temp/
 temp.yaml
 bin
 **/config/config.yaml
+
+### Custom ###
+internal/packed/packed_resource.go

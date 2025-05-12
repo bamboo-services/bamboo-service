@@ -8,4 +8,6 @@ var (
 	ErrorUserPasswordIncorrect   = berror.NewErrorCode(40009, "用户密码错误", nil)
 	ErrorSystemNotAbleRegister   = berror.NewErrorCode(40304, "系统不允许注册", nil)
 	ErrMailCodeSentTooFrequently = berror.NewErrorCode(40305, "邮件验证码发送过于频繁", nil)
+	ErrorMailSendFailed          = berror.NewErrorCode(40306, "邮件发送失败", nil)
+	ErrorMailConfigFailed        = berror.NewErrorCode(50011, "邮件配置失败", nil)
 )
