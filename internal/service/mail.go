@@ -25,6 +25,15 @@ type (
 		//   - *dto.MailCodeDTO: 包含生成的验证码及其相关信息。
 		//   - *berror.ErrorCode: 错误信息，如发送频率限制或缓存操作失败。
 		GenerateMailCode(ctx context.Context, email string, purpose string) (*dto.MailCodeDTO, *berror.ErrorCode)
+		// CheckPurpose 检查邮件用途是否有效。
+		//
+		// 参数:
+		//   - ctx: 上下文，用于控制生命周期和日志记录。
+		//   - purpose: 邮件用途，需要验证的用途标识。
+		//
+		// 返回:
+		//   - *berror.ErrorCode: 错误信息，如果用途无效或为空则返回相应错误。
+		CheckPurpose(ctx context.Context, purpose string) *berror.ErrorCode
 		// CheckMailTemplate 检查提供的邮件模板名称是否有效。
 		//
 		// 参数:

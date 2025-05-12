@@ -30,7 +30,7 @@ func (s *sMail) CheckMailTemplate(ctx context.Context, template string) *berror.
 		return berror.ErrorAddData(berror.ErrInvalidParameters, "模板名字不能为空")
 	}
 	// 循环列表，检查是否是允许的模板类型
-	for _, mailTemplate := range consts.MailTemplateForUserForgetPassword {
+	for _, mailTemplate := range consts.MailTemplateList {
 		if mailTemplate.Name == template {
 			return nil
 		}
@@ -69,7 +69,7 @@ func (s *sMail) SendMail(ctx context.Context, template string, mailTemplate *dto
 	}
 
 	// 发送邮件
-	errorCode = send(ctx, mailTemplate.Email, "验证码", *getResult)
+	errorCode = send(ctx, mailTemplate.Email, fmt.Sprintf("%s - 验证码", consts.SystemNameValue), *getResult)
 	return errorCode
 }
 
@@ -86,6 +86,9 @@ func (s *sMail) SendMail(ctx context.Context, template string, mailTemplate *dto
 func getMailTemplate(ctx context.Context, template string, mailTemplate *dto.MailSendTemplateDTO) (*string, *berror.ErrorCode) {
 	blog.ServiceDebug(ctx, "getMailTemplate", "获取模板 %s", template)
 	getResourceByte := gres.GetContent("template/mail/" + template + ".html")
+	if len(getResourceByte) == 0 {
+		return nil, berror.ErrorAddData(berror.ErrNotFound, fmt.Sprintf("模板文件 %s 不存在", template))
+	}
 	getResource := string(getResourceByte)
 	for key, val := range butil.StructToMap(mailTemplate) {
 		getResource = strings.ReplaceAll(getResource, "{{."+key+"}}", g.NewVar(val).String())
