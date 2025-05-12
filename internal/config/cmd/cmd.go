@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bamboo-service/internal/controller/auth"
+	"bamboo-service/internal/controller/mail"
 	"bamboo-service/internal/handler/hook"
 	"context"
 	"github.com/XiaoLFeng/bamboo-utils/bhandler/bhook"
@@ -29,6 +30,7 @@ var (
 				api.Group("/v1", func(v1 *ghttp.RouterGroup) {
 					v1.Bind(
 						auth.NewV1(),
+						mail.NewV1(),
 					)
 				})
 			})

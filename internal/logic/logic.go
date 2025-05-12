@@ -6,4 +6,5 @@ package logic
 
 import (
 	_ "bamboo-service/internal/logic/auth"
+	_ "bamboo-service/internal/logic/mail"
 )

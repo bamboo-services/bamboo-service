@@ -26,4 +26,9 @@ const (
 	//
 	//   - %s:  手机号
 	RedisUserPhone = "user:phone:%s"
+
+	// RedisMailCodeSendTime 邮件验证码发送时间的 Redis 键模板。
+	//
+	//   - %s: MD5 加密的邮箱地址
+	RedisMailCodeSendTime = "mail:code:send:%s"
 )
