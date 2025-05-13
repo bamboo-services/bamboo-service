@@ -9,6 +9,27 @@ import (
 	"github.com/XiaoLFeng/bamboo-utils/blog"
 )
 
+// GetUserByUUID 根据用户的UUID获取用户信息。
+//
+// 参数:
+//   - ctx: 请求上下文信息，用于控制操作生命周期。
+//   - userUUID: 用户的唯一标识符(UUID)。
+//
+// 返回:
+//   - *entity.User: 用户信息，如果用户存在则返回详细信息，否则为nil。
+//   - *berror.ErrorCode: 错误代码，表示用户不存在或其他错误情况。
+func (s *sUser) GetUserByUUID(ctx context.Context, userUUID string) (*entity.User, *berror.ErrorCode) {
+	blog.ServiceInfo(ctx, "GetUserByUUID", "根据UUID %s 获取用户信息", userUUID)
+	getUser, errorCode := dao.User.GetUserByUUID(ctx, userUUID)
+	if errorCode != nil {
+		return nil, errorCode
+	}
+	if getUser == nil {
+		return nil, custom.ErrorUserNotExist
+	}
+	return getUser, nil
+}
+
 // GetUserByUsername 根据用户名检查用户是否存在并返回用户信息。
 //
 // 参数:

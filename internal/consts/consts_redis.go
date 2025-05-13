@@ -31,4 +31,14 @@ const (
 	//
 	//   - %s: MD5 加密的邮箱地址
 	RedisMailCodeSendTime = "mail:code:send:%s"
+
+	// RedisRoleUUID 表示存储角色 UUID 的 Redis 键模板
+	//
+	//   - %s:  角色 UUID
+	RedisRoleUUID = "role:uuid:%s"
+
+	// RedisRoleName 用于表示 Redis 中以角色名称为键的储存格式。
+	//
+	//   - %s:  角色名称
+	RedisRoleName = "role:name:%s"
 )

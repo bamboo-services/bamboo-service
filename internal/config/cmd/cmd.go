@@ -10,6 +10,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gcmd"
+	"golang.org/x/net/proxy"
 )
 
 var (
@@ -23,6 +24,7 @@ var (
 			// 绑定事件
 			s.BindHookHandler("/api/*", ghttp.HookBeforeServe, bhook.BambooHookDefaultCors)
 			s.BindHookHandler("/api/*/admin/*", ghttp.HookBeforeServe, hook.BeforeAdminCheckHook)
+			s.BindHookHandler("/api/*/proxy/*", ghttp.HookBeforeServe, hook.ProxyPermissionBeforeProxy)
 
 			// API 接口
 			s.Group("/api", func(api *ghttp.RouterGroup) {
@@ -31,6 +33,7 @@ var (
 					v1.Bind(
 						auth.NewV1(),
 						mail.NewV1(),
+						proxy.NewV1(),
 					)
 				})
 			})

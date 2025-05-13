@@ -38,6 +38,22 @@ type (
 		//   - berror.ErrCacheError: Redis 操作错误。
 		//   - berror.ErrInvalidToken: 提供的令牌无效或不存在。
 		RemoveToken(ctx context.Context, userUUID string, tokenUUID string) *berror.ErrorCode
+		// GetToken 获取指定用户的授权令牌。
+		//
+		// 参数:
+		//   - ctx: 上下文信息，用于请求追踪和控制。
+		//   - userUUID: 用户唯一标识符。
+		//   - tokenUUID: 授权令牌唯一标识符。
+		//
+		// 返回:
+		//   - *dto.AuthorizeTokenDTO: 包含授权令牌信息的 DTO。
+		//   - *berror.ErrorCode: 错误代码，当方法执行失败时返回。
+		//
+		// 错误:
+		//   - berror.ErrCacheError: Redis 操作错误。
+		//   - berror.ErrInvalidToken: 提供的令牌无效或不存在。
+		//   - berror.ErrInternalServer: 数据转换错误。
+		GetToken(ctx context.Context, userUUID string, tokenUUID string) (*dto.AuthorizeTokenDTO, *berror.ErrorCode)
 	}
 )
 

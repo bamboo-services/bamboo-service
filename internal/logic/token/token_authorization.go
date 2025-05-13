@@ -84,16 +84,45 @@ func (s *sToken) GenerateNewAuthorizationToken(ctx context.Context, userUUID str
 //   - berror.ErrInvalidToken: 提供的令牌无效或不存在。
 func (s *sToken) RemoveToken(ctx context.Context, userUUID, tokenUUID string) *berror.ErrorCode {
 	blog.ServiceInfo(ctx, "RemoveToken", "删除授权令牌 %s", tokenUUID)
-	getToken, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisUserToken, userUUID, tokenUUID))
-	if redisErr != nil {
-		return berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+	_, errorCode := s.GetToken(ctx, userUUID, tokenUUID)
+	if errorCode != nil {
+		return errorCode
 	}
-	if getToken.IsNil() || getToken.IsEmpty() {
-		return berror.ErrorAddData(&berror.ErrInvalidToken, "无效的令牌")
-	}
-	_, redisErr = g.Redis().Del(ctx, fmt.Sprintf(consts.RedisUserToken, userUUID, tokenUUID))
+	_, redisErr := g.Redis().Del(ctx, fmt.Sprintf(consts.RedisUserToken, userUUID, tokenUUID))
 	if redisErr != nil {
 		return berror.ErrorAddData(&berror.ErrCacheError, redisErr)
 	}
 	return nil
+}
+
+// GetToken 获取指定用户的授权令牌。
+//
+// 参数:
+//   - ctx: 上下文信息，用于请求追踪和控制。
+//   - userUUID: 用户唯一标识符。
+//   - tokenUUID: 授权令牌唯一标识符。
+//
+// 返回:
+//   - *dto.AuthorizeTokenDTO: 包含授权令牌信息的 DTO。
+//   - *berror.ErrorCode: 错误代码，当方法执行失败时返回。
+//
+// 错误:
+//   - berror.ErrCacheError: Redis 操作错误。
+//   - berror.ErrInvalidToken: 提供的令牌无效或不存在。
+//   - berror.ErrInternalServer: 数据转换错误。
+func (s *sToken) GetToken(ctx context.Context, userUUID, tokenUUID string) (*dto.AuthorizeTokenDTO, *berror.ErrorCode) {
+	blog.ServiceInfo(ctx, "GetToken", "获取 %s 授权令牌 %s", userUUID, tokenUUID)
+	getToken, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisUserToken, userUUID, tokenUUID))
+	if redisErr != nil {
+		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+	}
+	if getToken.IsNil() || getToken.IsEmpty() {
+		return nil, berror.ErrorAddData(&berror.ErrInvalidToken, "无效的令牌")
+	}
+	var tokenDTO *dto.AuthorizeTokenDTO
+	operateErr := gconv.Struct(getToken.Map(), &tokenDTO)
+	if operateErr != nil {
+		return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr)
+	}
+	return tokenDTO, nil
 }

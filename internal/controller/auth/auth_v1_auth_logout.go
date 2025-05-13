@@ -12,6 +12,15 @@ import (
 	"bamboo-service/api/auth/v1"
 )
 
+// AuthLogout 用户登出并注销授权令牌。
+//
+// 参数:
+//   - ctx: 上下文信息。
+//   - req: 用户登出请求，包含必要的请求头信息（用户 UUID 和 Token）。
+//
+// 返回:
+//   - res: 用户登出响应，表示登出结果。
+//   - err: 执行过程中可能发生的错误。
 func (c *ControllerV1) AuthLogout(ctx context.Context, req *v1.AuthLogoutReq) (res *v1.AuthLogoutRes, err error) {
 	blog.ControllerInfo(ctx, "AuthLogout", "用户登出")
 	// 获取用户 UUID 和 Token
