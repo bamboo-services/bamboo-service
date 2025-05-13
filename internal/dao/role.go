@@ -5,7 +5,17 @@
 package dao
 
 import (
+	"bamboo-service/internal/consts"
 	"bamboo-service/internal/dao/internal"
+	"bamboo-service/internal/model/do"
+	"bamboo-service/internal/model/entity"
+	"context"
+	"fmt"
+	"github.com/XiaoLFeng/bamboo-utils/berror"
+	"github.com/XiaoLFeng/bamboo-utils/blog"
+	"github.com/XiaoLFeng/bamboo-utils/butil"
+	"github.com/gogf/gf/v2/frame/g"
+	"time"
 )
 
 // roleDao is the data access object for the table fy_role.
@@ -20,3 +30,90 @@ var (
 )
 
 // Add your custom methods and functionality below.
+
+// GetRoleByUUID 根据角色 UUID 获取角色信息。
+//
+// 参数:
+//   - ctx: 上下文对象，用于控制请求的生命周期。
+//   - roleUUID: 角色的唯一标识符。
+//
+// 返回:
+//   - *entity.Role: 匹配的角色信息，若未找到则为 nil。
+//   - *berror.ErrorCode: 错误代码，若没有错误则为 nil。
+func (cDao *roleDao) GetRoleByUUID(ctx context.Context, roleUUID string) (*entity.Role, *berror.ErrorCode) {
+	blog.DaoInfo(ctx, "GetRoleByUUID", "获取角色 %s 的信息", roleUUID)
+	// 尝试从缓存获取数据
+	cacheData, redisErr := g.Redis().HGetAll(ctx, fmt.Sprintf(consts.RedisRoleUUID, roleUUID))
+	if redisErr != nil {
+		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+	}
+	var role *entity.Role
+	if cacheData.IsNil() || cacheData.IsEmpty() {
+		// 从数据库获取数据
+		sqlErr := cDao.Ctx(ctx).Where(&do.Role{RoleUuid: roleUUID}).Limit(1).Scan(&role)
+		if sqlErr != nil {
+			return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
+		}
+		// 数据存入缓存
+		if role != nil {
+			_, redisErr := g.Redis().HSet(ctx, fmt.Sprintf(consts.RedisRoleUUID, roleUUID), butil.StructToMap(role))
+			if redisErr != nil {
+				return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+			}
+			_, redisErr = g.Redis().Expire(ctx, fmt.Sprintf(consts.RedisRoleUUID, roleUUID), int64(24*time.Hour))
+			if redisErr != nil {
+			}
+		}
+		return role, nil
+	} else {
+		role, operateErr := butil.MapToStruct(cacheData.Map(), role)
+		if operateErr != nil {
+			return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr)
+		}
+		return role, nil
+	}
+}
+
+// GetRoleByName 根据角色名称获取角色信息。
+//
+// 参数:
+//   - ctx: 上下文对象，用于控制请求的生命周期。
+//   - roleName: 角色的名称。
+//
+// 返回:
+//   - *entity.Role: 匹配的角色信息，若未找到则为 nil。
+//   - *berror.ErrorCode: 错误代码，若没有错误则为 nil。
+func (cDao *roleDao) GetRoleByName(ctx context.Context, roleName string) (*entity.Role, *berror.ErrorCode) {
+	blog.DaoInfo(ctx, "GetRoleByName", "获取角色 %s 的信息", roleName)
+	cacheData, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisRoleName, roleName))
+	if redisErr != nil {
+		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+	}
+	var role *entity.Role
+	if cacheData.IsNil() || cacheData.IsEmpty() {
+		sqlErr := cDao.Ctx(ctx).Where(&do.Role{RoleName: roleName}).Limit(1).Scan(&role)
+		if sqlErr != nil {
+			return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
+		}
+		if role != nil {
+			redisErr := g.Redis().SetEX(ctx, fmt.Sprintf(consts.RedisRoleName, role.RoleName), role.RoleUuid, int64(24*time.Hour))
+			if redisErr != nil {
+				return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+			}
+			_, redisErr = g.Redis().HSet(ctx, fmt.Sprintf(consts.RedisRoleUUID, role.RoleUuid), butil.StructToMap(role))
+			if redisErr != nil {
+				return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+			}
+			_, redisErr = g.Redis().Expire(ctx, fmt.Sprintf(consts.RedisRoleUUID, role.RoleUuid), int64(24*time.Hour))
+			if redisErr != nil {
+			}
+		}
+		return role, nil
+	} else {
+		getRole, errorCode := cDao.GetRoleByUUID(ctx, cacheData.String())
+		if errorCode != nil {
+			return nil, errorCode
+		}
+		return getRole, nil
+	}
+}

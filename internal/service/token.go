@@ -10,6 +10,7 @@ import (
 	"context"
 
 	"github.com/XiaoLFeng/bamboo-utils/berror"
+	"github.com/gogf/gf/v2/os/gtime"
 )
 
 type (
@@ -54,6 +55,22 @@ type (
 		//   - berror.ErrInvalidToken: 提供的令牌无效或不存在。
 		//   - berror.ErrInternalServer: 数据转换错误。
 		GetToken(ctx context.Context, userUUID string, tokenUUID string) (*dto.AuthorizeTokenDTO, *berror.ErrorCode)
+		// GenerateProxyToken 生成新的代理令牌。
+		//
+		// 参数:
+		//   - ctx: 上下文信息，用于请求追踪和控制。
+		//   - userUUID: 用户的UUID。
+		//   - name: 代理令牌的名称。
+		//   - desc: 代理令牌的描述信息。
+		//   - expiredAt: 代理令牌的过期时间，不能超过当前时间的一年后。
+		//
+		// 返回:
+		//   - *entity.ProxyToken: 包含生成的代理令牌信息。
+		//   - *berror.ErrorCode: 错误代码，当方法执行失败时返回。
+		//
+		// 错误:
+		//   - berror.ErrInvalidParameters: 参数无效，例如有效期超过一年。
+		GenerateProxyToken(ctx context.Context, userUUID string, name string, desc string, expiredAt *gtime.Time) (*dto.ProxyTokenDTO, *berror.ErrorCode)
 	}
 )
 

@@ -3,6 +3,7 @@ package cmd
 import (
 	"bamboo-service/internal/controller/auth"
 	"bamboo-service/internal/controller/mail"
+	"bamboo-service/internal/controller/proxy"
 	"bamboo-service/internal/handler/hook"
 	"context"
 	"github.com/XiaoLFeng/bamboo-utils/bhandler/bhook"
@@ -10,7 +11,6 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gcmd"
-	"golang.org/x/net/proxy"
 )
 
 var (
