@@ -77,10 +77,10 @@ func (s *sAuth) UserLogin(ctx context.Context, username, password string) (*dto.
 	}
 	// 检查用户密码
 	if butil.PasswordVerify(password, (getUser).PasswordHash) {
-		userInfo := &dto.UserInfoDTO{}
-		operateErr := gconv.Struct(getUser, userInfo)
+		var userInfo *dto.UserInfoDTO
+		operateErr := gconv.Struct(getUser, &userInfo)
 		if operateErr != nil {
-			return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr)
+			return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr.Error())
 		}
 		return userInfo, nil
 	} else {

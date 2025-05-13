@@ -4,6 +4,7 @@ import (
 	"bamboo-service/internal/consts"
 	"bamboo-service/internal/service"
 	"github.com/XiaoLFeng/bamboo-utils/berror"
+	"github.com/XiaoLFeng/bamboo-utils/blog"
 	"github.com/XiaoLFeng/bamboo-utils/bmodels"
 	"github.com/XiaoLFeng/bamboo-utils/butil"
 	"github.com/gogf/gf/v2/frame/g"
@@ -28,11 +29,13 @@ func ProxyPermissionBeforeProxy(r *ghttp.Request) {
 	// 获取当前登录用户信息
 	userUUID := r.GetHeader(consts.HeaderUserUUID)
 	token := r.GetHeader(consts.HeaderToken)
+	token = butil.TokenRemoveBearer(token)
 
 	// 获取令牌
 	iToken := service.Token()
 	_, errorCode := iToken.GetToken(r.GetCtx(), userUUID, token)
 	if errorCode != nil {
+		blog.BambooError(r.GetCtx(), "ProxyPermissionBeforeProxy", "获取令牌失败", errorCode)
 		r.Response.Status = int(errorCode.Code / 100)
 		r.Response.WriteJson(&bmodels.ResponseDTO[interface{}]{
 			Code:     errorCode.Code,

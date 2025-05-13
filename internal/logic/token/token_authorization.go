@@ -112,17 +112,17 @@ func (s *sToken) RemoveToken(ctx context.Context, userUUID, tokenUUID string) *b
 //   - berror.ErrInternalServer: 数据转换错误。
 func (s *sToken) GetToken(ctx context.Context, userUUID, tokenUUID string) (*dto.AuthorizeTokenDTO, *berror.ErrorCode) {
 	blog.ServiceInfo(ctx, "GetToken", "获取 %s 授权令牌 %s", userUUID, tokenUUID)
-	getToken, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisUserToken, userUUID, tokenUUID))
+	getToken, redisErr := g.Redis().HGetAll(ctx, fmt.Sprintf(consts.RedisUserToken, userUUID, tokenUUID))
 	if redisErr != nil {
-		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr.Error())
 	}
 	if getToken.IsNil() || getToken.IsEmpty() {
 		return nil, berror.ErrorAddData(&berror.ErrInvalidToken, "无效的令牌")
 	}
 	var tokenDTO *dto.AuthorizeTokenDTO
-	operateErr := gconv.Struct(getToken.Map(), &tokenDTO)
+	operateErr := gconv.Struct(getToken, &tokenDTO)
 	if operateErr != nil {
-		return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr)
+		return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr.Error())
 	}
 	return tokenDTO, nil
 }
