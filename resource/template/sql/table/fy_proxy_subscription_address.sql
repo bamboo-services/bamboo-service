@@ -8,7 +8,7 @@ CREATE TABLE fy_proxy_subscription
     merchant          VARCHAR(64)  NOT NULL,
     description       VARCHAR(255) NOT NULL DEFAULT '开发者好像很懒，没有写这个代理订阅地址的描述',
     url               VARCHAR      NOT NULL,
-    content           TEXT,
+    original_content  TEXT,
     created_at        TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at        TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     subscribe_at      TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -23,7 +23,7 @@ COMMENT ON COLUMN fy_proxy_subscription.name IS '代理订阅地址名称';
 COMMENT ON COLUMN fy_proxy_subscription.merchant IS '代理订阅地址商户';
 COMMENT ON COLUMN fy_proxy_subscription.description IS '代理订阅地址描述';
 COMMENT ON COLUMN fy_proxy_subscription.url IS '代理订阅地址URL';
-COMMENT ON COLUMN fy_proxy_subscription.content IS '代理订阅地址所订阅获取的内容';
+COMMENT ON COLUMN fy_proxy_subscription.original_content IS '代理订阅地址所订阅获取的原始内容';
 COMMENT ON COLUMN fy_proxy_subscription.created_at IS '代理订阅地址创建时间';
 COMMENT ON COLUMN fy_proxy_subscription.updated_at IS '代理订阅地址更新时间';
 COMMENT ON COLUMN fy_proxy_subscription.subscribe_at IS '代理订阅地址订阅时间';
