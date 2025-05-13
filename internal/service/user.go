@@ -49,6 +49,24 @@ type (
 		// 返回:
 		//   - 错误代码，表示用户是否存在或其他错误情况。
 		CheckUserExistByPhone(ctx context.Context, phone string) *berror.ErrorCode
+		// CheckUserEmailIsVerify 检查指定邮箱是否已验证。
+		//
+		// 参数:
+		//   - ctx: 请求上下文信息，用于控制操作的生命周期。
+		//   - email: 需要检查的邮箱地址。
+		//
+		// 返回:
+		//   - *berror.ErrorCode: 错误代码，表示邮箱未验证或其他错误情况。返回 nil 表示邮箱已验证。
+		CheckUserEmailIsVerify(ctx context.Context, email string) *berror.ErrorCode
+		// CheckUserPhoneIsVerify 检查指定手机号是否已验证。
+		//
+		// 参数:
+		//   - ctx: 请求上下文信息，用于控制操作的生命周期。
+		//   - phone: 需要检查的手机号。
+		//
+		// 返回:
+		//   - *berror.ErrorCode: 错误代码，表示手机号未验证或其他错误情况。返回 nil 表示手机号已验证。
+		CheckUserPhoneIsVerify(ctx context.Context, phone string) *berror.ErrorCode
 		// GetUserByUsername 根据用户名检查用户是否存在并返回用户信息。
 		//
 		// 参数:

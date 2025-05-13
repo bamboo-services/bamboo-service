@@ -24,6 +24,11 @@ func (c *ControllerV1) AuthRegister(ctx context.Context, req *v1.AuthRegisterReq
 	if !consts.SystemAbleRegisterValue {
 		return nil, custom.ErrorSystemNotAbleRegister
 	}
+	// 重复密码验证
+	if req.Password != req.ConfirmPassword {
+		return nil, custom.ErrorUserConfirmPasswordIncorrect
+	}
+
 	// 数据验证
 	iUser := service.User()
 	errorCode := iUser.CheckUserExistByUsername(ctx, req.Username)

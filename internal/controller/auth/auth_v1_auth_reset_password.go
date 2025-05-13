@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"bamboo-service/internal/custom"
 	"bamboo-service/internal/service"
 	"context"
 	"github.com/XiaoLFeng/bamboo-utils/blog"
@@ -20,10 +21,20 @@ import (
 //   - err: 执行过程中可能发生的错误。
 func (c *ControllerV1) AuthResetPassword(ctx context.Context, req *v1.AuthResetPasswordReq) (res *v1.AuthResetPasswordRes, err error) {
 	blog.ControllerInfo(ctx, "AuthResetPassword", "重置密码")
+	// 密码一致性验证
+	if req.Password != req.ConfirmPassword {
+		return nil, custom.ErrorUserConfirmPasswordIncorrect
+	}
 
 	// 检查邮箱是否存在
 	iUser := service.User()
 	errorCode := iUser.CheckUserExistByEmail(ctx, req.Email)
+	if errorCode != nil {
+		return nil, errorCode
+	}
+
+	// 检查该用户邮件是否已验证
+	errorCode = iUser.CheckUserEmailIsVerify(ctx, req.Email)
 	if errorCode != nil {
 		return nil, errorCode
 	}
