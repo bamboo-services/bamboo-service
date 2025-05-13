@@ -38,7 +38,8 @@ func (s *sToken) GenerateProxyToken(ctx context.Context, userUUID, name, desc st
 	var newToken *dto.ProxyTokenDTO
 	operateErr := gconv.Struct(generateToken, &newToken)
 	if operateErr != nil {
-		return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr)
+		blog.ServiceError(ctx, "GenerateProxyToken", "令牌转换失败 %v", operateErr)
+		return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr.Error())
 	}
 
 	return newToken, nil

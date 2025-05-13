@@ -45,20 +45,23 @@ func (cDao *roleDao) GetRoleByUUID(ctx context.Context, roleUUID string) (*entit
 	// 尝试从缓存获取数据
 	cacheData, redisErr := g.Redis().HGetAll(ctx, fmt.Sprintf(consts.RedisRoleUUID, roleUUID))
 	if redisErr != nil {
-		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+		blog.DaoError(ctx, "GetRoleByUUID", "从缓存中获取数据时出错: %v", redisErr)
+		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr.Error())
 	}
 	var role *entity.Role
 	if cacheData.IsNil() || cacheData.IsEmpty() {
 		// 从数据库获取数据
 		sqlErr := cDao.Ctx(ctx).Where(&do.Role{RoleUuid: roleUUID}).Limit(1).Scan(&role)
 		if sqlErr != nil {
-			return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
+			blog.DaoError(ctx, "GetRoleByUUID", "从数据库中获取数据时出错: %v", sqlErr)
+			return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr.Error())
 		}
 		// 数据存入缓存
 		if role != nil {
 			_, redisErr := g.Redis().HSet(ctx, fmt.Sprintf(consts.RedisRoleUUID, roleUUID), butil.StructToMap(role))
 			if redisErr != nil {
-				return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+				blog.DaoError(ctx, "GetRoleByUUID", "将数据存入缓存时出错: %v", redisErr)
+				return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr.Error())
 			}
 			_, redisErr = g.Redis().Expire(ctx, fmt.Sprintf(consts.RedisRoleUUID, roleUUID), int64(24*time.Hour))
 			if redisErr != nil {
@@ -87,22 +90,26 @@ func (cDao *roleDao) GetRoleByName(ctx context.Context, roleName string) (*entit
 	blog.DaoInfo(ctx, "GetRoleByName", "获取角色 %s 的信息", roleName)
 	cacheData, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisRoleName, roleName))
 	if redisErr != nil {
-		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+		blog.DaoError(ctx, "GetRoleByName", "从缓存中获取数据时出错: %v", redisErr)
+		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr.Error())
 	}
 	var role *entity.Role
 	if cacheData.IsNil() || cacheData.IsEmpty() {
 		sqlErr := cDao.Ctx(ctx).Where(&do.Role{RoleName: roleName}).Limit(1).Scan(&role)
 		if sqlErr != nil {
-			return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
+			blog.DaoError(ctx, "GetRoleByName", "从数据库中获取数据时出错: %v", sqlErr)
+			return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr.Error())
 		}
 		if role != nil {
 			redisErr := g.Redis().SetEX(ctx, fmt.Sprintf(consts.RedisRoleName, role.RoleName), role.RoleUuid, int64(24*time.Hour))
 			if redisErr != nil {
-				return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+				blog.DaoError(ctx, "GetRoleByName", "将数据存入缓存时出错: %v", redisErr)
+				return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr.Error())
 			}
 			_, redisErr = g.Redis().HSet(ctx, fmt.Sprintf(consts.RedisRoleUUID, role.RoleUuid), butil.StructToMap(role))
 			if redisErr != nil {
-				return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+				blog.DaoError(ctx, "GetRoleByName", "将数据存入缓存时出错: %v", redisErr)
+				return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr.Error())
 			}
 			_, redisErr = g.Redis().Expire(ctx, fmt.Sprintf(consts.RedisRoleUUID, role.RoleUuid), int64(24*time.Hour))
 			if redisErr != nil {

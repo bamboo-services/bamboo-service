@@ -51,7 +51,8 @@ func (cDAO *proxyTokenDao) CreateNewToken(ctx context.Context, userUUID, name, d
 	}
 	_, sqlErr := cDAO.Ctx(ctx).Insert(&newProxyTokenEntity)
 	if sqlErr != nil {
-		return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
+		blog.DaoError(ctx, "CreateNewToken", "创建用户 %s 代理令牌失败 %v", userUUID, sqlErr)
+		return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr.Error())
 	}
 	return newProxyTokenEntity, nil
 }

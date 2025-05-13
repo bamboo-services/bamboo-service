@@ -109,7 +109,7 @@ func send(ctx context.Context, targetMail string, subject string, result string)
 	getMailConfig, configErr := g.Cfg().GetWithEnv(ctx, "custom.mail")
 	if configErr != nil {
 		blog.ServiceError(ctx, "send", "获取邮件配置失败 %v", configErr)
-		return berror.ErrorAddData(custom.ErrorMailConfigFailed, configErr)
+		return berror.ErrorAddData(custom.ErrorMailConfigFailed, configErr.Error())
 	}
 	mailConfig := getMailConfig.Map()
 	newEmail := email.NewEmail()
@@ -120,7 +120,7 @@ func send(ctx context.Context, targetMail string, subject string, result string)
 	mailErr := newEmail.Send(fmt.Sprintf("%s:%s", mailConfig["host"], mailConfig["port"]), smtp.PlainAuth("", mailConfig["user"].(string), mailConfig["pass"].(string), mailConfig["host"].(string)))
 	if mailErr != nil {
 		blog.ServiceError(context.Background(), "send", "发送邮件失败 %v", mailErr)
-		return berror.ErrorAddData(custom.ErrorMailSendFailed, mailErr)
+		return berror.ErrorAddData(custom.ErrorMailSendFailed, mailErr.Error())
 	}
 	return nil
 }

@@ -30,7 +30,8 @@ func (s *sMail) GenerateMailCode(ctx context.Context, email string, purpose stri
 	// 检查最后一个发送的邮件是否少于 1 分钟
 	getLastSendTime, redisErr := g.Redis().GetEX(ctx, fmt.Sprintf(consts.RedisMailCodeSendTime, gmd5.MustEncrypt(email)))
 	if redisErr != nil {
-		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+		blog.DaoError(ctx, "GenerateMailCode", "获取邮件发送时间失败 %v", redisErr)
+		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr.Error())
 	}
 
 	// 重复发送的事件在一分钟内「禁止重复发送」
@@ -52,7 +53,8 @@ func (s *sMail) GenerateMailCode(ctx context.Context, email string, purpose stri
 	// 缓存创建最后创建的验证码时间
 	redisErr = g.Redis().SetEX(ctx, fmt.Sprintf(consts.RedisMailCodeSendTime, gmd5.MustEncrypt(email)), gtime.Now(), int64(30*time.Minute))
 	if redisErr != nil {
-		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+		blog.DaoError(ctx, "GenerateMailCode", "保存邮件发送时间失败 %v", redisErr)
+		return nil, berror.ErrorAddData(&berror.ErrCacheError, redisErr.Error())
 	}
 	return &dto.MailCodeDTO{
 		Email:     mailCodeEntity.Email,

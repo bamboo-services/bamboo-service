@@ -248,29 +248,29 @@ func (cDao *userDao) UpdateUser(ctx context.Context, user *entity.User) *berror.
 	_, redisErr := g.Redis().Del(ctx, fmt.Sprintf(consts.RedisUserUUID, user.UserUuid))
 	if redisErr != nil {
 		blog.DaoError(ctx, "UpdateUser", "删除用户缓存失败 %s", redisErr)
-		return berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+		return berror.ErrorAddData(&berror.ErrCacheError, redisErr.Error())
 	}
 	_, redisErr = g.Redis().Del(ctx, fmt.Sprintf(consts.RedisUserEmail, user.Email))
 	if redisErr != nil {
 		blog.DaoError(ctx, "UpdateUser", "删除用户缓存失败 %s", redisErr)
-		return berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+		return berror.ErrorAddData(&berror.ErrCacheError, redisErr.Error())
 	}
 	_, redisErr = g.Redis().Del(ctx, fmt.Sprintf(consts.RedisUserPhone, user.Phone))
 	if redisErr != nil {
 		blog.DaoError(ctx, "UpdateUser", "删除用户缓存失败 %s", redisErr)
-		return berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+		return berror.ErrorAddData(&berror.ErrCacheError, redisErr.Error())
 	}
 	_, redisErr = g.Redis().Del(ctx, fmt.Sprintf(consts.RedisUserUsername, user.Username))
 	if redisErr != nil {
 		blog.DaoError(ctx, "UpdateUser", "删除用户缓存失败 %s", redisErr)
-		return berror.ErrorAddData(&berror.ErrCacheError, redisErr)
+		return berror.ErrorAddData(&berror.ErrCacheError, redisErr.Error())
 	}
 
 	// 更新数据库
 	_, sqlErr := cDao.Ctx(ctx).Where(do.User{UserUuid: user.UserUuid}).Update(&user)
 	if sqlErr != nil {
 		blog.DaoError(ctx, "UpdateUser", "更新用户信息失败 %s", sqlErr)
-		return berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
+		return berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr.Error())
 	}
 
 	return nil
