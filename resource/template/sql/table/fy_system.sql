@@ -21,7 +21,7 @@ COMMENT ON COLUMN fy_system.version IS '版本';
 COMMENT ON COLUMN fy_system.created_at IS '创建时间';
 COMMENT ON COLUMN fy_system.updated_at IS '更新时间';
 
--- 触发器绑定
+-- 将触发器绑定到 fy_system 表的 UPDATE 操作上
 CREATE TRIGGER trigger_fy_system_updated_at
     BEFORE UPDATE
     ON fy_system

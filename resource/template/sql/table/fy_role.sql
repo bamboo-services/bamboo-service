@@ -26,6 +26,13 @@ CREATE INDEX fy_role_role_name_idx ON fy_role (role_name);
 CREATE INDEX fy_role_role_nickname_idx ON fy_role (role_nickname);
 CREATE INDEX fy_role_role_status_idx ON fy_role (role_status);
 
+-- 将触发器绑定到 fy_role 表的 UPDATE 操作上
+CREATE TRIGGER trigger_fy_role_updated_at
+    BEFORE UPDATE
+    ON fy_role
+    FOR EACH ROW
+EXECUTE FUNCTION updated_at_column();
+
 -- 预先构建部分角色
 INSERT INTO fy_role (role_uuid, role_name, role_nickname, role_description, role_permission, role_status)
 VALUES

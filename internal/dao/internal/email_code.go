@@ -27,7 +27,6 @@ type EmailCodeColumns struct {
 	Purpose   string // 验证码用途：register-注册,reset-重置密码,bind-绑定
 	ExpiredAt string // 过期时间
 	CreatedAt string // 创建时间
-	UpdatedAt string // 更新时间
 }
 
 // emailCodeColumns holds the columns for the table fy_email_code.
@@ -38,7 +37,6 @@ var emailCodeColumns = EmailCodeColumns{
 	Purpose:   "purpose",
 	ExpiredAt: "expired_at",
 	CreatedAt: "created_at",
-	UpdatedAt: "updated_at",
 }
 
 // NewEmailCodeDao creates and returns a new DAO object for table data access.

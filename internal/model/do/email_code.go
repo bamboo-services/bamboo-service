@@ -18,5 +18,4 @@ type EmailCode struct {
 	Purpose   interface{} // 验证码用途：register-注册,reset-重置密码,bind-绑定
 	ExpiredAt *gtime.Time // 过期时间
 	CreatedAt *gtime.Time // 创建时间
-	UpdatedAt *gtime.Time // 更新时间
 }
