@@ -2,9 +2,11 @@ package proxy
 
 import (
 	"bamboo-service/internal/dao"
+	"bamboo-service/internal/model/do"
 	"bamboo-service/internal/model/dto"
 	"bamboo-service/internal/model/entity"
 	"context"
+	"fmt"
 	"github.com/XiaoLFeng/bamboo-utils/berror"
 	"github.com/XiaoLFeng/bamboo-utils/blog"
 	"github.com/gogf/gf/v2/encoding/gjson"
@@ -46,7 +48,7 @@ func (s *sProxy) CreateProxyGroup(ctx context.Context, userEntity *entity.User, 
 	// 插入数据库
 	_, sqlErr := dao.ProxyGroup.Ctx(ctx).Insert(&newProxyGroupEntity)
 	if sqlErr != nil {
-		blog.ServiceError(ctx, "CreateProxyGroup", "数据库插入失败: %s", sqlErr.Error())
+		blog.ServiceError(ctx, "CreateProxyGroup", "数据库插入失败: %v", sqlErr)
 		return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr.Error())
 	}
 
@@ -54,56 +56,46 @@ func (s *sProxy) CreateProxyGroup(ctx context.Context, userEntity *entity.User, 
 	var newProxyGroupDTO *dto.ProxyBaseGroupDTO
 	operateErr := gconv.Struct(newProxyGroupEntity, &newProxyGroupDTO)
 	if operateErr != nil {
-		blog.ServiceError(ctx, "CreateProxyGroup", "数据转换失败: %s", operateErr.Error())
+		blog.ServiceError(ctx, "CreateProxyGroup", "数据转换失败: %v", operateErr)
 		return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr.Error())
 	}
 	return newProxyGroupDTO, nil
 }
 
-// AddSubscriptionInProxyGroup 向代理组中添加订阅地址。
+// ProxyGroupPage 分页检索用户的代理组信息。
 //
 // 参数:
 //   - ctx: 上下文对象，用于控制生命周期和日志追踪。
 //   - userEntity: 用户实体，包含执行操作的用户信息。
-//   - proxyGroupUUID: 代理组的唯一标识符。
-//   - name: 订阅地址名称。
-//   - merchant: 订阅地址的商户信息。
-//   - description: 订阅地址的描述信息。
-//   - url: 订阅地址的链接。
+//   - page: 页码，从 1 开始。
+//   - size: 每页返回的记录数。
+//   - search: 搜索关键词，用于匹配代理组名称或描述。
 //
 // 返回:
-//   - *dto.ProxyBaseSubscriptionDTO: 包含新添加订阅地址信息的数据传输对象。
+//   - []*dto.ProxyBaseGroupDTO: 包含代理组信息列表的数据传输对象数组。
 //   - *berror.ErrorCode: 错误信息对象，操作成功时为 nil。
-//
-// 错误:
-//   - 数据库操作失败时返回 ErrDatabaseError。
-//   - 数据转换失败时返回 ErrInternalServer。
-func (s *sProxy) AddSubscriptionInProxyGroup(ctx context.Context, userEntity *entity.User, proxyGroupUUID, name, merchant, description, url string) (*dto.ProxyBaseSubscriptionDTO, *berror.ErrorCode) {
-	blog.ServiceInfo(ctx, "AddSubscriptionInProxyGroup", "由 %s 在代理组 %s 中添加订阅地址 %s", userEntity.Username, proxyGroupUUID, name)
-	// 创建订阅地址
-	newProxySubscriptionEntity := &entity.ProxySubscription{
-		SubscriptionUuid: uuid.New().String(),
-		ProxyGroupUuid:   proxyGroupUUID,
-		UserUuid:         userEntity.UserUuid,
-		Name:             name,
-		Merchant:         merchant,
-		Description:      description,
-		Url:              url,
-		CreatedAt:        gtime.Now(),
-		UpdatedAt:        gtime.Now(),
+func (s *sProxy) ProxyGroupPage(ctx context.Context, userEntity *entity.User, page, size int, search string) (*[]*dto.ProxyBaseGroupDTO, *berror.ErrorCode) {
+	blog.ServiceInfo(ctx, "ProxyGroupPage", "由 %s 分页检索代理组信息", userEntity.Username)
+	// 查询代理组列表
+	var proxyGroupList []*entity.ProxyGroup
+	model := dao.ProxyGroup.Ctx(ctx).Where(&do.ProxyGroup{UserUuid: userEntity.UserUuid})
+	if search != "" {
+		model.WhereLike("name", fmt.Sprintf("%%%s%%", search))
+		model.WhereOrLike("description", fmt.Sprintf("%%%s%%", search))
+		model.WhereOrLike("file_name", fmt.Sprintf("%%%s%%", search))
 	}
-
-	// 插入数据库
-	_, sqlErr := dao.ProxySubscription.Ctx(ctx).Insert(&newProxySubscriptionEntity)
+	sqlErr := model.Page(page, size).Scan(&proxyGroupList)
 	if sqlErr != nil {
+		blog.ServiceError(ctx, "ProxyGroupPage", "数据库查询失败: %v", sqlErr)
 		return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr.Error())
 	}
 
 	// 转换为DTO
-	var newProxySubscriptionDTO *dto.ProxyBaseSubscriptionDTO
-	operateErr := gconv.Struct(newProxySubscriptionEntity, &newProxySubscriptionDTO)
+	var proxyGroupListDTO []*dto.ProxyBaseGroupDTO
+	operateErr := gconv.Structs(proxyGroupList, &proxyGroupListDTO)
 	if operateErr != nil {
+		blog.ServiceError(ctx, "ProxyGroupPage", "数据转换失败: %v", operateErr)
 		return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr.Error())
 	}
-	return newProxySubscriptionDTO, nil
+	return &proxyGroupListDTO, nil
 }
