@@ -7,6 +7,7 @@ package service
 
 import (
 	"bamboo-service/internal/model/dto"
+	"bamboo-service/internal/model/dto/base"
 	"bamboo-service/internal/model/entity"
 	"context"
 
@@ -36,14 +37,14 @@ type (
 		// 参数:
 		//   - ctx: 上下文对象，用于控制生命周期和日志追踪。
 		//   - userEntity: 用户实体，包含执行操作的用户信息。
-		//   - page: 页码，从 1 开始。
+		//   - base: 页码，从 1 开始。
 		//   - size: 每页返回的记录数。
 		//   - search: 搜索关键词，用于匹配代理组名称或描述。
 		//
 		// 返回:
 		//   - []*dto.ProxyBaseGroupDTO: 包含代理组信息列表的数据传输对象数组。
 		//   - *berror.ErrorCode: 错误信息对象，操作成功时为 nil。
-		ProxyGroupPage(ctx context.Context, userEntity *entity.User, page int, size int, search string) (*[]*dto.ProxyBaseGroupDTO, *berror.ErrorCode)
+		ProxyGroupPage(ctx context.Context, userEntity *entity.User, page int, size int, search string) (*base.Page[dto.ProxyBaseGroupDTO], *berror.ErrorCode)
 		// AddSubscriptionInProxyGroup 向代理组中添加订阅地址。
 		//
 		// 参数:

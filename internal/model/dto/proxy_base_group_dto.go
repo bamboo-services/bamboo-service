@@ -10,6 +10,7 @@ import (
 type ProxyBaseGroupDTO struct {
 	GroupUuid   string      `json:"group_uuid"  description:"代理组UUID"`
 	UserUuid    string      `json:"user_uuid"   description:"用户UUID"`
+	Name        string      `json:"name"        description:"代理组名称"`
 	FileName    string      `json:"file_name"   description:"代理组文件名"`
 	Description string      `json:"description" description:"代理组描述"`
 	IsEnabled   bool        `json:"is_enabled"  description:"代理组是否启用"`

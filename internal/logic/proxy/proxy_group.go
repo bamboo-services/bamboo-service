@@ -4,11 +4,12 @@ import (
 	"bamboo-service/internal/dao"
 	"bamboo-service/internal/model/do"
 	"bamboo-service/internal/model/dto"
+	"bamboo-service/internal/model/dto/base"
 	"bamboo-service/internal/model/entity"
 	"context"
-	"fmt"
 	"github.com/XiaoLFeng/bamboo-utils/berror"
 	"github.com/XiaoLFeng/bamboo-utils/blog"
+	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/encoding/gjson"
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
@@ -67,24 +68,29 @@ func (s *sProxy) CreateProxyGroup(ctx context.Context, userEntity *entity.User, 
 // 参数:
 //   - ctx: 上下文对象，用于控制生命周期和日志追踪。
 //   - userEntity: 用户实体，包含执行操作的用户信息。
-//   - page: 页码，从 1 开始。
+//   - base: 页码，从 1 开始。
 //   - size: 每页返回的记录数。
 //   - search: 搜索关键词，用于匹配代理组名称或描述。
 //
 // 返回:
 //   - []*dto.ProxyBaseGroupDTO: 包含代理组信息列表的数据传输对象数组。
 //   - *berror.ErrorCode: 错误信息对象，操作成功时为 nil。
-func (s *sProxy) ProxyGroupPage(ctx context.Context, userEntity *entity.User, page, size int, search string) (*[]*dto.ProxyBaseGroupDTO, *berror.ErrorCode) {
+func (s *sProxy) ProxyGroupPage(ctx context.Context, userEntity *entity.User, page, size int, search string) (*base.Page[dto.ProxyBaseGroupDTO], *berror.ErrorCode) {
 	blog.ServiceInfo(ctx, "ProxyGroupPage", "由 %s 分页检索代理组信息", userEntity.Username)
 	// 查询代理组列表
 	var proxyGroupList []*entity.ProxyGroup
-	model := dao.ProxyGroup.Ctx(ctx).Where(&do.ProxyGroup{UserUuid: userEntity.UserUuid})
+	var count int
+	var whereBuilder *gdb.WhereBuilder
+
+	// 构建查询条件
+	model := dao.ProxyGroup.Ctx(ctx)
 	if search != "" {
-		model.WhereLike("name", fmt.Sprintf("%%%s%%", search))
-		model.WhereOrLike("description", fmt.Sprintf("%%%s%%", search))
-		model.WhereOrLike("file_name", fmt.Sprintf("%%%s%%", search))
+		whereBuilder = model.Builder().WhereOr("name LIKE ?", "%"+search+"%").
+			WhereOr("description LIKE ?", "%"+search+"%").
+			WhereOr("file_name LIKE ?", "%"+search+"%")
 	}
-	sqlErr := model.Page(page, size).Scan(&proxyGroupList)
+	model = model.Where(&do.ProxyGroup{UserUuid: userEntity.UserUuid}).Where(whereBuilder)
+	sqlErr := model.Page(page, size).ScanAndCount(&proxyGroupList, &count, false)
 	if sqlErr != nil {
 		blog.ServiceError(ctx, "ProxyGroupPage", "数据库查询失败: %v", sqlErr)
 		return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr.Error())
@@ -97,5 +103,5 @@ func (s *sProxy) ProxyGroupPage(ctx context.Context, userEntity *entity.User, pa
 		blog.ServiceError(ctx, "ProxyGroupPage", "数据转换失败: %v", operateErr)
 		return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr.Error())
 	}
-	return &proxyGroupListDTO, nil
+	return base.NewPage(count, page, size, proxyGroupListDTO), nil
 }
