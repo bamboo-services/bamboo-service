@@ -18,12 +18,12 @@ import (
 func (s *sMail) CheckPurpose(ctx context.Context, purpose string) *berror.ErrorCode {
 	blog.ServiceInfo(ctx, "CheckPurpose", "检查邮件用途 %s", purpose)
 	if purpose == "" {
-		return berror.ErrorAddData(berror.ErrInvalidParameters, "用途不能为空")
+		return berror.ErrorAddData(&berror.ErrInvalidParameters, "用途不能为空")
 	}
 	for _, v := range consts.MailPurposeList {
 		if v.Name == purpose {
 			return nil
 		}
 	}
-	return berror.ErrorAddData(berror.ErrInvalidParameters, "用途不存在")
+	return berror.ErrorAddData(&berror.ErrInvalidParameters, "用途不存在")
 }

@@ -15,16 +15,6 @@ import (
 
 type (
 	IAuth interface {
-		// AuthorizationToken 生成用户的授权令牌并存储到 Redis 缓存中。
-		//
-		// 参数:
-		//   - ctx: 请求上下文信息。
-		//   - userUUID: 用户唯一标识符。
-		//
-		// 返回:
-		//   - *dto.AuthorizeTokenDTO: 包含生成的授权令牌及其相关信息。
-		//   - *berror.ErrorCode: 错误代码，表示可能的存储或其他错误情况。
-		AuthorizationToken(ctx context.Context, userUUID string) (*dto.AuthorizeTokenDTO, *berror.ErrorCode)
 		// ResetPassword 重置用户密码。
 		//
 		// 参数:

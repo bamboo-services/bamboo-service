@@ -28,7 +28,8 @@ func (c *ControllerV1) AuthLogin(ctx context.Context, req *v1.AuthLoginReq) (res
 		return nil, errorCode
 	}
 	// 授权
-	getToken, errorCode := iAuth.AuthorizationToken(ctx, userInfo.UserUuid)
+	iToken := service.Token()
+	getToken, errorCode := iToken.GenerateNewAuthorizationToken(ctx, userInfo.UserUuid)
 	if errorCode != nil {
 		blog.ControllerError(ctx, "AuthLogin", errorCode.Error())
 		return nil, errorCode

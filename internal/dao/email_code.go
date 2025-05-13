@@ -44,7 +44,7 @@ func (cDao *emailCodeDao) GetMailCodeList(ctx context.Context, email string) ([]
 	var list []*entity.EmailCode
 	sqlErr := cDao.Ctx(ctx).Where(&do.EmailCode{Email: email}).OrderDesc(cDao.Columns().CreatedAt).Scan(&list)
 	if sqlErr != nil {
-		return nil, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
+		return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
 	}
 	return list, nil
 }
@@ -63,7 +63,7 @@ func (cDao *emailCodeDao) GetLastMailCode(ctx context.Context, purpose, email st
 	var mailCode *entity.EmailCode
 	sqlErr := cDao.Ctx(ctx).Where(&do.EmailCode{Email: email, Purpose: purpose}).OrderDesc(cDao.Columns().CreatedAt).Limit(1).Scan(&mailCode)
 	if sqlErr != nil {
-		return nil, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
+		return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
 	}
 	return mailCode, nil
 }
@@ -80,7 +80,7 @@ func (cDao *emailCodeDao) RemoveMailCode(ctx context.Context, mailCodeUUID strin
 	blog.DaoInfo(ctx, "RemoveMailCode", "删除 %s 的验证码", mailCodeUUID)
 	_, sqlErr := cDao.Ctx(ctx).Where(&do.EmailCode{CodeUuid: mailCodeUUID}).Delete()
 	if sqlErr != nil {
-		return berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
+		return berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
 	}
 	return nil
 }
@@ -98,11 +98,11 @@ func (cDao *emailCodeDao) ClearMailCode(ctx context.Context, email string) (int6
 	blog.DaoInfo(ctx, "ClearMailCode", "清除 %s 的验证码", email)
 	result, sqlErr := cDao.Ctx(ctx).Where(&do.EmailCode{Email: email}).Delete()
 	if sqlErr != nil {
-		return 0, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
+		return 0, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
 	}
 	rowsAffected, sqlErr := result.RowsAffected()
 	if sqlErr != nil {
-		return 0, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
+		return 0, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
 	}
 	return rowsAffected, nil
 }
@@ -132,7 +132,7 @@ func (cDao *emailCodeDao) CreateMailCode(ctx context.Context, email string, purp
 	}
 	_, sqlErr := cDao.Ctx(ctx).Insert(newMailCode)
 	if sqlErr != nil {
-		return nil, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
+		return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
 	}
 	return newMailCode, nil
 }

@@ -30,7 +30,7 @@ func (s *sAuth) UserRegister(ctx context.Context, request *v1.AuthRegisterReq) (
 	var getRole *entity.Role
 	sqlErr := dao.Role.Ctx(ctx).Where(&entity.Role{RoleName: consts.RoleUser}).Scan(&getRole)
 	if sqlErr != nil {
-		return nil, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
+		return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
 	}
 	var newUserUUID = uuid.New().String()
 	newUser := &entity.User{
@@ -44,7 +44,7 @@ func (s *sAuth) UserRegister(ctx context.Context, request *v1.AuthRegisterReq) (
 	}
 	_, sqlErr = dao.User.Ctx(ctx).Insert(newUser)
 	if sqlErr != nil {
-		return nil, berror.ErrorAddData(berror.ErrDatabaseError, sqlErr)
+		return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr)
 	}
 	// 取得新用户信息
 	user, errorCode := dao.User.GetUserByUUID(ctx, newUserUUID)
@@ -54,7 +54,7 @@ func (s *sAuth) UserRegister(ctx context.Context, request *v1.AuthRegisterReq) (
 	var userDTO *dto.UserInfoDTO
 	operateErr := gconv.Struct(user, &userDTO)
 	if operateErr != nil {
-		return nil, berror.ErrorAddData(berror.ErrInternalServer, operateErr)
+		return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr)
 	}
 	return userDTO, nil
 }
@@ -80,7 +80,7 @@ func (s *sAuth) UserLogin(ctx context.Context, username, password string) (*dto.
 		userInfo := &dto.UserInfoDTO{}
 		operateErr := gconv.Struct(getUser, userInfo)
 		if operateErr != nil {
-			return nil, berror.ErrorAddData(berror.ErrInternalServer, operateErr)
+			return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr)
 		}
 		return userInfo, nil
 	} else {

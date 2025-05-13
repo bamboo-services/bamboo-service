@@ -27,7 +27,7 @@ import (
 func (s *sMail) CheckMailTemplate(ctx context.Context, template string) *berror.ErrorCode {
 	blog.ServiceDebug(ctx, "CheckMailTemplate", "检查模板 %s", template)
 	if template == "" {
-		return berror.ErrorAddData(berror.ErrInvalidParameters, "模板名字不能为空")
+		return berror.ErrorAddData(&berror.ErrInvalidParameters, "模板名字不能为空")
 	}
 	// 循环列表，检查是否是允许的模板类型
 	for _, mailTemplate := range consts.MailTemplateList {
@@ -35,7 +35,7 @@ func (s *sMail) CheckMailTemplate(ctx context.Context, template string) *berror.
 			return nil
 		}
 	}
-	return berror.ErrorAddData(berror.ErrInvalidParameters, "模板名字不存在")
+	return berror.ErrorAddData(&berror.ErrInvalidParameters, "模板名字不存在")
 }
 
 // SendMail 发送邮件至指定邮箱并填充模板数据。
@@ -87,7 +87,7 @@ func getMailTemplate(ctx context.Context, template string, mailTemplate *dto.Mai
 	blog.ServiceDebug(ctx, "getMailTemplate", "获取模板 %s", template)
 	getResourceByte := gres.GetContent("template/mail/" + template + ".html")
 	if len(getResourceByte) == 0 {
-		return nil, berror.ErrorAddData(berror.ErrNotFound, fmt.Sprintf("模板文件 %s 不存在", template))
+		return nil, berror.ErrorAddData(&berror.ErrNotFound, fmt.Sprintf("模板文件 %s 不存在", template))
 	}
 	getResource := string(getResourceByte)
 	for key, val := range butil.StructToMap(mailTemplate) {
@@ -109,7 +109,7 @@ func send(ctx context.Context, targetMail string, subject string, result string)
 	getMailConfig, configErr := g.Cfg().GetWithEnv(ctx, "custom.mail")
 	if configErr != nil {
 		blog.ServiceError(ctx, "send", "获取邮件配置失败 %v", configErr)
-		return berror.ErrorAddData(*custom.ErrorMailConfigFailed, configErr)
+		return berror.ErrorAddData(custom.ErrorMailConfigFailed, configErr)
 	}
 	mailConfig := getMailConfig.Map()
 	newEmail := email.NewEmail()
@@ -120,7 +120,7 @@ func send(ctx context.Context, targetMail string, subject string, result string)
 	mailErr := newEmail.Send(fmt.Sprintf("%s:%s", mailConfig["host"], mailConfig["port"]), smtp.PlainAuth("", mailConfig["user"].(string), mailConfig["pass"].(string), mailConfig["host"].(string)))
 	if mailErr != nil {
 		blog.ServiceError(context.Background(), "send", "发送邮件失败 %v", mailErr)
-		return berror.ErrorAddData(*custom.ErrorMailSendFailed, mailErr)
+		return berror.ErrorAddData(custom.ErrorMailSendFailed, mailErr)
 	}
 	return nil
 }

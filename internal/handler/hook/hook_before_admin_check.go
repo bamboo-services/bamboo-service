@@ -17,8 +17,8 @@ import (
 // BeforeAdminCheckHook 在管理员权限检查前触发的钩子，用于预处理请求或执行额外验证逻辑。
 func BeforeAdminCheckHook(r *ghttp.Request) {
 	// 获取用户的请求头
-	authorizationToken := r.GetHeader("Authorization")
-	getUserUUID := r.GetHeader("X-User-UUID")
+	authorizationToken := r.GetHeader(consts.HeaderToken)
+	getUserUUID := r.GetHeader(consts.HeaderUserUUID)
 	// 检查是否符合格式
 	if authorizationToken == "" || getUserUUID == "" {
 		errorCode := berror.ErrInvalidToken
@@ -93,7 +93,7 @@ func BeforeAdminCheckHook(r *ghttp.Request) {
 			// 删除该 Redis Token
 			_, redisErr := g.Redis().Del(r.GetCtx(), fmt.Sprintf(consts.RedisUserToken, getUserUUID, token))
 			if redisErr != nil {
-				errorCode := berror.ErrorAddData(berror.ErrCacheError, redisErr)
+				errorCode := berror.ErrorAddData(&berror.ErrCacheError, redisErr)
 				r.Response.WriteJson(&bmodels.ResponseDTO[types.Nil]{
 					Code:     errorCode.Code,
 					Message:  errorCode.Message,
@@ -118,7 +118,7 @@ func BeforeAdminCheckHook(r *ghttp.Request) {
 			// 删除该 Redis Token
 			_, redisErr := g.Redis().Del(r.GetCtx(), fmt.Sprintf(consts.RedisUserToken, getUserUUID, token))
 			if redisErr != nil {
-				errorCode := berror.ErrorAddData(berror.ErrCacheError, redisErr)
+				errorCode := berror.ErrorAddData(&berror.ErrCacheError, redisErr)
 				r.Response.WriteJson(&bmodels.ResponseDTO[types.Nil]{
 					Code:     errorCode.Code,
 					Message:  errorCode.Message,
