@@ -20,3 +20,4 @@ bin
 
 ### Custom ###
 internal/packed/packed_resource.go
+test.txt

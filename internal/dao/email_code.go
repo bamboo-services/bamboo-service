@@ -128,7 +128,6 @@ func (cDao *emailCodeDao) CreateMailCode(ctx context.Context, email string, purp
 		Purpose:   purpose,
 		ExpiredAt: gtime.Now().Add(30 * time.Minute),
 		CreatedAt: gtime.Now(),
-		UpdatedAt: gtime.Now(),
 	}
 	_, sqlErr := cDao.Ctx(ctx).Insert(newMailCode)
 	if sqlErr != nil {
