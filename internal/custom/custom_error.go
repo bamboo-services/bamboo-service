@@ -28,6 +28,7 @@ var (
 	ErrorUserNotExist     = berror.NewErrorCode(40404, "用户不存在", nil)
 	ErrorUserExist        = berror.NewErrorCode(40405, "用户已存在", nil)
 	ErrorMailCodeNotExist = berror.NewErrorCode(40406, "邮件验证码不存在", nil)
+	ErrorRoleNotExist     = berror.NewErrorCode(40407, "角色不存在", nil)
 
 	//
 	// 500 Internal Server errors (50001-50099)

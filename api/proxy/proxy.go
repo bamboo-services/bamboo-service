@@ -12,6 +12,7 @@ import (
 
 type IProxyV1 interface {
 	ProxyGroupAdd(ctx context.Context, req *v1.ProxyGroupAddReq) (res *v1.ProxyGroupAddRes, err error)
+	ProxyGroupList(ctx context.Context, req *v1.ProxyGroupListReq) (res *v1.ProxyGroupListRes, err error)
 	ProxyGroupPage(ctx context.Context, req *v1.ProxyGroupPageReq) (res *v1.ProxyGroupPageRes, err error)
 	ProxySubscriptionAdd(ctx context.Context, req *v1.ProxySubscriptionAddReq) (res *v1.ProxySubscriptionAddRes, err error)
 	ProxyTokenGenerate(ctx context.Context, req *v1.ProxyTokenGenerateReq) (res *v1.ProxyTokenGenerateRes, err error)

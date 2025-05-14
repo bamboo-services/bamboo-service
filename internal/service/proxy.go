@@ -45,6 +45,21 @@ type (
 		//   - []*dto.ProxyBaseGroupDTO: 包含代理组信息列表的数据传输对象数组。
 		//   - *berror.ErrorCode: 错误信息对象，操作成功时为 nil。
 		ProxyGroupPage(ctx context.Context, userEntity *entity.User, page int, size int, search string) (*base.Page[dto.ProxyBaseGroupDTO], *berror.ErrorCode)
+		// ProxyGroupList 获取代理组列表。
+		//
+		// 参数:
+		//   - ctx: 上下文对象，用于控制生命周期和日志追踪。
+		//   - userEntity: 用户实体，包含筛选条件的用户信息，可为 nil。
+		//   - search: 搜索关键词，支持模糊匹配代理组的名称、描述、文件名。
+		//
+		// 返回:
+		//   - []*dto.ProxyBaseGroupLiteDTO: 包含代理组基本信息的精简版数据传输对象列表。
+		//   - *berror.ErrorCode: 错误信息对象，操作成功时为 nil。
+		//
+		// 错误:
+		//   - 数据库查询失败返回 ErrDatabaseError。
+		//   - 数据转换失败返回 ErrInternalServer。
+		ProxyGroupList(ctx context.Context, userEntity *entity.User, search string) (*[]*dto.ProxyBaseGroupLiteDTO, *berror.ErrorCode)
 		// AddSubscriptionInProxyGroup 向代理组中添加订阅地址。
 		//
 		// 参数:

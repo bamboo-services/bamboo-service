@@ -17,3 +17,13 @@ type ProxyBaseGroupDTO struct {
 	CreatedAt   *gtime.Time `json:"created_at"  description:"代理组创建时间"`
 	UpdatedAt   *gtime.Time `json:"updated_at"  description:"代理组更新时间"`
 }
+
+// ProxyBaseGroupLiteDTO 表示代理组的基本信息（精简版）。
+//
+// 包括代理组的UUID、所属用户的UUID、名称和描述。
+type ProxyBaseGroupLiteDTO struct {
+	GroupUuid   string `json:"group_uuid"  description:"代理组UUID"`
+	UserUuid    string `json:"user_uuid"   description:"用户UUID"`
+	Name        string `json:"name"        description:"代理组名称"`
+	Description string `json:"description" description:"代理组描述"`
+}

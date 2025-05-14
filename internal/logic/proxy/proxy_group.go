@@ -105,3 +105,48 @@ func (s *sProxy) ProxyGroupPage(ctx context.Context, userEntity *entity.User, pa
 	}
 	return base.NewPage(count, page, size, proxyGroupListDTO), nil
 }
+
+// ProxyGroupList 获取代理组列表。
+//
+// 参数:
+//   - ctx: 上下文对象，用于控制生命周期和日志追踪。
+//   - userEntity: 用户实体，包含筛选条件的用户信息，可为 nil。
+//   - search: 搜索关键词，支持模糊匹配代理组的名称、描述、文件名。
+//
+// 返回:
+//   - []*dto.ProxyBaseGroupLiteDTO: 包含代理组基本信息的精简版数据传输对象列表。
+//   - *berror.ErrorCode: 错误信息对象，操作成功时为 nil。
+//
+// 错误:
+//   - 数据库查询失败返回 ErrDatabaseError。
+//   - 数据转换失败返回 ErrInternalServer。
+func (s *sProxy) ProxyGroupList(ctx context.Context, userEntity *entity.User, search string) (*[]*dto.ProxyBaseGroupLiteDTO, *berror.ErrorCode) {
+	blog.ServiceInfo(ctx, "ProxyGroupList", "获取代理组列表，查询内容 %s", search)
+
+	// 查询代理组列表
+	var proxyGroupList []*entity.ProxyGroup
+	model := dao.ProxyGroup.Ctx(ctx)
+	var whereBuilder = model.Builder()
+	if userEntity != nil {
+		whereBuilder.Where(&entity.User{UserUuid: userEntity.UserUuid})
+	}
+	if search != "" {
+		whereBuilder.WhereOrLike("name", "%"+search+"%").
+			WhereOrLike("description", "%"+search+"%").
+			WhereOrLike("file_name", "%"+search+"%")
+	}
+	sqlErr := model.Where(whereBuilder).Scan(&proxyGroupList)
+	if sqlErr != nil {
+		blog.ServiceError(ctx, "ProxyGroupList", "数据库查询失败: %v", sqlErr)
+		return nil, berror.ErrorAddData(&berror.ErrDatabaseError, sqlErr.Error())
+	}
+
+	// 转换为DTO
+	var proxyGroupListDTO []*dto.ProxyBaseGroupLiteDTO
+	operateErr := gconv.Structs(proxyGroupList, &proxyGroupListDTO)
+	if operateErr != nil {
+		blog.ServiceError(ctx, "ProxyGroupList", "数据转换失败: %v", operateErr)
+		return nil, berror.ErrorAddData(&berror.ErrInternalServer, operateErr.Error())
+	}
+	return proxyGroupListDTO, nil
+}
